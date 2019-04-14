@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,6 +25,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+import com.example.behere.register.RegisterFirstStep;
+import com.example.behere.utils.ApiUsage;
+
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +45,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+
+
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -62,9 +71,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mLoginView = findViewById(R.id.login);
+        mPasswordView = findViewById(R.id.password);
         populateAutoComplete();
 
-        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -75,12 +84,27 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
         });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button register = findViewById(R.id.btnRegister);
+        register.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent firstStep = new Intent(LoginActivity.this, RegisterFirstStep.class);
+                startActivity(firstStep);
+            }
+        });
+        Button btnSignIn =  findViewById(R.id.btnSignIn);
+        btnSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                if(null != mLoginView.getText() && null != mPasswordView.getText())
+                {
+                    JSONObject result = ApiUsage.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
+                    if((boolean) result.get("auth"))
+                    {
+                        Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
+                        startActivity(mapActivity);
+                    }
+                }
             }
         });
 

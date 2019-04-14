@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    android {
+        useLibrary 'org.apache.http.legacy'
+    }
+
 }
 
 dependencies {
@@ -32,4 +36,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.akexorcist:googledirectionlibrary:1.1.1'
     implementation 'com.google.maps:google-maps-services:0.9.1'
+    implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
+
+
 }
