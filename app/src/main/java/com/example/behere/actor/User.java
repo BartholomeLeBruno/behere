@@ -17,12 +17,20 @@ public class User {
 
     private String pathPicture;
 
-    private List<User> listAmis = new ArrayList<>();
+    private List<User> listFriends = new ArrayList<>();
 
-    public User()
-    {
-
+    public List<BeerType> getListBeer() {
+        return listBeer;
     }
+
+    public void setListBeer(List<BeerType> listBeer) {
+        this.listBeer = listBeer;
+    }
+
+    private List<BeerType> listBeer = new ArrayList<>();
+
+
+    public User(){ }
     public String getEmail() {
         return email;
     }
@@ -71,12 +79,12 @@ public class User {
         this.pathPicture = pathPicture;
     }
 
-    public List<User> getListAmis() {
-        return listAmis;
+    public List<User> getListFriends() {
+        return listFriends;
     }
 
-    public void setListAmis(List<User> listAmis) {
-        this.listAmis = listAmis;
+    public void setListFriends(List<User> listAmis) {
+        this.listFriends = listAmis;
     }
 
 

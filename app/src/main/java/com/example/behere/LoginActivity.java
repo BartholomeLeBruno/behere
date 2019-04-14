@@ -16,6 +16,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -99,7 +100,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if(null != mLoginView.getText() && null != mPasswordView.getText())
                 {
                     JSONObject result = ApiUsage.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
-                    if((boolean) result.get("auth"))
+                    Log.i("content", result.toString());
+                    if(!(boolean) result.get("error"))
                     {
                         Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
                         startActivity(mapActivity);
