@@ -1,13 +1,16 @@
 package com.example.behere.actor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
     private String email;
 
     private String password;
+
+    private String checkPassword;
 
     private String name;
 
@@ -87,5 +90,23 @@ public class User {
         this.listFriends = listAmis;
     }
 
+    public String getCheckPassword() {
+        return checkPassword;
+    }
+
+    public void setCheckPassword(String checkPassword) {
+        this.checkPassword = checkPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                '}';
+    }
 
 }
