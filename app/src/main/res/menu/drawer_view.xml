@@ -3,9 +3,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_advancedResearch"
-            android:title="My proile"/>
+            android:title="My profile"/>
         <item
             android:id="@+id/nav_details"
-            android:title="Détails"/>
+            android:title="Details"/>
+        <item
+            android:id="@+id/disconnected"
+            android:title="Disconnect" />
     </group>
 </menu>

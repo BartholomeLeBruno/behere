@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -54,13 +55,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private SharedPreferences sharedPreferences;
     private Dialog match_text_dialog;
     private ArrayList<String> matches_text;
-    private EditText startPoint, endPoint;
     private DrawerLayout mDrawerLayout;
     private Marker depart;
     private Marker arrivee;
     private Polyline direction;
     private DirectionsResult result;
-    private Button btnDisconnect;
 
     private void loadMapWithPredefinedValues(Bundle extras)
     {
@@ -89,12 +88,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        startPoint = findViewById(R.id.start_EditText);
-        endPoint = findViewById(R.id.end_EditText);
-        btnDisconnect = findViewById(R.id.btnDisconnection);
         // Drawer navigation
         mDrawerLayout = findViewById(R.id.drawer_layout);
-        Bundle extras = getIntent().getExtras();
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
@@ -108,82 +103,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 }
         );
-        btnDisconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MapActivity.this, LoginActivity.class);
-                sharedPreferences.edit().remove(PREFS_ID).apply();
-                startActivity(intent);
-            }
-        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
        // actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
-        startPoint.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(!endPoint.getText().toString().equals(""))
-                {
-                    try {
-                        result = DirectionsApi.newRequest(getBuilder().build()).mode(TravelMode.TRANSIT)
-                                .transitMode(TransitMode.TRAIN)
-                                .origin(startPoint.getText().toString())
-                                .destination(endPoint.getText().toString()).departureTime(Instant.now()).await();
-                                addMarkersToMap(result);
-
-
-                    }
-                    catch(IOException  | InterruptedException | ApiException e)
-                    {
-                        Log.d("Erreur", "onItemClick: "+e);
-                    }
-                }
-            }
-        });
-        endPoint.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(!startPoint.getText().toString().equals(""))
-                {
-                    try {
-                        result = DirectionsApi.newRequest(getBuilder().build()).mode(TravelMode.TRANSIT)
-                                .transitMode(TransitMode.TRAIN)
-                                .origin(startPoint.getText().toString())
-                                .destination(endPoint.getText().toString()).departureTime(Instant.now()).await();
-                        addMarkersToMap(result);
-                        addPolyline(result);
-                        LatLng middle = new LatLng((result.routes[0].legs[0].startLocation.lat + result.routes[0].legs[0].endLocation.lat)/2,
-                                (result.routes[0].legs[0].startLocation.lng + result.routes[0].legs[0].endLocation.lng)/2);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(middle, 17.f));
-                    }
-                    catch(IOException  | InterruptedException | ApiException e)
-                    {
-                        Log.d("Erreur", "onItemClick: "+e);
-                    }
-                }
-            }
-        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -217,8 +140,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new LatLng(results.routes[0].legs[0].endLocation.lat,
                         results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].endAddress).snippet(getEndLocationTitle(results)));
 
-        Log.d("startPoint:", startPoint.getText().toString());
-        Log.d("endPoint:", endPoint.getText().toString());
         Log.d("duree:", result.routes[0].legs[0].duration.humanReadable);
 
         //Search search = dataSource.createSearch(startPoint.getText().toString(), endPoint.getText().toString(), result.routes[0].legs[0].duration.humanReadable);
@@ -234,30 +155,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
         direction =  mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
     }
-
-
-
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.nav_advancedResearch:
-                intent = new Intent(MainActivity.this, AdvancedResearchActivity.class);
-                MainActivity.this.startActivity(intent);
-                return true;
-            case R.id.nav_history:
-                intent = new Intent(MainActivity.this, HistoryActivity.class);
-                MainActivity.this.startActivity(intent);
-                return true;
-            case R.id.nav_details:
-                // TODO: Ajouter activité détails
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
 
     /**
      * Manipulates the map once available.
@@ -276,8 +173,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Add a marker in Sydney and move the camera
         LatLng Paris = new LatLng(48.8534,  2.3488);
        // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Paris, 15.0f));
     }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.disconnected:
+                Intent intent = new Intent(MapActivity.this, LoginActivity.class);
+                sharedPreferences.edit().remove(PREFS_ID).apply();
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
