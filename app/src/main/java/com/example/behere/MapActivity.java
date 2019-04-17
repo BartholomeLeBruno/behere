@@ -1,7 +1,9 @@
 package com.example.behere;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -13,7 +15,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -37,24 +42,25 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private static final int REQUEST_CODE = 1234;
-
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_ID = "USER_ID";
+    private SharedPreferences sharedPreferences;
     private Dialog match_text_dialog;
     private ArrayList<String> matches_text;
     private EditText startPoint, endPoint;
     private DrawerLayout mDrawerLayout;
     private Marker depart;
-    private Marker arrivée;
+    private Marker arrivee;
     private Polyline direction;
-
-
-
     private DirectionsResult result;
+    private Button btnDisconnect;
 
     private void loadMapWithPredefinedValues(Bundle extras)
     {
@@ -81,16 +87,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         startPoint = findViewById(R.id.start_EditText);
         endPoint = findViewById(R.id.end_EditText);
+        btnDisconnect = findViewById(R.id.btnDisconnection);
         // Drawer navigation
         mDrawerLayout = findViewById(R.id.drawer_layout);
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            loadMapWithPredefinedValues(extras);
-            //The key argument here must match that used in the other activity
-        }
+        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -103,6 +108,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 }
         );
+        btnDisconnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapActivity.this, LoginActivity.class);
+                sharedPreferences.edit().remove(PREFS_ID).apply();
+                startActivity(intent);
+            }
+        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -200,7 +213,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new LatLng(results.routes[0].legs[0].startLocation.lat,
                         results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
 
-        arrivée = mMap.addMarker(new MarkerOptions().position(
+        arrivee = mMap.addMarker(new MarkerOptions().position(
                 new LatLng(results.routes[0].legs[0].endLocation.lat,
                         results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].endAddress).snippet(getEndLocationTitle(results)));
 

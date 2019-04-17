@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TimeFormatException;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.behere.LoginActivity;
 import com.example.behere.R;
@@ -56,10 +58,14 @@ public class RegisterFirstStep extends Activity {
                     newUser.setCheckPassword(checkPassword.getText().toString());
                     Intent nextStep = new Intent(RegisterFirstStep.this, LoginActivity.class);
                     JSONObject result = ApiUsage.createAccount(newUser);
-                    Log.i("content", result.toString());
-
-                    nextStep.putExtra("User",newUser);
-                    startActivity(nextStep);
+                    if(!(boolean) result.get("error")) {
+                        nextStep.putExtra("User", newUser);
+                        startActivity(nextStep);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), result.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    }
 
 
                 }

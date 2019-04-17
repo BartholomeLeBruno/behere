@@ -6,6 +6,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,12 +26,21 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.behere.register.RegisterFirstStep;
 import com.example.behere.utils.ApiUsage;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +56,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_ID = "USER_ID";
+    private SharedPreferences sharedPreferences;
+
 
 
 
@@ -64,6 +78,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     // UI references.
     private EditText mLoginView;
     private EditText mPasswordView;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager = CallbackManager.Factory.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +90,29 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mLoginView = findViewById(R.id.login);
         mPasswordView = findViewById(R.id.password);
         populateAutoComplete();
+        loginButton = findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email");
+        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+               Toast.makeText(getApplicationContext(), loginResult.toString(), Toast.LENGTH_SHORT).show();
+                // App code
+
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -104,8 +142,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     if(!(boolean) result.get("error"))
                     {
                         Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
+                        try{
+                            JSONParser parser = new JSONParser();
+                            Object obj  = parser.parse(result.get("user").toString());
+                            JSONObject objres = (JSONObject)  parser.parse(result.get("user").toString());
+                            sharedPreferences.edit().putLong(PREFS_ID,(long) objres.get("id")).apply();
+                        }
+                        catch (ParseException e)
+                        {
+                            throw new RuntimeException(e);
+                        }
                         startActivity(mapActivity);
                     }
+                    else
+                        Toast.makeText(getApplicationContext(), result.get("message").toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -121,9 +171,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
         if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
@@ -291,6 +338,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // TODO: register the new account here.
             return true;
         }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }
 
