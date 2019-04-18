@@ -6,6 +6,7 @@ import com.example.behere.actor.User;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -15,7 +16,7 @@ import org.json.simple.parser.JSONParser;
 
 public class ApiUsage {
 
-    final static String PATH_API = "http://10.0.2.2:8081/";
+    final static String PATH_API = "http://192.168.43.12:8081/";
 
     public static JSONObject authentificate(String email, String password){
         try{
@@ -67,6 +68,24 @@ public class ApiUsage {
             StringEntity stringEntity = new StringEntity(body.toString());
             httpPost.setEntity(stringEntity);
             HttpResponse httpResponse = httpClient.execute(httpPost);
+
+            String content = EntityUtils.toString(httpResponse.getEntity());
+            JSONParser parser = new JSONParser();
+            return (JSONObject) parser.parse(content);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static JSONObject getUser(long idUser) {
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpGet httpGet = new HttpGet(PATH_API+"users/"+idUser);
+            httpGet.setHeader("Content-type", "application/json");
+            HttpResponse httpResponse = httpClient.execute(httpGet);
 
             String content = EntityUtils.toString(httpResponse.getEntity());
             JSONParser parser = new JSONParser();
