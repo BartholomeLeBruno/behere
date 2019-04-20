@@ -122,7 +122,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
         });
-        Button register = findViewById(R.id.btnRegister);
+        Button register = findViewById(R.id.btnRegisterLastStep);
         register.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -56,18 +56,9 @@ public class RegisterFirstStep extends Activity {
                     newUser.setBirthDate(birthdate.getText().toString());
                     newUser.setPassword(password.getText().toString());
                     newUser.setCheckPassword(checkPassword.getText().toString());
-                    Intent nextStep = new Intent(RegisterFirstStep.this, LoginActivity.class);
-                    JSONObject result = ApiUsage.createAccount(newUser);
-                    if(!(boolean) result.get("error")) {
-                        nextStep.putExtra("User", newUser);
-                        startActivity(nextStep);
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), result.get("message").toString(), Toast.LENGTH_SHORT).show();
-                    }
-
-
+                    Intent nextStep = new Intent(RegisterFirstStep.this, RegisterSecondStep.class);
+                    nextStep.putExtra("User", newUser);
+                    startActivity(nextStep);
                 }
             }
         });

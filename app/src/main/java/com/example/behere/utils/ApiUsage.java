@@ -16,7 +16,7 @@ import org.json.simple.parser.JSONParser;
 
 public class ApiUsage {
 
-    final static String PATH_API = "http://192.168.43.12:8081/";
+    final static String PATH_API = "http://192.168.1.31:8081/";
 
     public static JSONObject authentificate(String email, String password){
         try{
