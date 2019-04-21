@@ -1,31 +1,32 @@
 package com.example.behere.register;
 
-import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TimeFormatException;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.example.behere.LoginActivity;
 import com.example.behere.R;
 import com.example.behere.actor.User;
-import com.example.behere.utils.ApiUsage;
 
-import org.json.simple.JSONObject;
+import java.util.Calendar;
 
-public class RegisterFirstStep extends Activity {
+public class RegisterFirstStep extends AppCompatActivity {
 
     private EditText name;
     private EditText surname;
     private EditText email;
-    private EditText birthdate;
+    private Button btnBirthDate;
     private EditText password;
     private EditText checkPassword;
+    public User newUser = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +37,11 @@ public class RegisterFirstStep extends Activity {
         name = findViewById(R.id.name);
         surname = findViewById(R.id.surname);
         email = findViewById(R.id.email);
-        birthdate = findViewById(R.id.birthDate);
+        btnBirthDate = findViewById(R.id.btnBirthDate);
         password = findViewById(R.id.password);
         checkPassword = findViewById(R.id.checkpassword);
+
+
 
 
         Button continueStep = findViewById(R.id.continueStep);
@@ -46,14 +49,13 @@ public class RegisterFirstStep extends Activity {
         continueStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(name.getText() != null && surname.getText() != null && email.getText() != null && birthdate.getText() != null
-                && password.getText() != null && checkPassword.getText() != null)
+                if(!name.getText().toString().equals("") && !surname.getText().toString().equals("") && !email.getText().toString().equals("") && !btnBirthDate.getText().toString().equals("")
+                && !btnBirthDate.getText().toString().toUpperCase().equals("BIRTHDATE")  && !password.getText().toString().equals("") && !checkPassword.getText().toString().equals(""))
                 {
-                    User newUser = new User();
                     newUser.setName(name.getText().toString());
                     newUser.setSurname(surname.getText().toString());
                     newUser.setEmail(email.getText().toString());
-                    newUser.setBirthDate(birthdate.getText().toString());
+                    newUser.setBirthDate(btnBirthDate.getText().toString());
                     newUser.setPassword(password.getText().toString());
                     newUser.setCheckPassword(checkPassword.getText().toString());
                     Intent nextStep = new Intent(RegisterFirstStep.this, RegisterSecondStep.class);
@@ -62,5 +64,29 @@ public class RegisterFirstStep extends Activity {
                 }
             }
         });
+    }
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            ((Button) getActivity().findViewById(R.id.btnBirthDate)).setText(year + "-" + month + "-" + day);
+
+        }
     }
 }
