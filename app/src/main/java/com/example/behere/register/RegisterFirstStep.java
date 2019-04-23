@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.behere.R;
@@ -81,7 +82,12 @@ public class RegisterFirstStep extends AppCompatActivity {
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+            /*return new DatePickerDialog(getActivity(), this, year, month, day);*/
+
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                    R.style.CustomDatePickerDialogTheme, this, year, month, day);
+            return datePickerDialog;
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
