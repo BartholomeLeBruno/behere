@@ -32,10 +32,6 @@ import android.widget.Toast;
 import com.example.behere.register.RegisterFirstStep;
 import com.example.behere.utils.ApiUsage;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -77,7 +73,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     // UI references.
     private EditText mLoginView;
     private EditText mPasswordView;
-    private LoginButton loginButton;
     private CallbackManager callbackManager = CallbackManager.Factory.create();
 
     @Override
@@ -89,29 +84,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mLoginView = findViewById(R.id.login);
         mPasswordView = findViewById(R.id.password);
         populateAutoComplete();
-        loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-               Toast.makeText(getApplicationContext(), loginResult.toString(), Toast.LENGTH_SHORT).show();
-                // App code
-
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -134,26 +107,21 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         btnSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(null != mLoginView.getText() && null != mPasswordView.getText())
-                {
+                if (!mLoginView.getText().toString().equals("") && !mPasswordView.getText().toString().equals("")) {
                     JSONObject result = ApiUsage.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
                     Log.i("content", result.toString());
-                    if(!(boolean) result.get("error"))
-                    {
+                    if (!(boolean) result.get("error")) {
                         Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
-                        try{
+                        try {
                             JSONParser parser = new JSONParser();
-                            Object obj  = parser.parse(result.get("user").toString());
-                            JSONObject objres = (JSONObject)  parser.parse(result.get("user").toString());
-                            sharedPreferences.edit().putLong(PREFS_ID,(long) objres.get("id")).apply();
-                        }
-                        catch (ParseException e)
-                        {
+                            Object obj = parser.parse(result.get("user").toString());
+                            JSONObject objres = (JSONObject) parser.parse(result.get("user").toString());
+                            sharedPreferences.edit().putLong(PREFS_ID, (long) objres.get("id")).apply();
+                        } catch (ParseException e) {
                             throw new RuntimeException(e);
                         }
                         startActivity(mapActivity);
-                    }
-                    else
+                    } else
                         Toast.makeText(getApplicationContext(), result.get("message").toString(), Toast.LENGTH_SHORT).show();
                 }
             }

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -82,17 +83,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Drawer navigation
         mDrawerLayout = findViewById(R.id.drawer_layout);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        //menuItem.setChecked(false);
-                        onOptionsItemSelected(menuItem);
-                        mDrawerLayout.closeDrawers();
-                        return false;
-                    }
-                }
+        BottomNavigationView navigationView = findViewById(R.id.footer);
+        navigationView.setOnNavigationItemReselectedListener(
+                new BottomNavigationView.OnNavigationItemReselectedListener() {
+                 @Override
+                 public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
+                     onOptionsItemSelected(menuItem);
+                     mDrawerLayout.closeDrawers();
+                 }
+             }
         );
 
         Toolbar toolbar = findViewById(R.id.toolbar);
