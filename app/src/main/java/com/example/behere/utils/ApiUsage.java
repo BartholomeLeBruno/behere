@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -105,6 +106,30 @@ public class ApiUsage {
             HttpGet httpGet = new HttpGet(PATH_API+"typeOfBeers/");
             httpGet.setHeader("Content-type", "application/json");
             HttpResponse httpResponse = httpClient.execute(httpGet);
+
+            String content = EntityUtils.toString(httpResponse.getEntity());
+            JSONParser parser = new JSONParser();
+            return (JSONObject) parser.parse(content);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public  static JSONObject addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String acces_token)
+    {
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            JSONObject body = new JSONObject();
+            body.put("typeOfBeer_id", typeBeer_ID);
+            HttpPut httpPut = new HttpPut(PATH_API+"users/" + user_ID + "/addTypeOfBeer");
+            httpPut.setHeader("Content-type", "application/json");
+            httpPut.setHeader("x-access-token", acces_token);
+            StringEntity stringEntity = new StringEntity(body.toString());
+            httpPut.setEntity(stringEntity);
+            HttpResponse httpResponse = httpClient.execute(httpPut);
 
             String content = EntityUtils.toString(httpResponse.getEntity());
             JSONParser parser = new JSONParser();
