@@ -91,29 +91,31 @@ public class RegisterSecondStep extends Activity {
     {
         try {
             JSONObject jsonObject = ApiUsage.getAllTypeOfBeer();
-            JSONParser parser = new JSONParser();
-            JSONArray res = (JSONArray)  parser.parse(jsonObject.get("typeOfBeer").toString());
-            for (Object unres : res) {
-                JSONObject objres = (JSONObject)  parser.parse(unres.toString());
-                listBeerType.add((String) objres.get("name"));
-            }
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, listBeerType){
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent){
-                    // Get the Item from ListView
-                    View view = super.getView(position, convertView, parent);
-
-                    // Initialize a TextView for ListView each Item
-                    TextView tv =  view.findViewById(android.R.id.text1);
-
-                    // Set the text color of TextView (ListView Item)
-                    tv.setTextColor(Color.WHITE);
-
-                    // Generate ListView Item using TextView
-                    return view;
+            if(!(boolean) jsonObject.get("error")) {
+                JSONParser parser = new JSONParser();
+                JSONArray res = (JSONArray) parser.parse(jsonObject.get("typeOfBeer").toString());
+                for (Object unres : res) {
+                    JSONObject objres = (JSONObject) parser.parse(unres.toString());
+                    listBeerType.add((String) objres.get("name"));
                 }
-            };
-            lvBeerType.setAdapter(arrayAdapter);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, listBeerType) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        // Get the Item from ListView
+                        View view = super.getView(position, convertView, parent);
+
+                        // Initialize a TextView for ListView each Item
+                        TextView tv = view.findViewById(android.R.id.text1);
+
+                        // Set the text color of TextView (ListView Item)
+                        tv.setTextColor(Color.WHITE);
+
+                        // Generate ListView Item using TextView
+                        return view;
+                    }
+                };
+                lvBeerType.setAdapter(arrayAdapter);
+            }
         }
         catch (Exception e)
         {
