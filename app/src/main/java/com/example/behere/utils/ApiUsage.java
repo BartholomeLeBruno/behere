@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+
 public class ApiUsage {
 
     final static String PATH_API = "http://31.220.61.74:8081/";
@@ -104,6 +105,25 @@ public class ApiUsage {
             StrictMode.setThreadPolicy(policy);
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet httpGet = new HttpGet(PATH_API+"typeOfBeers/");
+            httpGet.setHeader("Content-type", "application/json");
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+
+            String content = EntityUtils.toString(httpResponse.getEntity());
+            JSONParser parser = new JSONParser();
+            return (JSONObject) parser.parse(content);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static JSONObject getAllBar()
+    {
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpGet httpGet = new HttpGet(PATH_API+"bars/");
             httpGet.setHeader("Content-type", "application/json");
             HttpResponse httpResponse = httpClient.execute(httpGet);
 

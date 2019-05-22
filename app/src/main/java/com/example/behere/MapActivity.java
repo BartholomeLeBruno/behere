@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,30 +14,32 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.behere.actor.Market;
+import com.example.behere.utils.ApiUsage;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext.Builder;
 import com.google.maps.android.PolyUtil;
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.TransitMode;
-import com.google.maps.model.TravelMode;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-import java.io.IOException;
-import java.time.Instant;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,OnMapReadyCallback {
 
     private GoogleMap mMap;
     private static final int REQUEST_CODE = 1234;
@@ -51,29 +52,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Marker depart;
     private Marker arrivee;
     private Polyline direction;
+    private  Marker marker;
     private DirectionsResult result;
-
-    private void loadMapWithPredefinedValues(Bundle extras)
-    {
-        try {
-            String depart = extras.getString("depart");
-            String arrivee = extras.getString("arrivee");
-            Instant heure = Instant.parse(extras.getString("heure"));
-            result = DirectionsApi.newRequest(getBuilder().build()).mode(TravelMode.TRANSIT)
-                    .transitMode(TransitMode.TRAIN)
-                    .origin(depart)
-                    .destination(arrivee).departureTime(heure).await();
-            addMarkersToMap(result);
-            addPolyline(result);
-            LatLng middle = new LatLng((result.routes[0].legs[0].startLocation.lat + result.routes[0].legs[0].endLocation.lat) / 2,
-                    (result.routes[0].legs[0].startLocation.lng + result.routes[0].legs[0].endLocation.lng) / 2);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(middle, 17.f));
-        }
-        catch(IOException  | InterruptedException | ApiException e)
-        {
-            Log.d("Erreur", "onItemClick: "+e);
-        }
-    }
+    private ArrayList<Market> listMarket = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +74,40 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                  }
              }
         );
+        listMarket = new ArrayList<>();
+        try {
+            long id;
+             String name;
+             Double latitude;
+             Double longitutde;
+             String description;
+             String webSiteLink;
+            JSONObject result = ApiUsage.getAllBar();
+            if (!(boolean) result.get("error")) {
+                JSONParser parser = new JSONParser();
+                JSONArray res = (JSONArray) parser.parse(result.get("bar").toString());
+                for (Object unres : res) {
+                    JSONObject objres = (JSONObject) parser.parse(unres.toString());
+                    id = (long) objres.get("id");
+                    name = (String)  objres.get("name");
+                    description = (String)  objres.get("description");
+                    latitude =  (Double)  objres.get("gpsLatitude");
+                    longitutde = (Double)  objres.get("gpsLongitude");
+                    webSiteLink = (String)  objres.get("webSiteLink");
+                    Market market = new Market(id,name,latitude,longitutde, description,webSiteLink);
+                    listMarket.add(market);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+            Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
        // actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
     }
@@ -158,13 +171,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //mMap.getUiSettings().setZoomControlsEnabled(true);
-        //mMap.setMyLocationEnabled(true);
-        // Add a marker in Sydney and move the camera
-        LatLng Paris = new LatLng(48.8534,  2.3488);
-       // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Paris, 15.0f));
+        if(!listMarket.isEmpty())
+        {
+            for (Market market: listMarket) {
+                LatLng latLng = new LatLng(market.getLatitude(), market.getLongitutde());
+                marker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(market.getName())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
+                marker.setTag(0);
+            }
+        }
+        mMap.setOnMarkerClickListener(this);
+    }
+
+
+    /** Called when the user clicks a marker. */
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+
+        // Retrieve the data from the marker.
+        Integer clickCount = (Integer) marker.getTag();
+
+        // Check if a click count was set, then display the click count.
+        if (clickCount != null) {
+            clickCount = clickCount + 1;
+            marker.setTag(clickCount);
+            Toast.makeText(this,
+                    marker.getTitle() +
+                            " has been clicked " + clickCount + " times.",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
