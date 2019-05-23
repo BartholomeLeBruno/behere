@@ -1,63 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/beerwallpaper2"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".LoginActivity">
 
     <!-- Login progress -->
 
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="100dp" />
 
             <TextView
                 android:id="@+id/tVTitle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_height="72dp"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center_horizontal"
                 android:text="BE'HERE"
-                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"
-                app:layout_constraintBottom_toTopOf="@+id/login"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toTopOf="@+id/login" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="100dp" />
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
             <EditText
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textAlignment="center"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"
                 android:textColorHint="#F6F6F6"
-                app:layout_constraintBottom_toTopOf="@+id/password"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                 />
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
@@ -67,17 +61,12 @@
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textAlignment="center"
                 android:textColor="@color/browser_actions_bg_grey"
-                android:textColorHint="#F6F6F6"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textColorHint="#F6F6F6" />
+        </android.support.design.widget.TextInputLayout>
 
-            <Button
+
+        <Button
                 android:id="@+id/btnSignIn"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
@@ -100,9 +89,5 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/password" />
-
-        </LinearLayout>
-    </ScrollView>
-
-
-</RelativeLayout>
+    </LinearLayout>
+</ScrollView>

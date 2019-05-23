@@ -1,6 +1,8 @@
 package com.example.behere.actor;
 
-public class Market {
+import java.io.Serializable;
+
+public abstract class Market implements Serializable {
 
     private  long id;
 

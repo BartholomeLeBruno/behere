@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.behere.actor.Bar;
 import com.example.behere.actor.Market;
 import com.example.behere.utils.ApiUsage;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,7 +37,9 @@ import org.json.simple.parser.JSONParser;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,OnMapReadyCallback {
@@ -54,7 +57,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private Polyline direction;
     private  Marker marker;
     private DirectionsResult result;
-    private ArrayList<Market> listMarket = new ArrayList<>();
+    private HashMap<String,Market> mapMarket = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                  }
              }
         );
-        listMarket = new ArrayList<>();
+        mapMarket = new HashMap<>();
         try {
             long id;
              String name;
@@ -94,8 +97,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     latitude =  (Double)  objres.get("gpsLatitude");
                     longitutde = (Double)  objres.get("gpsLongitude");
                     webSiteLink = (String)  objres.get("webSiteLink");
-                    Market market = new Market(id,name,latitude,longitutde, description,webSiteLink);
-                    listMarket.add(market);
+                    Market market = new Bar(id,name,latitude,longitutde, description,webSiteLink);
+                    mapMarket.put(market.getName(), market);
                 }
             }
         }
@@ -171,13 +174,13 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if(!listMarket.isEmpty())
+        if(!mapMarket.isEmpty())
         {
-            for (Market market: listMarket) {
-                LatLng latLng = new LatLng(market.getLatitude(), market.getLongitutde());
+            for (Map.Entry<String,Market> market: mapMarket.entrySet()) {
+                LatLng latLng = new LatLng(market.getValue().getLatitude(), market.getValue().getLongitutde());
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .title(market.getName())
+                        .title(market.getKey())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
                 marker.setTag(0);
             }
@@ -195,12 +198,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
-            clickCount = clickCount + 1;
-            marker.setTag(clickCount);
-            Toast.makeText(this,
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show();
+            if(mapMarket.containsKey(marker.getTitle())) {
+                Market m = mapMarket.get(marker.getTitle());
+                Intent nextStep = new Intent(MapActivity.this, MarketProfilActivity.class);
+                nextStep.putExtra("market", m);
+                startActivity(nextStep);
+            }
         }
 
         // Return false to indicate that we have not consumed the event and that we wish
