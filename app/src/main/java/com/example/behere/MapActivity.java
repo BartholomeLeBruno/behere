@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.behere.actor.Bar;
 import com.example.behere.actor.Market;
@@ -218,6 +217,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 Intent intent = new Intent(MapActivity.this, LoginActivity.class);
                 sharedPreferences.edit().remove(PREFS_ID).apply();
                 startActivity(intent);
+                return true;
+            case R.id.navigation_home:
+                Intent intentHome = new Intent(MapActivity.this, MapActivity.class);
+                startActivity(intentHome);
                 return true;
         }
         return super.onOptionsItemSelected(item);
