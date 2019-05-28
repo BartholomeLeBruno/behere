@@ -1,161 +1,254 @@
 package com.example.behere.utils;
 
-import android.os.StrictMode;
+import android.content.Context;
+import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.behere.actor.User;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONObject;
 
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ApiUsage {
 
-    final static String PATH_API = "http://31.220.61.74:8081/";
+    private final static String PATH_API = "http://31.220.61.74:8081/";
 
-    public static JSONObject authentificate(String email, String password){
-        try{
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    private VolleyCallback mResultCallback = null;
+    private Context mContext;
 
-            StrictMode.setThreadPolicy(policy);
-            JSONObject body = new JSONObject();
-            body.put("email", email);
-            body.put("password", password);
-
-
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost httpPost = new HttpPost(PATH_API+"authentificate/");
-            httpPost.setHeader("Content-type", "application/json");
-            //httpPut.setHeader("x-access-token", user.getAccessToken());
-
-            StringEntity stringEntity = new StringEntity(body.toString());
-            httpPost.setEntity(stringEntity);
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            String content = EntityUtils.toString(httpResponse.getEntity());
-            JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(content);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public ApiUsage(VolleyCallback resultCallback, Context context){
+        mResultCallback = resultCallback;
+        mContext = context;
     }
 
-
-    public static JSONObject createAccount(User user){
-        try{
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-            StrictMode.setThreadPolicy(policy);
-            JSONObject body = new JSONObject();
-            body.put("email", user.getEmail());
-            body.put("name", user.getName());
-            body.put("surname", user.getSurname());
-            body.put("password", user.getPassword());
-            body.put("checkPassword", user.getCheckPassword());
-            body.put("birthDate", user.getBirthDate());
-
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost httpPost = new HttpPost(PATH_API+"users/create/");
-            httpPost.setHeader("Content-type", "application/json");
-            //httpPut.setHeader("x-access-token", user.getAccessToken());
-
-            StringEntity stringEntity = new StringEntity(body.toString());
-            httpPost.setEntity(stringEntity);
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            String content = EntityUtils.toString(httpResponse.getEntity());
-            JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(content);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static JSONObject getUser(long idUser) {
-        try {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet httpGet = new HttpGet(PATH_API+"users/"+idUser);
-            httpGet.setHeader("Content-type", "application/json");
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-
-            String content = EntityUtils.toString(httpResponse.getEntity());
-            JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(content);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static JSONObject getAllTypeOfBeer()
+    public  void authentificate(String email, String password)
     {
         try {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet httpGet = new HttpGet(PATH_API+"typeOfBeers/");
-            httpGet.setHeader("Content-type", "application/json");
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            RequestQueue queue = Volley.newRequestQueue(mContext);
+            JSONObject params = new JSONObject();
+            params.put("email", email);
+            params.put("password", password);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, PATH_API+"authentificate", params,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // response
+                            if(mResultCallback != null)
+                                mResultCallback.onSuccess(response);
 
-            String content = EntityUtils.toString(httpResponse.getEntity());
-            JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(content);
-
-        } catch (Exception e) {
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            Log.d("Error.Response", error.getMessage());
+                            error.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(jsonObjectRequest);
+        }catch (Exception e)
+        {
             throw new RuntimeException(e);
         }
     }
 
-    public static JSONObject getAllBar()
+
+    public void createAccount(User user)
     {
         try {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet httpGet = new HttpGet(PATH_API+"bars/");
-            httpGet.setHeader("Content-type", "application/json");
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-
-            String content = EntityUtils.toString(httpResponse.getEntity());
-            JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(content);
-
-        } catch (Exception e) {
+            RequestQueue queue = Volley.newRequestQueue(mContext);
+            JSONObject params = new JSONObject();
+            params.put("email", user.getEmail());
+            params.put("name", user.getName());
+            params.put("surname", user.getSurname());
+            params.put("password", user.getPassword());
+            params.put("checkPassword", user.getCheckPassword());
+            params.put("birthDate", user.getBirthDate());
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, PATH_API+"users/create", params,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // response
+                            if(mResultCallback != null)
+                                mResultCallback.onSuccess(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            Log.d("Error.Response", error.getMessage());
+                            error.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(jsonObjectRequest);
+        }catch (Exception e)
+        {
             throw new RuntimeException(e);
         }
     }
 
-    public  static JSONObject addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String acces_token)
+    public void getUser(long idUser)
     {
         try {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            JSONObject body = new JSONObject();
-            body.put("typeOfBeer_id", typeBeer_ID);
-            HttpPut httpPut = new HttpPut(PATH_API+"users/" + user_ID + "/addTypeOfBeer");
-            httpPut.setHeader("Content-type", "application/json");
-            httpPut.setHeader("x-access-token", acces_token);
-            StringEntity stringEntity = new StringEntity(body.toString());
-            httpPut.setEntity(stringEntity);
-            HttpResponse httpResponse = httpClient.execute(httpPut);
+            RequestQueue queue = Volley.newRequestQueue(mContext);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, PATH_API+"users/"+idUser, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // response
+                            if(mResultCallback != null)
+                                mResultCallback.onSuccess(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            Log.d("Error.Response", error.getMessage());
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(jsonObjectRequest);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+    public void getAllTypeOfBeer()
+    {
+        try {
+            RequestQueue queue = Volley.newRequestQueue(mContext);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, PATH_API+"typeOfBeers", null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if(mResultCallback != null)
+                                mResultCallback.onSuccess(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            Log.d("Error.Response", error.getMessage());
+                            error.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(jsonObjectRequest);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
-            String content = EntityUtils.toString(httpResponse.getEntity());
-            JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(content);
+    public void getAllBar()
+    {
+        try {
+            RequestQueue queue = Volley.newRequestQueue(mContext);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, PATH_API+"bars", null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // response
+                            if(mResultCallback != null)
+                                mResultCallback.onSuccess(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            Log.d("Error.Response", error.getMessage());
+                            error.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(jsonObjectRequest);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
-        } catch (Exception e) {
+    public void addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String acces_token)
+    {
+        try {
+            RequestQueue queue = Volley.newRequestQueue(mContext);
+            JSONObject params = new JSONObject();
+            params.put("typeOfBeer_id", typeBeer_ID);
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, PATH_API+"users/" + user_ID + "/addTypeOfBeer", params,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // responses
+                            if(mResultCallback != null)
+                                mResultCallback.onSuccess(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            Log.d("Error.Response", error.getMessage());
+                            error.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("x-access-token", acces_token);
+
+                    return headers;
+                }
+            };
+            queue.add(jsonObjectRequest);
+        }catch (Exception e)
+        {
             throw new RuntimeException(e);
         }
     }

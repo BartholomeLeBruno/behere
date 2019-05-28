@@ -14,10 +14,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.example.behere.actor.Bar;
 import com.example.behere.actor.Market;
 import com.example.behere.utils.ApiUsage;
+import com.example.behere.utils.VolleyCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -30,8 +30,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.GeoApiContext.Builder;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsResult;
+
+import org.json.JSONTokener;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
+
 import org.json.simple.parser.JSONParser;
 
 
@@ -48,15 +51,18 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
-    private Dialog match_text_dialog;
-    private ArrayList<String> matches_text;
+    Dialog match_text_dialog;
+    ArrayList<String> matches_text;
     private DrawerLayout mDrawerLayout;
-    private Marker depart;
-    private Marker arrivee;
-    private Polyline direction;
-    private  Marker marker;
+    Marker depart;
+    Marker arrivee;
+    Polyline direction;
+    Marker marker;
     private DirectionsResult result;
     private HashMap<String,Market> mapMarket = new HashMap<>();
+    private String TAG = "MapActivity";
+    VolleyCallback mResultCallback = null;
+    ApiUsage mVolleyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,40 +82,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                  }
              }
         );
-        mapMarket = new HashMap<>();
-        try {
-            long id;
-             String name;
-             Double latitude;
-             Double longitutde;
-             String description;
-             String webSiteLink;
-            JSONObject result = ApiUsage.getAllBar();
-            if (!(boolean) result.get("error")) {
-                JSONParser parser = new JSONParser();
-                JSONArray res = (JSONArray) parser.parse(result.get("bar").toString());
-                for (Object unres : res) {
-                    JSONObject objres = (JSONObject) parser.parse(unres.toString());
-                    id = (long) objres.get("id");
-                    name = (String)  objres.get("name");
-                    description = (String)  objres.get("description");
-                    latitude =  (Double)  objres.get("gpsLatitude");
-                    longitutde = (Double)  objres.get("gpsLongitude");
-                    webSiteLink = (String)  objres.get("webSiteLink");
-                    Market market = new Bar(id,name,latitude,longitutde, description,webSiteLink);
-                    mapMarket.put(market.getName(), market);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+        prepareGetAllBar();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.getAllBar();
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-            Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
        // actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
     }
@@ -227,4 +205,40 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     }
 
 
+    void prepareGetAllBar() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    long id;
+                    String name;
+                    Double latitude;
+                    Double longitutde;
+                    String description;
+                    String webSiteLink;
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray res = (JSONArray) parser.parse(response.get("bar").toString());
+                        for (Object unres : res) {
+                            JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                            id =  Long.parseLong(objres.get("id").toString());
+                            name =  objres.get("name").toString();
+                            description =  objres.get("description").toString();
+                            latitude =  Double.parseDouble(objres.get("gpsLatitude").toString());
+                            longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
+                            webSiteLink =  objres.get("webSiteLink").toString();
+                            mapMarket.put(name,  new Bar(id, name, latitude, longitutde, description, webSiteLink));
+                            marker = mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(latitude,longitutde))
+                                    .title(name)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
+                            marker.setTag(0);
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            };
+        };
+    }
 }

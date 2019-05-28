@@ -19,9 +19,9 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
 
 
      TextView tvNameBar;
-    private GoogleMap mMap;
-    private Marker marker;
-    TextView contentDesc;
+     GoogleMap mMap;
+     Marker marker;
+     TextView contentDesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -17,7 +17,6 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,13 +28,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.behere.register.RegisterFirstStep;
 import com.example.behere.utils.ApiUsage;
+import com.example.behere.utils.VolleyCallback;
 import com.facebook.CallbackManager;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
+    private String TAG = "LoginActivity";
+    private VolleyCallback mResultCallback = null;
+    private ApiUsage mVolleyService;
+
+
 
 
 
@@ -74,6 +81,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private EditText mLoginView;
     private EditText mPasswordView;
     private CallbackManager callbackManager = CallbackManager.Factory.create();
+    public static RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         // Set up the login form.
         mLoginView = findViewById(R.id.login);
         mPasswordView = findViewById(R.id.password);
+        requestQueue = Volley.newRequestQueue(this);
         populateAutoComplete();
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -108,21 +117,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             @Override
             public void onClick(View view) {
                 if (!mLoginView.getText().toString().equals("") && !mPasswordView.getText().toString().equals("")) {
-                    JSONObject result = ApiUsage.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
-                    Log.i("content", result.toString());
-                    if (!(boolean) result.get("error")) {
-                        Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
-                        try {
-                            JSONParser parser = new JSONParser();
-                            Object obj = parser.parse(result.get("user").toString());
-                            JSONObject objres = (JSONObject) parser.parse(result.get("user").toString());
-                            sharedPreferences.edit().putLong(PREFS_ID, (long) objres.get("id")).apply();
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        startActivity(mapActivity);
-                    } else
-                        Toast.makeText(getApplicationContext(), result.get("message").toString(), Toast.LENGTH_SHORT).show();
+                        prepareAuthentification();
+                        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                        mVolleyService.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
+
                 }
             }
         });
@@ -311,6 +309,31 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    void prepareAuthentification(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
+
+                        JSONParser parser = new JSONParser();
+                        Object obj = parser.parse(response.get("user").toString());
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
+                        sharedPreferences.edit().putLong(PREFS_ID, Long.parseLong(objres.get("id").toString())).apply();
+                        startActivity(mapActivity);
+                    } else
+                        Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        };
     }
 }
 

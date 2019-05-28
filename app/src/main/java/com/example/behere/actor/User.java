@@ -6,6 +6,8 @@ import java.util.List;
 
 public class User implements Serializable {
 
+    private String error;
+
     private String email;
 
     private String password;
@@ -34,6 +36,8 @@ public class User implements Serializable {
 
 
     public User(){ }
+
+
     public String getEmail() {
         return email;
     }
@@ -96,6 +100,14 @@ public class User implements Serializable {
 
     public void setCheckPassword(String checkPassword) {
         this.checkPassword = checkPassword;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     @Override
