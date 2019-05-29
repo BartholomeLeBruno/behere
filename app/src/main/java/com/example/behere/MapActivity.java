@@ -218,11 +218,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     double longitutde;
                     String description;
                     String webSiteLink;
+                    JSONObject objres;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         JSONArray res = (JSONArray) parser.parse(response.get("bar").toString());
                         for (Object unres : res) {
-                            JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                            objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                             id =  Long.parseLong(objres.get("id").toString());
                             name =  objres.get("name").toString();
                             description =  objres.get("description").toString();
@@ -232,7 +233,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             mapMarket.put(name,  new Bar(id, name, latitude, longitutde, description, webSiteLink));
                             marker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(latitude,longitutde))
-                                    .title(name.toUpperCase())
+                                    .title(name)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
                             marker.setTag(0);
                         }

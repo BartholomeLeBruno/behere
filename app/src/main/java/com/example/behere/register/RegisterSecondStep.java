@@ -35,7 +35,6 @@ public class RegisterSecondStep extends Activity {
     private ListView lvBeerType;
     Button btnRegister;
     private List<String> listBeerType = new ArrayList<>();
-    private String TAG = "RegisterSecondStep";
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private Long idUser;

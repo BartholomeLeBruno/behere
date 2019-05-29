@@ -40,9 +40,6 @@ public class RegisterFirstStep extends AppCompatActivity {
         password = findViewById(R.id.password);
         checkPassword = findViewById(R.id.checkpassword);
 
-
-
-
         Button continueStep = findViewById(R.id.continueStep);
 
         continueStep.setOnClickListener(new View.OnClickListener() {
