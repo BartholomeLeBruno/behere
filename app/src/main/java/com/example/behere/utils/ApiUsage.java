@@ -29,10 +29,9 @@ public class ApiUsage {
         mContext = context;
     }
 
-    public  void authentificate(String email, String password)
+    public void authentificate(String email, String password)
     {
         try {
-            RequestQueue queue = Volley.newRequestQueue(mContext);
             JSONObject params = new JSONObject();
             params.put("email", email);
             params.put("password", password);
@@ -61,7 +60,7 @@ public class ApiUsage {
                     return headers;
                 }
             };
-            queue.add(jsonObjectRequest);
+            CacheContainer.getQueue().add(jsonObjectRequest);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -72,7 +71,6 @@ public class ApiUsage {
     public void createAccount(User user)
     {
         try {
-            RequestQueue queue = Volley.newRequestQueue(mContext);
             JSONObject params = new JSONObject();
             params.put("email", user.getEmail());
             params.put("name", user.getName());
@@ -104,7 +102,7 @@ public class ApiUsage {
                     return headers;
                 }
             };
-            queue.add(jsonObjectRequest);
+            CacheContainer.getQueue().add(jsonObjectRequest);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -114,7 +112,6 @@ public class ApiUsage {
     public void getUser(long idUser)
     {
         try {
-            RequestQueue queue = Volley.newRequestQueue(mContext);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, PATH_API+"users/"+idUser, null,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -138,7 +135,7 @@ public class ApiUsage {
                     return headers;
                 }
             };
-            queue.add(jsonObjectRequest);
+            CacheContainer.getQueue().add(jsonObjectRequest);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -181,7 +178,6 @@ public class ApiUsage {
     public void getAllBar()
     {
         try {
-            RequestQueue queue = Volley.newRequestQueue(mContext);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, PATH_API+"bars", null,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -206,7 +202,7 @@ public class ApiUsage {
                     return headers;
                 }
             };
-            queue.add(jsonObjectRequest);
+            CacheContainer.getQueue().add(jsonObjectRequest);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -216,7 +212,6 @@ public class ApiUsage {
     public void addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String acces_token)
     {
         try {
-            RequestQueue queue = Volley.newRequestQueue(mContext);
             JSONObject params = new JSONObject();
             params.put("typeOfBeer_id", typeBeer_ID);
 
@@ -246,7 +241,7 @@ public class ApiUsage {
                     return headers;
                 }
             };
-            queue.add(jsonObjectRequest);
+            CacheContainer.getQueue().add(jsonObjectRequest);
         }catch (Exception e)
         {
             throw new RuntimeException(e);

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -44,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.behere.utils.CacheContainer.initializeQueue;
+
 public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -69,6 +70,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         super.onCreate(savedInstanceState);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        initializeQueue();
         // Drawer navigation
         mDrawerLayout = findViewById(R.id.drawer_layout);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
@@ -212,8 +214,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 try {
                     long id;
                     String name;
-                    Double latitude;
-                    Double longitutde;
+                    double latitude;
+                    double longitutde;
                     String description;
                     String webSiteLink;
                     if (!(boolean) response.get("error")) {
@@ -230,7 +232,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             mapMarket.put(name,  new Bar(id, name, latitude, longitutde, description, webSiteLink));
                             marker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(latitude,longitutde))
-                                    .title(name)
+                                    .title(name.toUpperCase())
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
                             marker.setTag(0);
                         }
@@ -238,7 +240,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            };
+            }
         };
     }
 }

@@ -9,6 +9,7 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="400dp"
+        android:contentDescription="@string/app_name"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:src="@drawable/splashscreen"

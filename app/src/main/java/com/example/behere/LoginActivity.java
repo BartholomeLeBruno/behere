@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.example.behere.utils.CacheContainer.initializeQueue;
 
 /**
  * A login screen that offers login via email/password.
@@ -89,6 +90,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
         // Set up the login form.
+        initializeQueue();
         mLoginView = findViewById(R.id.login);
         mPasswordView = findViewById(R.id.password);
         requestQueue = Volley.newRequestQueue(this);
@@ -271,7 +273,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;

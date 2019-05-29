@@ -11,8 +11,8 @@ import com.example.behere.utils.ApiUsage;
 import com.example.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.json.simple.parser.JSONParser;
+
+import static com.example.behere.utils.CacheContainer.initializeQueue;
 
 public class SplashScreen extends Activity {
 
@@ -29,7 +29,7 @@ public class SplashScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-
+        initializeQueue();
 
         new Handler().postDelayed(new Runnable()
         {
@@ -64,9 +64,6 @@ public class SplashScreen extends Activity {
                     if (!(boolean) response.get("error")) {
                         try {
                             Intent mapActivity = new Intent(SplashScreen.this, MapActivity.class);
-                            JSONParser parser = new JSONParser();
-                            Object obj = parser.parse(response.get("user").toString());
-                            JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                             mapActivity.putExtra("userID", sharedPreferences.getLong(PREFS_ID, 0));
                             startActivity(mapActivity);
                         } catch (Exception e) {
