@@ -20,6 +20,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity android:name=".MarketProfilActivity" />
+        <activity android:name=".DefaultProfileActivity" />
         <activity android:name=".FooterActivity" />
         <activity android:name=".register.RegisterSecondStep" />
         <activity android:name=".register.RegisterFirstStep" />

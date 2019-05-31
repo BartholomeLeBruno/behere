@@ -21,7 +21,7 @@ public class MypublicationRecyclerViewAdapter extends RecyclerView.Adapter<Mypub
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MypublicationRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+     MypublicationRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -57,16 +57,16 @@ public class MypublicationRecyclerViewAdapter extends RecyclerView.Adapter<Mypub
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+         final View mView;
+         final TextView mIdView;
+         final TextView mContentView;
+         DummyItem mItem;
 
-        public ViewHolder(View view) {
+         ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = view.findViewById(R.id.item_number);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

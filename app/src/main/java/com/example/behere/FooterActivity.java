@@ -1,5 +1,6 @@
 package com.example.behere;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +17,11 @@ public class FooterActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText("Home");
+                case R.id.navigation_profile:
+                    mTextMessage.setText("My Profile");
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText("My Profile");
+                    mTextMessage.setText("Dashboard");
                     return true;
                 case R.id.disconnected:
                     mTextMessage.setText("Disconnect");

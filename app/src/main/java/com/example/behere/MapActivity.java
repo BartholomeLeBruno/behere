@@ -3,6 +3,7 @@ package com.example.behere;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.example.behere.actor.Bar;
 import com.example.behere.actor.Market;
 import com.example.behere.utils.ApiUsage;
 import com.example.behere.utils.VolleyCallback;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -37,7 +39,7 @@ import java.util.Map;
 
 import static com.example.behere.utils.CacheContainer.initializeQueue;
 
-public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,OnMapReadyCallback, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
     private static final int REQUEST_CODE = 1234;
@@ -78,8 +80,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //setSupportActionBar(toolbar);
-       // actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -124,6 +124,24 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         mMap.setOnMarkerClickListener(this);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+        mMap.clear();
+
+        MarkerOptions mp = new MarkerOptions();
+
+        mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
+
+        mp.title("my position");
+
+        mMap.addMarker(mp);
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(location.getLatitude(), location.getLongitude()), 16));
+
+    }
+
 
     /** Called when the user clicks a marker. */
     @Override
@@ -155,9 +173,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 sharedPreferences.edit().remove(PREFS_ID).apply();
                 startActivity(intent);
                 return true;
-            case R.id.navigation_home:
-                Intent intentHome = new Intent(MapActivity.this, MapActivity.class);
-                startActivity(intentHome);
+            case R.id.navigation_profile:
+                Intent intentProfile = new Intent(MapActivity.this, DefaultProfileActivity.class);
+                startActivity(intentProfile);
                 return true;
         }
         return super.onOptionsItemSelected(item);
