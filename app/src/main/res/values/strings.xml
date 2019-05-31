@@ -22,5 +22,13 @@
     <string name="password_champ">Password</string>
     <string name="checkPassword_champ">CheckPassword</string>
     <string name="continue_champ">continue</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_testvoila">testvoila</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_test_tab">testTab</string>
 
 </resources>

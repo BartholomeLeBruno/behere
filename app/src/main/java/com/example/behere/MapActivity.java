@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -24,11 +23,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.GeoApiContext.Builder;
-import com.google.maps.android.PolyUtil;
-import com.google.maps.model.DirectionsResult;
 
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
@@ -39,9 +33,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.behere.utils.CacheContainer.initializeQueue;
 
@@ -55,11 +47,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     Dialog match_text_dialog;
     ArrayList<String> matches_text;
     private DrawerLayout mDrawerLayout;
-    Marker depart;
-    Marker arrivee;
-    Polyline direction;
     Marker marker;
-    private DirectionsResult result;
     private HashMap<String,Market> mapMarket = new HashMap<>();
     private String TAG = "MapActivity";
     VolleyCallback mResultCallback = null;
@@ -108,37 +96,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             match_text_dialog.show();
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private Builder getBuilder() {
-        Builder geoApiContext = new Builder();
-        return geoApiContext.queryRateLimit(3).apiKey("AIzaSyBuAnhRy95K8XSSehEciHxGTbrlrAtQLj8").connectTimeout(1, TimeUnit.SECONDS)
-                .readTimeout(1, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.SECONDS);
-    }
-
-    private void addMarkersToMap(DirectionsResult results ) {
-        depart = mMap.addMarker(new MarkerOptions().position(
-                new LatLng(results.routes[0].legs[0].startLocation.lat,
-                        results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
-
-        arrivee = mMap.addMarker(new MarkerOptions().position(
-                new LatLng(results.routes[0].legs[0].endLocation.lat,
-                        results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].endAddress).snippet(getEndLocationTitle(results)));
-
-        Log.d("duree:", result.routes[0].legs[0].duration.humanReadable);
-
-        //Search search = dataSource.createSearch(startPoint.getText().toString(), endPoint.getText().toString(), result.routes[0].legs[0].duration.humanReadable);
-
-    }
-
-    private String getEndLocationTitle(DirectionsResult results) {
-        return  "Time :"+ results.routes[0].legs[0].duration.humanReadable +
-                " Distance :" + results.routes[0].legs[0].distance.humanReadable;
-    }
-
-    private void addPolyline(DirectionsResult results) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        direction =  mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
     }
 
     /**

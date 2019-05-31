@@ -1,10 +1,21 @@
 package com.example.behere;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.behere.actor.Market;
+import com.example.behere.utils.ApiUsage;
+import com.example.behere.utils.VolleyCallback;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +33,12 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
      GoogleMap mMap;
      Marker marker;
      TextView contentDesc;
+    private VolleyCallback mResultCallback = null;
+    private ApiUsage mVolleyService;
+    private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
+    private static final String PREFS = "PREFS";
+    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +51,6 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         Market market =  (Market) getIntent().getExtras().get("market");
 
         tvNameBar.setText(market.getName());
-
         contentDesc.setText(market.getDescription());
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -69,12 +85,36 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
     /** Called when the user clicks a marker. */
     @Override
     public boolean onMarkerClick(final Marker marker) {
-
-        // Retrieve the data from the marker.
-
-        // Return false to indicate that we have not consumed the event and that we wish
-        // for the default behavior to occur (which is for the camera to move such that the
-        // marker is centered and for the marker's info window to open, if it has one).
         return false;
+    }
+
+    public void onButtonShowPopupWindowClick(View view) {
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.activity_comment, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
+        EditText tvComment =  popupView.findViewById(R.id.tvComment);
+        btnSendComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+                Market market =  (Market) getIntent().getExtras().get("market");
+                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                mVolleyService.addCommentsToBar(tvComment.getText().toString(),(int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
+                popupWindow.dismiss();
+            }
+        });
     }
 }

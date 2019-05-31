@@ -71,6 +71,28 @@ public class ApiUsage {
         }
     }
 
+    public void addCommentsToBar(String text, int bar_id, String acces_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("text", text);
+            params.put("bar_id", bar_id);
+            postDataWithAccessToken(params, PATH_API+"commentsBars/create", acces_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllCommentsBar(int bar_id, int user_id)
+    {
+        try {
+            getData(PATH_API+"commentsBars/?bar_id= " + bar_id + "&user_id=" + user_id + "");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void getUser(long idUser)
     {

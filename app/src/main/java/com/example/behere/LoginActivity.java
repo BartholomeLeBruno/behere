@@ -56,8 +56,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private static final int REQUEST_READ_CONTACTS = 0;
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
+    private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
     private SharedPreferences sharedPreferences;
-    private String TAG = "LoginActivity";
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
 
@@ -325,6 +325,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         Object obj = parser.parse(response.get("user").toString());
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         sharedPreferences.edit().putLong(PREFS_ID, Long.parseLong(objres.get("id").toString())).apply();
+                        sharedPreferences.edit().putString(PREFS_ACCESS_TOKEN, objres.get("token").toString()).apply();
                         startActivity(mapActivity);
                     } else
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
