@@ -5,9 +5,8 @@ import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-
 import com.example.behere.fragment.SectionsAdapterProfile;
+
 
 public class DefaultProfileActivity extends AppCompatActivity {
 
@@ -16,7 +15,6 @@ public class DefaultProfileActivity extends AppCompatActivity {
      TabItem wall;
      SectionsAdapterProfile mSectionsPagerAdapter;
      ViewPager mViewPager;
-     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +23,6 @@ public class DefaultProfileActivity extends AppCompatActivity {
 
         edit = findViewById(R.id.tabEdit);
         wall = findViewById(R.id.tabWall);
-        recyclerView = findViewById(R.id.list);
 
         mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
 
@@ -35,6 +32,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
 
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
+
     }
 
 
