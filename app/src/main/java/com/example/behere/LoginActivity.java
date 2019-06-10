@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.example.behere.register.RegisterFirstStep;
 import com.example.behere.utils.ApiUsage;
@@ -329,12 +330,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         startActivity(mapActivity);
                     } else
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                        Intent loginActivity = new Intent(LoginActivity.this, MapActivity.class);
+                        startActivity(loginActivity);
                 }
                 catch (Exception e)
                 {
                     throw new RuntimeException(e);
                 }
-
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
             }
         };
     }

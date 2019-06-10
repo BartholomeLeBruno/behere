@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.android.volley.VolleyError;
 import com.example.behere.utils.ApiUsage;
 import com.example.behere.utils.VolleyCallback;
 
@@ -49,6 +50,8 @@ public class SplashScreen extends Activity {
                 }
                 catch (Exception e)
                 {
+                    Intent loginActivity = new Intent(SplashScreen.this, LoginActivity.class);
+                    startActivity(loginActivity);
                     Log.e("error splashScreen",e.getMessage());
                 }
             }
@@ -76,9 +79,15 @@ public class SplashScreen extends Activity {
                 }
                 catch (Exception e)
                 {
+
                     throw new RuntimeException(e);
                 }
 
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Intent loginActivity = new Intent(SplashScreen.this, LoginActivity.class);
+                startActivity(loginActivity);
             }
         };
     }

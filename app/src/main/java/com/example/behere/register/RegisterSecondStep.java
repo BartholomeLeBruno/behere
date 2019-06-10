@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.example.behere.LoginActivity;
 import com.example.behere.R;
 import com.example.behere.actor.User;
@@ -23,6 +24,7 @@ import com.example.behere.utils.ApiUsage;
 import com.example.behere.utils.Mail;
 import com.example.behere.utils.VolleyCallback;
 
+import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -97,7 +99,7 @@ public class RegisterSecondStep extends Activity {
                         JSONParser parser = new JSONParser();
                         JSONArray res = (JSONArray) parser.parse(response.get("typeOfBeer").toString());
                         for (Object unres : res) {
-                            JSONObject objres = (JSONObject) parser.parse(unres.toString());
+                            JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                             listBeerType.add((String) objres.get("name"));
                         }
                         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, listBeerType) {
@@ -125,6 +127,8 @@ public class RegisterSecondStep extends Activity {
                 }
 
             }
+            @Override
+            public void onError(VolleyError error) { }
         };
     }
     void prepareCreateAccount(){
@@ -135,7 +139,7 @@ public class RegisterSecondStep extends Activity {
                     if (!(boolean) response.get("error")) {
                         User newUser = (User) getIntent().getExtras().get("User");
                         JSONObject acessUser = (JSONObject) response.get("user");
-                        idUser = (Long) acessUser.get("id");
+                        idUser = (long) acessUser.get("id");
                         prepareAuthentification();
                         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                         mVolleyService.authentificate(newUser.getEmail(),newUser.getPassword());
@@ -150,6 +154,8 @@ public class RegisterSecondStep extends Activity {
                 }
 
             }
+            @Override
+            public void onError(VolleyError error) { }
         };
     }
     void prepareAuthentification() {
@@ -178,6 +184,8 @@ public class RegisterSecondStep extends Activity {
                 }
 
             }
+            @Override
+            public void onError(VolleyError error) { }
         };
     }
 }

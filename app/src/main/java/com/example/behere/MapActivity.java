@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.android.volley.VolleyError;
 import com.example.behere.actor.Bar;
 import com.example.behere.actor.Market;
 import com.example.behere.utils.ApiUsage;
@@ -170,7 +172,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         switch (item.getItemId()) {
             case R.id.disconnected:
                 Intent intent = new Intent(MapActivity.this, LoginActivity.class);
-                sharedPreferences.edit().remove(PREFS_ID).apply();
+                sharedPreferences.edit().clear().apply();
                 startActivity(intent);
                 return true;
             case R.id.navigation_profile:
@@ -217,6 +219,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     throw new RuntimeException(e);
                 }
             }
+            @Override
+            public void onError(VolleyError error) { }
         };
     }
 }

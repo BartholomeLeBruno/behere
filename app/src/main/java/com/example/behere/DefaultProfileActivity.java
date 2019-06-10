@@ -10,11 +10,11 @@ import com.example.behere.fragment.SectionsAdapterProfile;
 
 public class DefaultProfileActivity extends AppCompatActivity {
 
-     TabLayout tabLayout;
-     TabItem edit;
-     TabItem wall;
-     SectionsAdapterProfile mSectionsPagerAdapter;
-     ViewPager mViewPager;
+    TabLayout tabLayout;
+    TabItem edit;
+    TabItem wall;
+    SectionsAdapterProfile mSectionsPagerAdapter;
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

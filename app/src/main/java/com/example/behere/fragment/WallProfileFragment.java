@@ -1,5 +1,6 @@
 package com.example.behere.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,9 @@ public class WallProfileFragment extends Fragment {
 
     ArrayList<Publication> publications;
     RecyclerView recyclerView;
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_ID = "USER_ID";
+    private SharedPreferences sharedPreferences;
 
 
     @Nullable
@@ -40,6 +44,12 @@ public class WallProfileFragment extends Fragment {
 
         return rootView;
     }
+
+    /*ArrayList<Publication> getAllPublicationsOfActualUsers()
+    {
+        ApiUsage apiUsage = new ApiUsage()
+        return null;
+    }*/
 
 
 }

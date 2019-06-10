@@ -94,10 +94,42 @@ public class ApiUsage {
         }
     }
 
+    public void getAllCommentsBeer(int beer_id, int user_id)
+    {
+        try {
+            getData(PATH_API+"commentsBeers/?beer_id= " + beer_id + "&user_id=" + user_id + "");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllCommentsBrewery(int brewery_id, int user_id)
+    {
+        try {
+            getData(PATH_API+"commentsBrewerys/?brewery_id= " + brewery_id + "&user_id=" + user_id + "");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
     public void getUser(long idUser)
     {
         try {
             getData(PATH_API+"users/" + idUser);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllComments(long idUser)
+    {
+        try {
+            getData(PATH_API+"/generals/commentsUser/" + idUser);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -139,7 +171,11 @@ public class ApiUsage {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
-                        Log.d("Error.Response", error.getMessage());
+                        Log.d("Error.Response", " " + error.getMessage());
+                        error.printStackTrace();
+                        if(mResultCallback != null)
+                            mResultCallback.onError(error);
+
                     }
                 }) {
             @Override
@@ -166,8 +202,9 @@ public class ApiUsage {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
-                        Log.d("Error.Response", error.getMessage());
-                        error.printStackTrace();
+                        Log.d("Error.Response", error.getMessage() +" ");
+                        if(mResultCallback != null)
+                            mResultCallback.onError(error);
                     }
                 }) {
             @Override
@@ -194,8 +231,9 @@ public class ApiUsage {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
-                        Log.d("Error.Response", error.getMessage());
-                        error.printStackTrace();
+                        Log.d("Error.Response", error.getMessage() +" ");
+                        if(mResultCallback != null)
+                            mResultCallback.onError(error);
                     }
                 }) {
             @Override

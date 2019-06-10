@@ -4,18 +4,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/btnPublication"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="PUBLIER"
-            android:textColor="#FFFFFF"
-            android:background="#3ACCE1"
-            app:layout_constraintBottom_toTopOf="@id/listPublication"
-            app:layout_constraintEnd_toEndOf="@+id/listPublication"
-            app:layout_constraintStart_toStartOf="@+id/listPublication" />
+        android:id="@+id/constraintLayout"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listPublication"
@@ -23,11 +13,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layoutManager="LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="@id/btnPublication"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/fragment_publication" />
 
     </android.support.constraint.ConstraintLayout>
