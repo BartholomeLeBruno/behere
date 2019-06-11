@@ -13,7 +13,7 @@
         tools:background="#AAA" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/Publicationname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/avatar"
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="202dp"
-        android:layout_toEndOf="@id/name"
+        android:layout_toEndOf="@id/Publicationname"
         android:text="ADD" />
 
 </RelativeLayout>

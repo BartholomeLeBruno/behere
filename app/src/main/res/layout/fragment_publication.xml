@@ -15,7 +15,7 @@
         tools:background="#AAA" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/Publicationname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/avatar"
@@ -27,7 +27,7 @@
         tools:text="Pseudo" />
 
     <TextView
-        android:id="@+id/type"
+        android:id="@+id/PublicationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/avatar"

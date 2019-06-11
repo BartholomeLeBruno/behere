@@ -34,7 +34,7 @@ public class RegisterFirstStep extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_register_first_step);
 
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.Publicationname);
         surname = findViewById(R.id.surname);
         email = findViewById(R.id.email);
         btnBirthDate = findViewById(R.id.btnBirthDate);
