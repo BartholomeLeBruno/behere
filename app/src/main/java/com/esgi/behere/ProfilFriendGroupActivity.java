@@ -13,21 +13,20 @@ import android.view.MenuItem;
 
 import com.esgi.behere.fragment.SectionsAdapterProfile;
 
+public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
-public class DefaultProfileActivity extends AppCompatActivity {
-
+    private SharedPreferences sharedPreferences;
+    private static final String PREFS = "PREFS";
     TabLayout tabLayout;
     TabItem edit;
     TabItem wall;
     SectionsAdapterProfile mSectionsPagerAdapter;
     ViewPager mViewPager;
-    private SharedPreferences sharedPreferences;
-    private static final String PREFS = "PREFS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_default_profile);
+        setContentView(R.layout.activity_other_profile_groups);
 
         edit = findViewById(R.id.tabInfo);
         wall = findViewById(R.id.tabWall);
@@ -69,10 +68,11 @@ public class DefaultProfileActivity extends AppCompatActivity {
                 next = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(next);
                 return true;
+            case R.id.navigation_myprofile:
+                next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
+                startActivity(next);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }
