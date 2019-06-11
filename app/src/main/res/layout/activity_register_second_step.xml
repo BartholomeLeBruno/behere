@@ -73,11 +73,11 @@
         <ListView
             android:id="@+id/lvBeerType"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:choiceMode="multipleChoice"
             android:clickable="true"
-            android:dividerHeight="5dp">
+            android:dividerHeight="10.0sp">
 
         </ListView>
     </ScrollView>

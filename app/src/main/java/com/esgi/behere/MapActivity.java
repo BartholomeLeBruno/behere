@@ -169,15 +169,16 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent next;
         switch (item.getItemId()) {
             case R.id.disconnected:
-                Intent intent = new Intent(MapActivity.this, LoginActivity.class);
+                next = new Intent(MapActivity.this, LoginActivity.class);
                 sharedPreferences.edit().clear().apply();
-                startActivity(intent);
+                startActivity(next);
                 return true;
-            case R.id.navigation_profile:
-                Intent intentProfile = new Intent(MapActivity.this, DefaultProfileActivity.class);
-                startActivity(intentProfile);
+            case R.id.navigation_myprofile:
+                next = new Intent(MapActivity.this, DefaultProfileActivity.class);
+                startActivity(next);
                 return true;
         }
         return super.onOptionsItemSelected(item);

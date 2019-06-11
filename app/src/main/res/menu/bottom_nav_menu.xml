@@ -2,14 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_profile"
+        android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="My Profile" />
+        android:title="@string/Home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_myprofile"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="My Profile" />
+        android:title="@string/Profile" />
+
+    <item
+        android:id="@+id/navigation_mygroups"
+        android:icon="@drawable/ic_exit_24dp"
+        android:title="Groups" />
+
+    <item
+        android:id="@+id/navigation_lexical"
+        android:icon="@drawable/ic_exit_24dp"
+        android:title="Lexical" />
 
     <item
         android:id="@+id/disconnected"
