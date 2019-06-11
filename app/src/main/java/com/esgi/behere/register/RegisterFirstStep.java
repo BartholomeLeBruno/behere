@@ -83,6 +83,7 @@ public class RegisterFirstStep extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
+            month = month + 1;
             ((Button) getActivity().findViewById(R.id.btnBirthDate)).setText(year + "-" + month + "-" + day);
 
         }
