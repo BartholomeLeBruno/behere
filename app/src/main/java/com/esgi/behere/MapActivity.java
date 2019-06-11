@@ -221,6 +221,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 next = new Intent(MapActivity.this, DefaultProfileActivity.class);
                 startActivity(next);
                 return true;
+            case R.id.navigation_mygroups:
+                next = new Intent(MapActivity.this, MyGroupActivity.class);
+                startActivity(next);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

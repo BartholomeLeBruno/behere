@@ -1,11 +1,15 @@
 package com.esgi.behere;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,6 +63,15 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        BottomNavigationView navigationView = findViewById(R.id.footer);
+        navigationView.setOnNavigationItemReselectedListener(
+                new BottomNavigationView.OnNavigationItemReselectedListener() {
+                    @Override
+                    public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
+                        onOptionsItemSelected(menuItem);
+                    }
+                }
+        );
 
     }
 
@@ -144,5 +157,29 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             @Override
             public void onError(VolleyError error) { }
         };
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent next;
+        switch (item.getItemId()) {
+            case R.id.disconnected:
+                next = new Intent(getApplicationContext(), LoginActivity.class);
+                sharedPreferences.edit().clear().apply();
+                startActivity(next);
+                return true;
+            case R.id.navigation_mygroups:
+                next = new Intent(getApplicationContext(), MyGroupActivity.class);
+                startActivity(next);
+                return true;
+            case R.id.navigation_home:
+                next = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(next);
+                return true;
+            case R.id.navigation_myprofile:
+                next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
+                startActivity(next);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

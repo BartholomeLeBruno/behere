@@ -3,44 +3,24 @@ package com.esgi.behere;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.esgi.behere.fragment.SectionsAdapterProfile;
 
+public class MyGroupActivity extends AppCompatActivity {
 
-public class DefaultProfileActivity extends AppCompatActivity {
-
-    TabLayout tabLayout;
-    TabItem edit;
-    TabItem wall;
-    SectionsAdapterProfile mSectionsPagerAdapter;
-    ViewPager mViewPager;
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_default_profile);
-
-        edit = findViewById(R.id.tabEdit);
-        wall = findViewById(R.id.tabWall);
+        setContentView(R.layout.activity_list_groups);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-
-        mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager =  findViewById(R.id.activity_main_viewpager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        tabLayout =  findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(mViewPager);
         BottomNavigationView navigationView = findViewById(R.id.footer);
         navigationView.setOnNavigationItemReselectedListener(
                 new BottomNavigationView.OnNavigationItemReselectedListener() {
@@ -57,22 +37,19 @@ public class DefaultProfileActivity extends AppCompatActivity {
         Intent next;
         switch (item.getItemId()) {
             case R.id.disconnected:
-                next = new Intent(getApplicationContext(), LoginActivity.class);
+                next = new Intent(MyGroupActivity.this, LoginActivity.class);
                 sharedPreferences.edit().clear().apply();
                 startActivity(next);
                 return true;
-            case R.id.navigation_mygroups:
-                next = new Intent(getApplicationContext(), MyGroupActivity.class);
+            case R.id.navigation_myprofile:
+                next = new Intent(MyGroupActivity.this, DefaultProfileActivity.class);
                 startActivity(next);
                 return true;
             case R.id.navigation_home:
-                next = new Intent(getApplicationContext(), MapActivity.class);
+                next = new Intent(MyGroupActivity.this, MapActivity.class);
                 startActivity(next);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

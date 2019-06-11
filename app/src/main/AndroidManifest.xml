@@ -24,6 +24,7 @@
         <activity android:name=".FooterActivity" />
         <activity android:name=".register.RegisterSecondStep" />
         <activity android:name=".register.RegisterFirstStep" />
+        <activity android:name=".MyGroupActivity"/>
         <activity android:name=".MapActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
