@@ -40,10 +40,10 @@
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:drawable/dialog_holo_light_frame"
                 android:autofillHints="@string/email_champ"
                 android:hint="@string/email_champ"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/common_google_signin_btn_text_dark_default"
                 android:textColorHint="#F6F6F6"
                  />
         </android.support.design.widget.TextInputLayout>
@@ -59,11 +59,11 @@
                 android:layout_height="match_parent"
                 android:hint="@string/password_champ"
                 android:autofillHints="@string/password_champ"
+                android:background="@android:drawable/dialog_holo_light_frame"
                 android:imeActionId="6"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
-                android:textColor="@color/browser_actions_bg_grey"
                 android:textColorHint="#F6F6F6" />
         </android.support.design.widget.TextInputLayout>
 
