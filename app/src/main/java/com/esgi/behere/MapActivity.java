@@ -1,18 +1,23 @@
 package com.esgi.behere;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Bar;
@@ -56,6 +61,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private String TAG = "MapActivity";
     VolleyCallback mResultCallback = null;
     ApiUsage mVolleyService;
+    LocationManager locationManager;
+    Criteria criteria;
+    Location location;
+    double lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +133,28 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             }
         }
         mMap.setOnMarkerClickListener(this);
+
+        /*try{
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            criteria = new Criteria();
+            criteria.setAccuracy( Criteria.ACCURACY_COARSE );
+            String provider = locationManager.getBestProvider( criteria, true );
+
+            if ( provider == null ) {
+                Log.e( TAG, "No location provider found!" );
+                return;
+            }
+
+            location = locationManager.getLastKnownLocation(provider);
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+            LatLng latLng = new LatLng(lat,lng);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        }catch (SecurityException e)
+        {
+            Toast.makeText(getApplicationContext(), "Error to get current location", Toast.LENGTH_SHORT).show();
+        }*/
+
     }
 
     @Override

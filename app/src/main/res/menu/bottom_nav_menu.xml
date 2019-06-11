@@ -8,22 +8,22 @@
 
     <item
         android:id="@+id/navigation_myprofile"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_person_black_24dp"
         android:title="@string/Profile" />
 
     <item
         android:id="@+id/navigation_mygroups"
-        android:icon="@drawable/ic_exit_24dp"
-        android:title="Groups" />
+        android:icon="@drawable/ic_group_black_24dp"
+        android:title="GROUPS" />
 
     <item
         android:id="@+id/navigation_lexical"
-        android:icon="@drawable/ic_exit_24dp"
-        android:title="Lexical" />
+        android:icon="@drawable/ic_grid_on_black_24dp"
+        android:title="LEXICAL" />
 
     <item
         android:id="@+id/disconnected"
         android:icon="@drawable/ic_exit_24dp"
-        android:title="Disconnect" />
+        android:title="EXIT" />
 
 </menu>
