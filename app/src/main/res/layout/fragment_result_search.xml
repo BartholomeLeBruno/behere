@@ -4,25 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/dialog_holo_light_frame"
-    android:backgroundTint="#353A50"
     android:padding="10dp">
 
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:contentDescription="empty"
         tools:background="#AAA" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/avatar"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="12dp"
-        android:layout_toEndOf="@+id/avatar"
-        android:textColor="@android:color/white"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/avatar"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
         tools:text="Pseudo" />
 
@@ -30,9 +27,9 @@
         android:id="@+id/type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/avatar"
-        android:layout_marginStart="17dp"
-        android:textColor="@android:color/white"
-        tools:text="Texte de mon tweet" />
+        android:layout_below="@+id/pseudo"
+        android:layout_alignLeft="@+id/pseudo"
+        android:textColor="@android:color/black"
+        tools:text="type" />
 
 </RelativeLayout>

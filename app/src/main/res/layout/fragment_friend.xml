@@ -2,12 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="@drawable/voila"
-    android:padding="10dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingRight="16dp">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="empty"
+        tools:background="#AAA" />
 
     <TextView
         android:id="@+id/name"
@@ -17,9 +20,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="13dp"
         android:layout_toEndOf="@+id/avatar"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
-        tools:text="Name" />
+        tools:text="Pseudo" />
 
     <Button
         android:id="@+id/btnADD"
