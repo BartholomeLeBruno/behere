@@ -1,20 +1,23 @@
 package com.esgi.behere;
 
+import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Criteria;
+import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -24,6 +27,8 @@ import com.esgi.behere.actor.Bar;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.VolleyCallback;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,6 +37,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
@@ -53,6 +60,14 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private static final float DEFAULT_ZOOM = 15f;
+    private Boolean mLocationPermissionsGranted = false;
+    FusedLocationProviderClient mFusedLocationProviderClient;
+    LatLng latLng;
+    FloatingActionButton btnRecenter;
     Dialog match_text_dialog;
     ArrayList<String> matches_text;
     private DrawerLayout mDrawerLayout;
@@ -61,10 +76,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private String TAG = "MapActivity";
     VolleyCallback mResultCallback = null;
     ApiUsage mVolleyService;
-    LocationManager locationManager;
-    Criteria criteria;
-    Location location;
-    double lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +85,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         initializeQueue();
         // Drawer navigation
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        btnRecenter = findViewById(R.id.btnCenter);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footer);
         navigationView.setOnNavigationItemReselectedListener(
@@ -85,12 +97,19 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                  }
              }
         );
+        btnRecenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(latLng != null)
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                }
+            }
+        });
         prepareGetAllBar();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getAllBar();
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        getLocationPermission();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -121,41 +140,32 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if(!mapMarket.isEmpty())
-        {
-            for (Map.Entry<String,Market> market: mapMarket.entrySet()) {
+
+        if (!mapMarket.isEmpty()) {
+            for (Map.Entry<String, Market> market : mapMarket.entrySet()) {
                 LatLng latLng = new LatLng(market.getValue().getLatitude(), market.getValue().getLongitutde());
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .title(market.getKey())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
                 marker.setTag(0);
             }
         }
         mMap.setOnMarkerClickListener(this);
+        if (mLocationPermissionsGranted) {
+            getDeviceLocation();
 
-        /*try{
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            criteria = new Criteria();
-            criteria.setAccuracy( Criteria.ACCURACY_COARSE );
-            String provider = locationManager.getBestProvider( criteria, true );
-
-            if ( provider == null ) {
-                Log.e( TAG, "No location provider found!" );
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            location = locationManager.getLastKnownLocation(provider);
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-            LatLng latLng = new LatLng(lat,lng);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-        }catch (SecurityException e)
-        {
-            Toast.makeText(getApplicationContext(), "Error to get current location", Toast.LENGTH_SHORT).show();
-        }*/
-
+        }
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -254,5 +264,73 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             @Override
             public void onError(VolleyError error) { }
         };
+    }
+
+    private void getDeviceLocation(){
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        try{
+            if(mLocationPermissionsGranted){
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()){
+                            Location location = (Location) task.getResult();
+                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                            marker = mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_current_location)));
+                        }else{
+                            Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        mLocationPermissionsGranted = false;
+        if(grantResults.length > 0){
+            for (int grant: grantResults) {
+                if(grant != PackageManager.PERMISSION_GRANTED){
+                    mLocationPermissionsGranted = false;
+                    return;
+                }
+            }
+            mLocationPermissionsGranted = true;
+            initMap();
+        }
+    }
+
+    private void initMap(){
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(MapActivity.this);
+    }
+
+    private void getLocationPermission(){
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionsGranted = true;
+                initMap();
+            }else{
+                ActivityCompat.requestPermissions(this,
+                        permissions,
+                        LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }else{
+            ActivityCompat.requestPermissions(this,
+                    permissions,
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
     }
 }
