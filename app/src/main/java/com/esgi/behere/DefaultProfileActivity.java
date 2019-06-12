@@ -42,6 +42,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
         BottomNavigationView navigationView = findViewById(R.id.footer);
+        navigationView.getMenu().getItem(1).setChecked(true);
         navigationView.setOnNavigationItemReselectedListener(
                 new BottomNavigationView.OnNavigationItemReselectedListener() {
                     @Override
@@ -59,20 +60,33 @@ public class DefaultProfileActivity extends AppCompatActivity {
             case R.id.disconnected:
                 next = new Intent(getApplicationContext(), LoginActivity.class);
                 sharedPreferences.edit().clear().apply();
+                next.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(next);
+                finish();
                 return true;
             case R.id.navigation_mygroups:
                 next = new Intent(getApplicationContext(), MyGroupActivity.class);
+                next.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(next);
+                finish();
                 return true;
             case R.id.navigation_home:
                 next = new Intent(getApplicationContext(), MapActivity.class);
+                next.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(next);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent next;
+        next = new Intent(getApplicationContext(), MapActivity.class);
+        startActivity(next);
+        finish();
+    }
 
 
 }

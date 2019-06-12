@@ -24,6 +24,7 @@
         <activity android:name=".FooterActivity" />
         <activity android:name=".register.RegisterSecondStep" />
         <activity android:name=".register.RegisterFirstStep" />
+        <activity android:name=".CreateGroupeActivity" />
         <activity android:name=".MyGroupActivity"/>
         <activity android:name=".ProfilFriendGroupActivity"/>
         <activity android:name=".MapActivity">

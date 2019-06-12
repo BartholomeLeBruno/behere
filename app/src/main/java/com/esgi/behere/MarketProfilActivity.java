@@ -182,4 +182,11 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent next;
+        next = new Intent(getApplicationContext(), MapActivity.class);
+        startActivity(next);
+    }
 }

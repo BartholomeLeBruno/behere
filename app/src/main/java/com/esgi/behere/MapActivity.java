@@ -88,6 +88,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         btnRecenter = findViewById(R.id.btnCenter);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footer);
+        navigationView.getMenu().setGroupCheckable(4,true,false);
+        //navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setOnNavigationItemReselectedListener(
                 new BottomNavigationView.OnNavigationItemReselectedListener() {
                  @Override
@@ -214,16 +216,18 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         Intent next;
         switch (item.getItemId()) {
             case R.id.disconnected:
-                next = new Intent(MapActivity.this, LoginActivity.class);
+                next = new Intent(getApplicationContext(), LoginActivity.class);
                 sharedPreferences.edit().clear().apply();
+                next.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(next);
+                finish();
                 return true;
             case R.id.navigation_myprofile:
-                next = new Intent(MapActivity.this, DefaultProfileActivity.class);
+                next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
                 startActivity(next);
                 return true;
             case R.id.navigation_mygroups:
-                next = new Intent(MapActivity.this, MyGroupActivity.class);
+                next = new Intent(getApplicationContext(), MyGroupActivity.class);
                 startActivity(next);
                 return true;
         }
@@ -337,5 +341,14 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+
     }
 }
