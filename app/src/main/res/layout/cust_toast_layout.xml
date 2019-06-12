@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/funRelativeLayout"
+    android:background="@android:drawable/dialog_holo_light_frame"
     android:padding="10dp">
 
     <ImageView
         android:id="@+id/funImg"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:contentDescription="empty"
-        tools:background="#AAA" />
+        android:contentDescription="empty" />
 
     <TextView
         android:id="@+id/funText"
@@ -18,18 +18,10 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/funImg"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="7dp"
         android:layout_toEndOf="@+id/funImg"
         android:textColor="@android:color/black"
-        android:textStyle="bold"
-        tools:text="Pseudo" />
-
-    <Button
-        android:id="@+id/btnADD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="202dp"
-        android:layout_toEndOf="@id/funText"
-        android:text="ADD" />
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

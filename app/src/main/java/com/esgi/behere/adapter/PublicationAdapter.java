@@ -71,7 +71,7 @@ public class PublicationAdapter extends RecyclerView.Adapter<PublicationAdapter.
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            nameTextView = itemView.findViewById(R.id.Publicationname);
+            nameTextView = itemView.findViewById(R.id.funText);
             messageButton = itemView.findViewById(R.id.PublicationText);
         }
     }

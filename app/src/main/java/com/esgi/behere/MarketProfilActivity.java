@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.VolleyCallback;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -127,11 +128,14 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             @Override
             public void onClick(View v) {
                 prepareAddCommentBar();
+                InformationMessage informationMessage = new InformationMessage();
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 Market market =  (Market) getIntent().getExtras().get("market");
                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                 Log.d("voila", tvComment.getText().toString() + "-" + market.getId() + "-" + sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(),(int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
+                informationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
+                        "We love you my love");
                 popupWindow.dismiss();
             }
         });
