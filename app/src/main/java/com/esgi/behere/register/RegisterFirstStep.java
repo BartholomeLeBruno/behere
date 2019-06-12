@@ -12,10 +12,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.esgi.behere.R;
 import com.esgi.behere.actor.User;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Calendar;
 
 public class RegisterFirstStep extends AppCompatActivity {
@@ -27,6 +30,7 @@ public class RegisterFirstStep extends AppCompatActivity {
     private EditText password;
     private EditText checkPassword;
     public User newUser = new User();
+    private int ageOfPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +50,28 @@ public class RegisterFirstStep extends AppCompatActivity {
         continueStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!name.getText().toString().equals("") && !surname.getText().toString().equals("") && !email.getText().toString().equals("") && !btnBirthDate.getText().toString().equals("")
-                && !btnBirthDate.getText().toString().toUpperCase().equals("BIRTHDATE")  && !password.getText().toString().equals("") && !checkPassword.getText().toString().equals(""))
+                if (password.getText().toString().equals(checkPassword.getText().toString()))
                 {
-                    newUser.setName(name.getText().toString());
-                    newUser.setSurname(surname.getText().toString());
-                    newUser.setEmail(email.getText().toString());
-                    newUser.setBirthDate(btnBirthDate.getText().toString());
-                    newUser.setPassword(password.getText().toString());
-                    newUser.setCheckPassword(checkPassword.getText().toString());
-                    Intent nextStep = new Intent(RegisterFirstStep.this, RegisterSecondStep.class);
-                    nextStep.putExtra("User", newUser);
-                    startActivity(nextStep);
+                    if (!name.getText().toString().equals("")
+                            && !surname.getText().toString().equals("")
+                            && !email.getText().toString().equals("")
+                            && !btnBirthDate.getText().toString().equals("")
+                            && !btnBirthDate.getText().toString().toUpperCase().equals("BIRTHDATE")
+                            && !password.getText().toString().equals("")
+                            && !checkPassword.getText().toString().equals("")) {
+                        newUser.setName(name.getText().toString());
+                        newUser.setSurname(surname.getText().toString());
+                        newUser.setEmail(email.getText().toString());
+                        newUser.setBirthDate(btnBirthDate.getText().toString());
+                        newUser.setPassword(password.getText().toString());
+                        newUser.setCheckPassword(checkPassword.getText().toString());
+                        Intent nextStep = new Intent(RegisterFirstStep.this, RegisterSecondStep.class);
+                        nextStep.putExtra("User", newUser);
+                        startActivity(nextStep);
+                    }
+            }
+                else{
+                    Toast.makeText(getApplicationContext(),"Both password have to be the same", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -84,8 +98,17 @@ public class RegisterFirstStep extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             month = month + 1;
-            ((Button) getActivity().findViewById(R.id.btnBirthDate)).setText(year + "-" + month + "-" + day);
+            if(calculateAge(year,month,day) < 18)
+                Toast.makeText(getContext(),"We Accept Minor with pickaxe but not minor with baby bottle",Toast.LENGTH_SHORT).show();
+            else
+                ((Button) getActivity().findViewById(R.id.btnBirthDate)).setText(year + "-" + month + "-" + day);
 
         }
+        public int calculateAge(int year, int month, int day) {
+            LocalDate birthDate = LocalDate.of(year, month, day);
+            return Period.between(birthDate, LocalDate.now()).getYears();
+        }
     }
-}
+    }
+
+
