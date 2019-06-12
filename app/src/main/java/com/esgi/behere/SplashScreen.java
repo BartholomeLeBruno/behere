@@ -31,7 +31,6 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         initializeQueue();
-
         new Handler().postDelayed(new Runnable()
         {
             @Override

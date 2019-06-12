@@ -160,7 +160,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            mMap.setMyLocationEnabled(true);
+
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         }
@@ -182,6 +182,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(location.getLatitude(), location.getLongitude()), 16));
+
 
     }
 
