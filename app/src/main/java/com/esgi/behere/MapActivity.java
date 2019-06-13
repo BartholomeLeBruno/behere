@@ -199,6 +199,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
             if(mapMarket.containsKey(marker.getTitle())) {
+                Log.d("voila", mapMarket.toString());
                 Market m = mapMarket.get(marker.getTitle());
                 Intent nextStep = new Intent(MapActivity.this, MarketProfilActivity.class);
                 nextStep.putExtra("market", m);

@@ -12,7 +12,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.esgi.behere.R;
 import com.esgi.behere.actor.User;
@@ -38,7 +37,7 @@ public class RegisterFirstStep extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_register_first_step);
         informationMessage = new InformationMessage();
-        name = findViewById(R.id.funText);
+        name = findViewById(R.id.pseudoPubPro);
         surname = findViewById(R.id.surname);
         email = findViewById(R.id.email);
         btnBirthDate = findViewById(R.id.btnBirthDate);

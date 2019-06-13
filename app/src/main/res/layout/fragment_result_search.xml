@@ -7,7 +7,7 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/funImg"
+        android:id="@+id/imgPubPro"
         android:layout_width="50dp"
         android:layout_height="50dp"
         tools:background="#AAA" />
@@ -16,9 +16,9 @@
         android:id="@+id/pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/funImg"
+        android:layout_alignTop="@+id/imgPubPro"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/funImg"
+        android:layout_toRightOf="@+id/imgPubPro"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         tools:text="Pseudo" />

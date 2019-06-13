@@ -32,10 +32,10 @@ public class InformationMessage extends Activity {
     {
         inflater =  getLayout;
         viewFun = inflater.inflate(R.layout.cust_toast_layout, activity.findViewById(R.id.funRelativeLayout));
-        funImage = viewFun.findViewById(R.id.funImg);
+        funImage = viewFun.findViewById(R.id.imgPubPro);
         Drawable d = context.getDrawable(drawable);
         funImage.setBackground(d);
-        funText = viewFun.findViewById(R.id.funText);
+        funText = viewFun.findViewById(R.id.pseudoPubPro);
         funText.setText(text);
         toast = new Toast(context);
         toast.setView(viewFun);

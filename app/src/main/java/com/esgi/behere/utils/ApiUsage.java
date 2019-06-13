@@ -129,7 +129,7 @@ public class ApiUsage {
     public void getAllComments(long idUser)
     {
         try {
-            getData(PATH_API+"/generals/commentsUser/" + idUser);
+            getData(PATH_API+"generals/commentsUser/" + idUser);
         }catch (Exception e)
         {
             throw new RuntimeException(e);

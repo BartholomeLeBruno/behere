@@ -7,19 +7,19 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/funImg"
+        android:id="@+id/imgPubPro"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="empty" />
 
     <TextView
-        android:id="@+id/funText"
+        android:id="@+id/pseudoPubPro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/funImg"
+        android:layout_alignTop="@+id/imgPubPro"
         android:layout_marginStart="10dp"
         android:layout_marginTop="7dp"
-        android:layout_toEndOf="@+id/funImg"
+        android:layout_toEndOf="@+id/imgPubPro"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:textStyle="bold" />

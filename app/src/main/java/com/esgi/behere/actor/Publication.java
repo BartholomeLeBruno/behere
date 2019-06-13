@@ -1,5 +1,6 @@
 package com.esgi.behere.actor;
 
+
 import java.util.ArrayList;
 
 public class Publication {
@@ -14,18 +15,29 @@ public class Publication {
 
     private String content;
 
-    private Publication(String content)
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    private String pseudo;
+
+
+    public Publication(String pseudo, String content)
     {
+        this.pseudo = pseudo;
         this.content = content;
     }
 
-    public static ArrayList<Publication> createPublicationList(int numPublication) {
+    public static ArrayList<Publication> createPublicationList(int number)
+    {
         ArrayList<Publication> publications = new ArrayList<>();
-
-        for (int i = 1; i <= numPublication; i++) {
-            publications.add(new Publication("Publication numero : "+i));
+        for (int i = 0; i <number ; i++) {
+            publications.add(new Publication("voila","truc"));
         }
-
         return publications;
     }
 }

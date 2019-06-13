@@ -10,13 +10,13 @@
     android:paddingRight="16dp">
 
     <TextView
-        android:id="@+id/funText"
+        android:id="@+id/pseudoPubPro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/funImg"
+        android:layout_alignTop="@+id/imgPubPro"
         android:layout_marginStart="10dp"
         android:layout_marginTop="13dp"
-        android:layout_toEndOf="@+id/funImg"
+        android:layout_toEndOf="@+id/imgPubPro"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="Name" />
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="202dp"
-        android:layout_toEndOf="@id/funText"
+        android:layout_toEndOf="@id/pseudoPubPro"
         android:text="ADD" />
 
 </RelativeLayout>

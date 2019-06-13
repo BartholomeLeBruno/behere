@@ -8,20 +8,20 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/funImg"
+        android:id="@+id/imgPubPro"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="empty"
         tools:background="#AAA" />
 
     <TextView
-        android:id="@+id/funText"
+        android:id="@+id/pseudoPubPro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/funImg"
+        android:layout_alignTop="@+id/imgPubPro"
         android:layout_marginStart="17dp"
         android:layout_marginTop="12dp"
-        android:layout_toEndOf="@+id/funImg"
+        android:layout_toEndOf="@+id/imgPubPro"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="Pseudo" />
@@ -30,7 +30,7 @@
         android:id="@+id/PublicationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/funImg"
+        android:layout_below="@+id/imgPubPro"
         android:layout_marginStart="17dp"
         android:textColor="@android:color/white"
         tools:text="Texte de mon tweet" />
