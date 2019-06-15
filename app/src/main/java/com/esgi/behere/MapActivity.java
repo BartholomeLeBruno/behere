@@ -182,7 +182,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
     private void addPolyline(LatLng home,LatLng toMarket) {
         try {
-            polyline.remove();
             DirectionsResult result = DirectionsApi.newRequest(getBuilder().build()).mode(TravelMode.WALKING)
                     .transitMode(TransitMode.TRAIN)
                     .origin(new com.google.maps.model.LatLng(home.latitude, home.longitude))
@@ -214,7 +213,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
     @Override
     public void onLocationChanged(Location location) {
-
         mMap.clear();
 
         MarkerOptions mp = new MarkerOptions();
