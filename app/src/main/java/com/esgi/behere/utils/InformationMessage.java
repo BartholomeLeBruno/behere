@@ -15,11 +15,11 @@ import com.esgi.behere.R;
 
 public class InformationMessage extends Activity {
 
-    ImageView funImage;
-    TextView funText;
-    LayoutInflater inflater;
-    View viewFun;
-    Toast toast;
+    static ImageView funImage;
+    static TextView funText;
+    static LayoutInflater inflater;
+    static View viewFun;
+    static Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class InformationMessage extends Activity {
         setContentView(R.layout.cust_toast_layout);
     }
 
-    public void createToastInformation(Activity activity, LayoutInflater getLayout, Context context, int drawable, String text)
+    public static void createToastInformation(Activity activity, LayoutInflater getLayout, Context context, int drawable, String text)
     {
         inflater =  getLayout;
         viewFun = inflater.inflate(R.layout.cust_toast_layout, activity.findViewById(R.id.funRelativeLayout));

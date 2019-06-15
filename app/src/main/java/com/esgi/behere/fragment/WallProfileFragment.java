@@ -52,7 +52,7 @@ public class WallProfileFragment extends Fragment {
         // Initialize contacts
         sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         prepareGetAllComments();
-        prepareGetUser();
+        //prepareGetUser();
         mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
         mVolleyService.getAllComments(sharedPreferences.getLong(PREFS_ID,0));
         // Create adapter passing in the sample user data
@@ -72,38 +72,7 @@ public class WallProfileFragment extends Fragment {
         return null;
     }*/
 
-    void prepareGetUser(){
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        try {
-                            Intent mapActivity = new Intent(getContext(), MapActivity.class);
-                            mapActivity.putExtra("userID", sharedPreferences.getLong(PREFS_ID, 0));
-                            startActivity(mapActivity);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else {
-                        Intent loginActivity = new Intent(getContext(), LoginActivity.class);
-                        startActivity(loginActivity);
-                    }
-                }
-                catch (Exception e)
-                {
 
-                    throw new RuntimeException(e);
-                }
-
-            }
-            @Override
-            public void onError(VolleyError error) {
-                Intent loginActivity = new Intent(getContext(), LoginActivity.class);
-                startActivity(loginActivity);
-            }
-        };
-    }
 
     void prepareGetAllComments(){
         mResultCallback = new VolleyCallback() {

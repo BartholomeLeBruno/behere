@@ -29,14 +29,12 @@ public class RegisterFirstStep extends AppCompatActivity {
     private Button btnBirthDate;
     private EditText password;
     private EditText checkPassword;
-    InformationMessage informationMessage;
     public User newUser = new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_register_first_step);
-        informationMessage = new InformationMessage();
         name = findViewById(R.id.pseudoPubPro);
         surname = findViewById(R.id.surname);
         email = findViewById(R.id.email);
@@ -70,7 +68,7 @@ public class RegisterFirstStep extends AppCompatActivity {
                     }
             }
                 else{
-                    informationMessage.createToastInformation(RegisterFirstStep.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_highlight_off_red_24dp, "Both Password can't be the same moldu !");
+                    InformationMessage.createToastInformation(RegisterFirstStep.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_highlight_off_red_24dp, "Both Password can't be the same moldu !");
                 }
             }
         });
@@ -95,14 +93,13 @@ public class RegisterFirstStep extends AppCompatActivity {
             int day = c.get(Calendar.DAY_OF_MONTH);
             DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                     R.style.CustomDatePickerDialogTheme, this, year, month, day);
-            informationMessage = new InformationMessage();
             return datePickerDialog;
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             month = month + 1;
             if(calculateAge(year,month,day) < 18)
-                informationMessage.createToastInformation(getActivity(), getLayoutInflater(), getContext() ,R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
+                InformationMessage.createToastInformation(getActivity(), getLayoutInflater(), getContext() ,R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
             else
                 ((Button) getActivity().findViewById(R.id.btnBirthDate)).setText(year + "-" + month + "-" + day);
 

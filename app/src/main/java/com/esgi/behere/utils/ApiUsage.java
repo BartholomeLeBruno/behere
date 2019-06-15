@@ -84,38 +84,6 @@ public class ApiUsage {
         }
     }
 
-    public void getAllCommentsBar(int bar_id, int user_id)
-    {
-        try {
-            getData(PATH_API+"commentsBars/?bar_id= " + bar_id + "&user_id=" + user_id + "");
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void getAllCommentsBeer(int beer_id, int user_id)
-    {
-        try {
-            getData(PATH_API+"commentsBeers/?beer_id= " + beer_id + "&user_id=" + user_id + "");
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void getAllCommentsBrewery(int brewery_id, int user_id)
-    {
-        try {
-            getData(PATH_API+"commentsBrewerys/?brewery_id= " + brewery_id + "&user_id=" + user_id + "");
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
     public void getUser(long idUser)
     {
         try {
@@ -150,6 +118,21 @@ public class ApiUsage {
     {
         try {
             getData(PATH_API+"bars");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateUser(long id,String email, String name, String surname,String birthDate, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("email", email);
+            params.put("name", name);
+            params.put("surname", surname);
+            params.put("birthdate", birthDate);
+            putDataWithAccessToken(params,PATH_API+"users/update/"+id, access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -219,6 +202,36 @@ public class ApiUsage {
 
     private void postDataWithAccessToken(JSONObject params, String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // response
+                        if(mResultCallback != null)
+                            mResultCallback.onSuccess(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage() +" ");
+                        if(mResultCallback != null)
+                            mResultCallback.onError(error);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("x-access-token", acces_token);
+                return headers;
+            }
+        };
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
+
+    private void putDataWithAccessToken(JSONObject params, String url, String acces_token) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
