@@ -80,8 +80,6 @@ public class RegisterFirstStep extends AppCompatActivity {
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
-        InformationMessage informationMessage;
-
         @Override
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {

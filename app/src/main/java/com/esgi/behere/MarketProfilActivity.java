@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
+
 public class MarketProfilActivity extends AppCompatActivity  implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
 
@@ -95,6 +96,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
                 .title(market.getName())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
         marker.setTag(0);
+        mMap.setOnMarkerClickListener(this);
         CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(latLng, 16.0f);
         mMap.animateCamera(yourLocation);
 
@@ -103,8 +105,17 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
     /** Called when the user clicks a marker. */
     @Override
     public boolean onMarkerClick(final Marker marker) {
+        Integer clickCount = (Integer) marker.getTag();
+
+        // Check if a click count was set, then display the click count.
+        if (clickCount != null) {
+            Intent destination = new Intent(getApplicationContext(), MapActivity.class);
+            destination.putExtra("destination", marker.getPosition());
+            startActivity(destination);
+        }
         return false;
     }
+
 
     public void onButtonShowPopupWindowClick(View view) {
 

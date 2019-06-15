@@ -26,7 +26,10 @@ import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Bar;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.VolleyCallback;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.maps.GeoApiContext.Builder;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,8 +40,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.DirectionsApi;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TransitMode;
+import com.google.maps.model.TravelMode;
 
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
@@ -47,13 +56,16 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.esgi.behere.utils.CacheContainer.initializeQueue;
 
-public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,OnMapReadyCallback, com.google.android.gms.location.LocationListener {
+public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
     private static final int REQUEST_CODE = 1234;
@@ -71,7 +83,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     Dialog match_text_dialog;
     ArrayList<String> matches_text;
     private DrawerLayout mDrawerLayout;
-    Marker marker;
+    Marker marker, home;
+    Polyline polyline;
+
     private HashMap<String,Market> mapMarket = new HashMap<>();
     private String TAG = "MapActivity";
     VolleyCallback mResultCallback = null;
@@ -142,7 +156,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         if (!mapMarket.isEmpty()) {
             for (Map.Entry<String, Market> market : mapMarket.entrySet()) {
                 LatLng latLng = new LatLng(market.getValue().getLatitude(), market.getValue().getLongitutde());
@@ -164,8 +177,38 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             }
 
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
         }
+    }
+
+    private void addPolyline(LatLng home,LatLng toMarket) {
+        try {
+            polyline.remove();
+            DirectionsResult result = DirectionsApi.newRequest(getBuilder().build()).mode(TravelMode.WALKING)
+                    .transitMode(TransitMode.TRAIN)
+                    .origin(new com.google.maps.model.LatLng(home.latitude, home.longitude))
+                    .destination(new com.google.maps.model.LatLng(toMarket.latitude, toMarket.longitude)).departureTime(Instant.now()).await();
+            List<LatLng> decodedPath = PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
+            // decodedPath.add(home);
+            // decodedPath.add(toMarket);
+            polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+            polyline.remove();
+            polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+            InformationMessage.createToastInformation(MapActivity.this,getLayoutInflater(),getApplicationContext(),
+                    R.drawable.my_icon_bar,"Suivez le chemin de la bière mes amies !");
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public  void onDestroy()
+    {
+        super.onDestroy();
+        mMap.clear();
+        getIntent().getExtras().remove("destination");
+
     }
 
 
@@ -198,13 +241,11 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
-            if(mapMarket.containsKey(marker.getTitle())) {
                 Log.d("voila", mapMarket.toString());
                 Market m = mapMarket.get(marker.getTitle());
                 Intent nextStep = new Intent(MapActivity.this, MarketProfilActivity.class);
                 nextStep.putExtra("market", m);
                 startActivity(nextStep);
-            }
         }
 
         // Return false to indicate that we have not consumed the event and that we wish
@@ -288,9 +329,15 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             Location location = (Location) task.getResult();
                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
-                            marker = mMap.addMarker(new MarkerOptions()
+                            home = mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_current_location)));
+                            if(getIntent().getExtras()!=null) {
+                                if(getIntent().getExtras().get("destination") != null)
+                                {
+                                    addPolyline(home.getPosition(), (LatLng) getIntent().getExtras().get("destination"));
+                                }
+                            }
                         }else{
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
@@ -351,5 +398,11 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
 
+    }
+
+    private Builder getBuilder() {
+        Builder geoApiContext = new Builder();
+        return geoApiContext.queryRateLimit(3).apiKey("AIzaSyBuAnhRy95K8XSSehEciHxGTbrlrAtQLj8").connectTimeout(1, TimeUnit.SECONDS)
+                .readTimeout(1, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.SECONDS);
     }
 }
