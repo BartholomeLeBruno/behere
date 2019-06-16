@@ -1,6 +1,6 @@
 package com.esgi.behere.actor;
 
-public class BeerType {
+class BeerType {
 
     private String name;
 

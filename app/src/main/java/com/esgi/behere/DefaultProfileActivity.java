@@ -24,17 +24,17 @@ import org.json.JSONTokener;
 
 public class DefaultProfileActivity extends AppCompatActivity {
 
-    TabLayout tabLayout;
-    TabItem edit;
-    TabItem wall;
-    TextView tvNamePerson;
-    TextView tvFriends;
-    SectionsAdapterProfile mSectionsPagerAdapter;
-    ViewPager mViewPager;
+    private TabLayout tabLayout;
+    private TabItem edit;
+    private TabItem wall;
+    private TextView tvNamePerson;
+    private TextView tvFriends;
+    private SectionsAdapterProfile mSectionsPagerAdapter;
+    private ViewPager mViewPager;
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
-    VolleyCallback mResultCallback = null;
-    ApiUsage mVolleyService;
+    private VolleyCallback mResultCallback = null;
+    private ApiUsage mVolleyService;
     private static final String PREFS_ID = "USER_ID";
 
 
@@ -102,7 +102,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     }
 
 
-    void prepareGetUser() {
+    private void prepareGetUser() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -125,7 +125,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         };
     }
 
-    public void onFriendListCLick(View view)
+    private void onFriendListCLick(View view)
     {
         Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
         startActivity(listFriend);
@@ -141,7 +141,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
 
     }
 
-    void prepareAuthentification(){
+    private void prepareAuthentification(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

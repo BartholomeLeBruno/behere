@@ -41,10 +41,10 @@ public class EditProfileFragment extends Fragment {
     private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
-    ApiUsage mVolleyService;
-    TextView tvEmail, tvName, tvSurname;
+    private ApiUsage mVolleyService;
+    private TextView tvEmail, tvName, tvSurname;
     private Button btnBirthDate;
-    Button btnupdate;
+    private Button btnupdate;
 
     @Nullable
     @Override
@@ -78,7 +78,7 @@ public class EditProfileFragment extends Fragment {
 
 
 
-    void prepareGetUser(){
+    private void prepareGetUser(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -109,7 +109,7 @@ public class EditProfileFragment extends Fragment {
         };
     }
 
-    void prepareUpdateUser(){
+    private void prepareUpdateUser(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -127,7 +127,7 @@ public class EditProfileFragment extends Fragment {
             }
         };
     }
-    public void showDatePickerDialog(View v) {
+    private void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         if(getFragmentManager() != null)
             newFragment.show(getFragmentManager(), "datePicker");
@@ -161,7 +161,7 @@ public class EditProfileFragment extends Fragment {
                 ((Button) Objects.requireNonNull(getActivity()).findViewById(R.id.btnEditBirthDate)).setText(year + "-" + month + "-" + day);
 
         }
-        public int calculateAge(int year, int month, int day) {
+        private int calculateAge(int year, int month, int day) {
             LocalDate birthDate = LocalDate.of(year, month, day);
             return Period.between(birthDate, LocalDate.now()).getYears();
         }

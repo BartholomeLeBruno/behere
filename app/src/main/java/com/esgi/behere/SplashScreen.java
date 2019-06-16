@@ -17,7 +17,7 @@ import static com.esgi.behere.utils.CacheContainer.initializeQueue;
 
 public class SplashScreen extends Activity {
 
-    static int SPLASH_TIME_OUT = 1000;
+    private static int SPLASH_TIME_OUT = 1000;
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
@@ -53,7 +53,7 @@ public class SplashScreen extends Activity {
         }, SPLASH_TIME_OUT);
     }
 
-    void prepareGetUser(){
+    private void prepareGetUser(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

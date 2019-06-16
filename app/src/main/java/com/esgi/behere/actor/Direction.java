@@ -2,7 +2,7 @@ package com.esgi.behere.actor;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class Direction {
+class Direction {
 
     private LatLng depart;
 

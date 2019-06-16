@@ -23,13 +23,13 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
-    TabLayout tabLayout;
-    TabItem edit;
-    TabItem wall;
-    SectionsAdapterProfile mSectionsPagerAdapter;
-    ViewPager mViewPager;
-    VolleyCallback mResultCallback = null;
-    ApiUsage mVolleyService;
+    private TabLayout tabLayout;
+    private TabItem edit;
+    private TabItem wall;
+    private SectionsAdapterProfile mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    private VolleyCallback mResultCallback = null;
+    private ApiUsage mVolleyService;
 
 
     @Override
@@ -88,7 +88,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
     }
 
-    void prepareAuthentification(){
+    private void prepareAuthentification(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

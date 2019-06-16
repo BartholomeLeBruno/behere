@@ -18,7 +18,7 @@ public class ApiUsage {
 
     private final static String PATH_API = "http://31.220.61.74:8081/";
 
-    private VolleyCallback mResultCallback;
+    private final VolleyCallback mResultCallback;
 
     private Context mContext;
 

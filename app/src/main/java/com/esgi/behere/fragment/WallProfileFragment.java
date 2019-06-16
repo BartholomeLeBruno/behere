@@ -25,19 +25,20 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class WallProfileFragment extends Fragment {
 
     private ArrayList<Publication> publications =new ArrayList<>();
-    ListView recyclerView;
+    private ListView recyclerView;
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
-     SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
-     ApiUsage mVolleyService;
+    private ApiUsage mVolleyService;
 
 
 
@@ -54,7 +55,7 @@ public class WallProfileFragment extends Fragment {
         mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
         mVolleyService.getAllComments(sharedPreferences.getLong(PREFS_ID,0));
         // Create adapter passing in the sample user data
-        PublicationAdapter adapter = new PublicationAdapter(getContext(), publications);
+        PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
         // Attach the adapter to the recyclerview to populate items
         recyclerView.setAdapter(adapter);
         // Set layout manager to position the items
@@ -65,7 +66,7 @@ public class WallProfileFragment extends Fragment {
 
 
 
-    void prepareGetAllComments(){
+    private void prepareGetAllComments(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -93,7 +94,7 @@ public class WallProfileFragment extends Fragment {
                                 publications.add(new Publication("Test", objres.getString("text")));
                             }
                         }
-                        PublicationAdapter adapter = new PublicationAdapter(getContext(),publications);
+                        PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()),publications);
                         recyclerView.setAdapter(adapter);
                     }
                 }

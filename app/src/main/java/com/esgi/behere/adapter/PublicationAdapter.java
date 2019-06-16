@@ -17,7 +17,7 @@ import java.util.List;
 
 public class PublicationAdapter extends BaseAdapter {
 
-    Context context;
+    private Context context;
     private List<Publication> data;
     private static LayoutInflater inflater = null;
 

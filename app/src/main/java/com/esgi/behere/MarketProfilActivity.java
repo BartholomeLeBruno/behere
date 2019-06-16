@@ -41,16 +41,16 @@ import java.util.Objects;
 public class MarketProfilActivity extends AppCompatActivity  implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
 
-     TextView tvNameBar;
-     GoogleMap mMap;
-     Marker marker;
-     TextView contentDesc;
+    private TextView tvNameBar;
+    private  GoogleMap mMap;
+    private  Marker marker;
+    private  TextView contentDesc;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
     private final String PREFS = "PREFS";
-     final String PREFS_LONGITUDE = "LONGITUDE";
-     final String PREFS_LATITUDE = "LATITUDE";
+    private final String PREFS_LONGITUDE = "LONGITUDE";
+    private final String PREFS_LATITUDE = "LATITUDE";
 
     private SharedPreferences sharedPreferences;
 
@@ -111,8 +111,8 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
             Intent destination = new Intent(getApplicationContext(), MapActivity.class);
-            sharedPreferences.edit().putLong(PREFS_LATITUDE,(long) marker.getPosition().latitude).apply();
-            sharedPreferences.edit().putLong(PREFS_LONGITUDE,(long) marker.getPosition().longitude).apply();
+            sharedPreferences.edit().putString(PREFS_LATITUDE, marker.getPosition().latitude + "").apply();
+            sharedPreferences.edit().putString(PREFS_LONGITUDE, marker.getPosition().longitude + "").apply();
             startActivity(destination);
         }
         return false;
@@ -129,8 +129,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         // create the popup window
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true; // lets taps outside the popup also dismiss it
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
 
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window tolken
@@ -140,7 +139,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         btnSendComment.setOnClickListener((View v) -> {
                 prepareAddCommentBar();
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-                Market market =  (Market) getIntent().getExtras().get("market");
+                Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             assert market != null;
             Log.d("voila", tvComment.getText().toString() + "-" + market.getId() + "-" + sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
@@ -150,7 +149,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
                 popupWindow.dismiss();
         });
     }
-    void prepareAddCommentBar(){
+    private void prepareAddCommentBar(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -212,7 +211,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
 
     }
 
-    void prepareAuthentification(){
+    private void prepareAuthentification(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

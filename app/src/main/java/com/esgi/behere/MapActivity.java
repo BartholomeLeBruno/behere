@@ -55,6 +55,7 @@ import org.json.simple.parser.JSONParser;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.esgi.behere.utils.CacheContainer.initializeQueue;
@@ -72,15 +73,15 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
-    FusedLocationProviderClient mFusedLocationProviderClient;
-    LatLng latLng;
-    FloatingActionButton btnRecenter;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private LatLng latLng;
+    private FloatingActionButton btnRecenter;
     private DrawerLayout mDrawerLayout;
-    Marker marker, home;
-    Polyline polyline;
-    String TAG = "MapActivity";
-    VolleyCallback mResultCallback = null;
-    ApiUsage mVolleyService;
+    private Marker marker, home;
+    private Polyline polyline;
+    private final String TAG = "MapActivity";
+    private VolleyCallback mResultCallback = null;
+    private ApiUsage mVolleyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +92,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         // Drawer navigation
         mDrawerLayout = findViewById(R.id.drawer_layout);
         btnRecenter = findViewById(R.id.btnCenter);
+
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
-        navigationView.getMenu().setGroupCheckable(4,true,false);
         navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> {
                      onOptionsItemSelected(menuItem);
                      mDrawerLayout.closeDrawers();
@@ -250,7 +251,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     }
 
 
-    void prepareGetAllBar() {
+    private void prepareGetAllBar() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -304,10 +305,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             home = mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_current_location)));
-                            double latitude = sharedPreferences.getLong(PREFS_LATITUDE,0);
-                            double longitude = sharedPreferences.getLong(PREFS_LONGITUDE,0);
-                            if(latitude != 0 && longitude != 0) {
-                                addPolyline(home.getPosition(), new LatLng(latitude,longitude));
+                            if(!Objects.equals(sharedPreferences.getString(PREFS_LATITUDE, ""), "")) {
+                                double latitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LATITUDE, "")));
+                                double longitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LONGITUDE, "")));
+                                if (latitude != 0 && longitude != 0) {
+                                    addPolyline(home.getPosition(), new LatLng(latitude, longitude));
+                                }
                             }
                         }else{
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
@@ -387,7 +390,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
     }
 
-    void prepareAuthentification(){
+    private void prepareAuthentification(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

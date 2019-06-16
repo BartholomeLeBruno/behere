@@ -22,8 +22,8 @@ public class MyGroupActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
-    VolleyCallback mResultCallback = null;
-    ApiUsage mVolleyService;
+    private VolleyCallback mResultCallback = null;
+    private ApiUsage mVolleyService;
 
 
     @Override
@@ -87,7 +87,7 @@ public class MyGroupActivity extends AppCompatActivity {
 
     }
 
-    void prepareAuthentification(){
+    private void prepareAuthentification(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

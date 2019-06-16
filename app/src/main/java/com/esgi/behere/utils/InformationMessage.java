@@ -15,11 +15,11 @@ import com.esgi.behere.R;
 
 public class InformationMessage extends Activity {
 
-    static ImageView funImage;
-    static TextView funText;
-    static LayoutInflater inflater;
-    static View viewFun;
-    static Toast toast;
+    private static ImageView funImage;
+    private static TextView funText;
+    private static LayoutInflater inflater;
+    private static View viewFun;
+    private static Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

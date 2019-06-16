@@ -12,7 +12,7 @@ import com.esgi.behere.adapter.FriendAdpater;
 
 public class FriendsListActivity extends AppCompatActivity {
 
-    ListView listview;
+    private ListView listview;
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
 

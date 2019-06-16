@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,10 +21,10 @@ public class CreateGroupeActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
-    VolleyCallback mResultCallback = null;
-    ApiUsage mVolleyService;
-    Button btnCreateGroup;
-    EditText tvNameGroup;
+    private VolleyCallback mResultCallback = null;
+    private ApiUsage mVolleyService;
+    private Button btnCreateGroup;
+    private EditText tvNameGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +35,6 @@ public class CreateGroupeActivity extends AppCompatActivity {
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
-    }
-
-    public void createGroup(View view)
-    {
-        if(!tvNameGroup.getText().toString().equals(""))
-        {
-
-        }
     }
 
 
@@ -81,7 +72,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
 
     }
 
-    void prepareAuthentification(){
+    private void prepareAuthentification(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

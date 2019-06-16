@@ -13,7 +13,7 @@ import com.esgi.behere.R;
 
 public class FriendAdpater extends BaseAdapter {
 
-    Context context;
+    private Context context;
     private String[] data;
     private static LayoutInflater inflater = null;
 

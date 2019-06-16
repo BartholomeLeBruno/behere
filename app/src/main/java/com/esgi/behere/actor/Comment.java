@@ -1,6 +1,6 @@
 package com.esgi.behere.actor;
 
-public class Comment {
+ class Comment {
 
     private String text;
 

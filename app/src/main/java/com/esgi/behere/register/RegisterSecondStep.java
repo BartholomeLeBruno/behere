@@ -36,11 +36,11 @@ import java.util.Objects;
 public class RegisterSecondStep extends Activity {
 
     private ListView lvBeerType;
-    Button btnRegister;
+    private Button btnRegister;
     private List<String> listBeerType = new ArrayList<>();
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
-    private Long idUser;
+    private int idUser;
 
 
     @Override
@@ -85,7 +85,7 @@ public class RegisterSecondStep extends Activity {
 
     }
 
-    void prepareGetAllTypeOfBeer(){
+    private void prepareGetAllTypeOfBeer(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -126,7 +126,7 @@ public class RegisterSecondStep extends Activity {
             public void onError(VolleyError error) { }
         };
     }
-    void prepareCreateAccount(){
+    private void prepareCreateAccount(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -134,7 +134,7 @@ public class RegisterSecondStep extends Activity {
                     if (!(boolean) response.get("error")) {
                         User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
                         JSONObject acessUser = (JSONObject) response.get("user");
-                        idUser = (long) acessUser.get("id");
+                        idUser = (int) acessUser.get("id");
                         prepareAuthentification();
                         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                         assert newUser != null;
@@ -154,7 +154,7 @@ public class RegisterSecondStep extends Activity {
             public void onError(VolleyError error) { }
         };
     }
-    void prepareAuthentification() {
+    private void prepareAuthentification() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {

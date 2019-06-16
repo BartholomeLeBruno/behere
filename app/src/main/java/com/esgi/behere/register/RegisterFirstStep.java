@@ -30,7 +30,7 @@ public class RegisterFirstStep extends AppCompatActivity {
     private Button btnBirthDate;
     private EditText password;
     private EditText checkPassword;
-    public User newUser = new User();
+    private User newUser = new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +66,9 @@ public class RegisterFirstStep extends AppCompatActivity {
                         startActivity(nextStep);
                     }
             }
-                else{
-                    InformationMessage.createToastInformation(RegisterFirstStep.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_highlight_off_red_24dp, "Both Password can't be the same moldu !");
-                }
+            else{
+                InformationMessage.createToastInformation(RegisterFirstStep.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_highlight_off_red_24dp, "Both Password have to be the same moldu !");
+            }
         });
     }
     public void showDatePickerDialog(View v) {
@@ -94,12 +94,12 @@ public class RegisterFirstStep extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int day) {
             month = month + 1;
             if(calculateAge(year,month,day) < 18)
-                InformationMessage.createToastInformation(getActivity(), getLayoutInflater(), Objects.requireNonNull(getContext()),R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
+                InformationMessage.createToastInformation(Objects.requireNonNull(getActivity()), getLayoutInflater(), Objects.requireNonNull(getContext()),R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
             else
                 ((Button) Objects.requireNonNull(getActivity()).findViewById(R.id.btnBirthDate)).setText(year + "-" + month + "-" + day);
 
         }
-        public int calculateAge(int year, int month, int day) {
+        private int calculateAge(int year, int month, int day) {
             LocalDate birthDate = LocalDate.of(year, month, day);
             return Period.between(birthDate, LocalDate.now()).getYears();
         }
