@@ -41,14 +41,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
         BottomNavigationView navigationView = findViewById(R.id.footer);
-        navigationView.setOnNavigationItemReselectedListener(
-                new BottomNavigationView.OnNavigationItemReselectedListener() {
-                    @Override
-                    public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
-                        onOptionsItemSelected(menuItem);
-                    }
-                }
-        );
+        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> onOptionsItemSelected(menuItem));
 
     }
 

@@ -24,14 +24,7 @@ public class MyGroupActivity extends AppCompatActivity {
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footer);
         navigationView.getMenu().getItem(2).setChecked(true);
-        navigationView.setOnNavigationItemReselectedListener(
-                new BottomNavigationView.OnNavigationItemReselectedListener() {
-                    @Override
-                    public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
-                        onOptionsItemSelected(menuItem);
-                    }
-                }
-        );
+        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> onOptionsItemSelected(menuItem));
 
     }
 

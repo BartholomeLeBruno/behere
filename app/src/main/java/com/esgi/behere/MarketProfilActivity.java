@@ -59,21 +59,15 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         contentDesc = findViewById(R.id.tvDescription);
 
         Market market =  (Market) getIntent().getExtras().get("market");
-
-        tvNameBar.setText(market.getName());
-        contentDesc.setText(market.getDescription());
+        if(market != null) {
+            tvNameBar.setText(market.getName());
+            contentDesc.setText(market.getDescription());
+        }
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         BottomNavigationView navigationView = findViewById(R.id.footer);
-        navigationView.setOnNavigationItemReselectedListener(
-                new BottomNavigationView.OnNavigationItemReselectedListener() {
-                    @Override
-                    public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
-                        onOptionsItemSelected(menuItem);
-                    }
-                }
-        );
+        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> onOptionsItemSelected(menuItem));
 
     }
 
@@ -135,20 +129,16 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
         Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
         EditText tvComment =  popupView.findViewById(R.id.tvComment);
-        btnSendComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnSendComment.setOnClickListener((View v) -> {
                 prepareAddCommentBar();
-                InformationMessage informationMessage = new InformationMessage();
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 Market market =  (Market) getIntent().getExtras().get("market");
                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                 Log.d("voila", tvComment.getText().toString() + "-" + market.getId() + "-" + sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(),(int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
-                informationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
+                InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");
                 popupWindow.dismiss();
-            }
         });
     }
     void prepareAddCommentBar(){
@@ -157,9 +147,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             public void onSuccess(JSONObject response) {
                 try {
                     Log.d("response", response.toString());
-                    if (!(boolean) response.get("error")) {
-                    } else {
-
+                    if ((boolean) response.get("error")) {
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     }
                 }

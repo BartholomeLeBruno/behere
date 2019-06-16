@@ -38,7 +38,6 @@ import com.facebook.CallbackManager;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -322,8 +321,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     if (!(boolean) response.get("error")) {
                         Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
 
-                        JSONParser parser = new JSONParser();
-                        Object obj = parser.parse(response.get("user").toString());
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         sharedPreferences.edit().putLong(PREFS_ID, Long.parseLong(objres.get("id").toString())).apply();
                         sharedPreferences.edit().putString(PREFS_ACCESS_TOKEN, objres.get("token").toString()).apply();

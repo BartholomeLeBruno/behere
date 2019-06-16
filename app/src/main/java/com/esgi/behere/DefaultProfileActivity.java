@@ -56,14 +56,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
         BottomNavigationView navigationView = findViewById(R.id.footer);
         navigationView.getMenu().getItem(1).setChecked(true);
-        navigationView.setOnNavigationItemReselectedListener(
-                new BottomNavigationView.OnNavigationItemReselectedListener() {
-                    @Override
-                    public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
-                        onOptionsItemSelected(menuItem);
-                    }
-                }
-        );
+        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> onOptionsItemSelected(menuItem));
         prepareGetUser();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));

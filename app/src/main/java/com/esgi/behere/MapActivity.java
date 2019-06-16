@@ -1,13 +1,11 @@
 package com.esgi.behere;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -18,14 +16,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Bar;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.VolleyCallback;
 import com.google.android.gms.maps.model.Polyline;
@@ -41,7 +38,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.DirectionsApi;
 import com.google.maps.android.PolyUtil;
@@ -57,8 +53,6 @@ import org.json.simple.parser.JSONParser;
 
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -68,7 +62,6 @@ import static com.esgi.behere.utils.CacheContainer.initializeQueue;
 public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
-    private static final int REQUEST_CODE = 1234;
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
@@ -80,14 +73,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     FusedLocationProviderClient mFusedLocationProviderClient;
     LatLng latLng;
     FloatingActionButton btnRecenter;
-    Dialog match_text_dialog;
-    ArrayList<String> matches_text;
     private DrawerLayout mDrawerLayout;
     Marker marker, home;
     Polyline polyline;
-
-    private HashMap<String,Market> mapMarket = new HashMap<>();
-    private String TAG = "MapActivity";
+    String TAG = "MapActivity";
     VolleyCallback mResultCallback = null;
     ApiUsage mVolleyService;
 
@@ -103,46 +92,24 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footer);
         navigationView.getMenu().setGroupCheckable(4,true,false);
-        //navigationView.getMenu().getItem(0).setChecked(true);
-        navigationView.setOnNavigationItemReselectedListener(
-                new BottomNavigationView.OnNavigationItemReselectedListener() {
-                 @Override
-                 public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
+        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> {
                      onOptionsItemSelected(menuItem);
                      mDrawerLayout.closeDrawers();
-                 }
              }
         );
-        btnRecenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(latLng != null)
-                {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
-                }
+        btnRecenter.setOnClickListener((View v) -> {
+            if(latLng != null)
+            {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
             }
+
         });
         prepareGetAllBar();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getAllBar();
         getLocationPermission();
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            match_text_dialog = new Dialog(MapActivity.this);
-            match_text_dialog.setContentView(R.layout.dialog_matches_frag);
-            match_text_dialog.setTitle("Select Matching Text");
-            ListView textlist = match_text_dialog.findViewById(R.id.list);
-            matches_text = data
-                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            ArrayAdapter<String> adapter =    new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, matches_text);
-            textlist.setAdapter(adapter);
-            match_text_dialog.show();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+
 
     /**
      * Manipulates the map once available.
@@ -156,8 +123,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (!mapMarket.isEmpty()) {
-            for (Map.Entry<String, Market> market : mapMarket.entrySet()) {
+        if (!CacheContainer.getInstance().getMarketHashMap().isEmpty()) {
+            for (Map.Entry<String, Market> market : CacheContainer.getInstance().getMarketHashMap().entrySet()) {
                 LatLng latLng = new LatLng(market.getValue().getLatitude(), market.getValue().getLongitutde());
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(latLng)
@@ -206,7 +173,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     {
         super.onDestroy();
         mMap.clear();
-        getIntent().getExtras().remove("destination");
+        if(getIntent().getExtras() != null) { getIntent().getExtras().remove("destination"); }
+        CacheContainer.getInstance().getMarketHashMap().clear();
 
     }
 
@@ -239,8 +207,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
-                Log.d("voila", mapMarket.toString());
-                Market m = mapMarket.get(marker.getTitle());
+                Market m = CacheContainer.getInstance().getMarketHashMap().get(marker.getTitle());
                 Intent nextStep = new Intent(MapActivity.this, MarketProfilActivity.class);
                 nextStep.putExtra("market", m);
                 startActivity(nextStep);
@@ -298,7 +265,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             latitude =  Double.parseDouble(objres.get("gpsLatitude").toString());
                             longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
                             webSiteLink =  objres.get("webSiteLink").toString();
-                            mapMarket.put(name,  new Bar(id, name, latitude, longitutde, description, webSiteLink));
+                            CacheContainer.getInstance().getMarketHashMap().put(name,  new Bar(id, name, latitude, longitutde, description, webSiteLink));
                             marker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(latitude,longitutde))
                                     .title(name)
@@ -320,12 +287,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         try{
             if(mLocationPermissionsGranted){
                 final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
+                location.addOnCompleteListener((@NonNull Task task) -> {
                         if(task.isSuccessful()){
-                            Location location = (Location) task.getResult();
-                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            Location homeLocation = (Location) task.getResult();
+                            latLng = new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                             home = mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
@@ -340,7 +305,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                );
             }
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
@@ -364,7 +329,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MapActivity.this);
+        if(mapFragment != null) mapFragment.getMapAsync(MapActivity.this);
     }
 
     private void getLocationPermission(){

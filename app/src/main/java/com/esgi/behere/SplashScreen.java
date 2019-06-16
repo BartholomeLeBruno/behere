@@ -31,11 +31,8 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         initializeQueue();
-        new Handler().postDelayed(new Runnable()
+        new Handler().postDelayed(() ->
         {
-            @Override
-            public void run()
-            {
                 try {
                     if (sharedPreferences.contains(PREFS_ID)) {
                         prepareGetUser();
@@ -53,7 +50,6 @@ public class SplashScreen extends Activity {
                     startActivity(loginActivity);
                     Log.e("error splashScreen",e.getMessage());
                 }
-            }
         }, SPLASH_TIME_OUT);
     }
 

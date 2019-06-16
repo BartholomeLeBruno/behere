@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.LoginActivity;
-import com.esgi.behere.MapActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.Publication;
 import com.esgi.behere.adapter.PublicationAdapter;
@@ -37,9 +36,9 @@ public class WallProfileFragment extends Fragment {
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
-    private SharedPreferences sharedPreferences;
+     SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
-    private ApiUsage mVolleyService;
+     ApiUsage mVolleyService;
 
 
 

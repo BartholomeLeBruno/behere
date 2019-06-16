@@ -47,7 +47,7 @@ public class EditProfileFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
 
         tvEmail = rootView.findViewById(R.id.tvEmail);
@@ -61,22 +61,14 @@ public class EditProfileFragment extends Fragment {
         mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
 
-        btnBirthDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog(v);
-            }
-        });
+        btnBirthDate.setOnClickListener((View v) -> showDatePickerDialog(v));
 
-        btnupdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnupdate.setOnClickListener((View v) -> {
                 prepareUpdateUser();
                 mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
                 mVolleyService.updateUser(sharedPreferences.getLong(PREFS_ID,0),
                         tvEmail.getText().toString(), tvName.getText().toString(),
                         tvSurname.getText().toString(), btnBirthDate.getText().toString(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
-            }
         });
 
 
@@ -143,7 +135,6 @@ public class EditProfileFragment extends Fragment {
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
-        InformationMessage informationMessage;
 
         @Override
         @NonNull
@@ -157,7 +148,6 @@ public class EditProfileFragment extends Fragment {
             if(getActivity() != null) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                         R.style.CustomDatePickerDialogTheme, this, year, month, day);
-                informationMessage = new InformationMessage();
                 return datePickerDialog;
             }
             return null;
@@ -166,7 +156,7 @@ public class EditProfileFragment extends Fragment {
         public void onDateSet(DatePicker view, int year, int month, int day) {
             month = month + 1;
             if(calculateAge(year,month,day) < 18)
-                informationMessage.createToastInformation(getActivity(), getLayoutInflater(), getContext() ,R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
+                InformationMessage.createToastInformation(getActivity(), getLayoutInflater(), getContext() ,R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
             else
                 ((Button) getActivity().findViewById(R.id.btnEditBirthDate)).setText(year + "-" + month + "-" + day);
 

@@ -1,7 +1,6 @@
 package com.esgi.behere.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +10,6 @@ import android.widget.TextView;
 
 import com.esgi.behere.R;
 import com.esgi.behere.actor.Publication;
-import com.esgi.behere.utils.ApiUsage;
-import com.esgi.behere.utils.VolleyCallback;
 
 import java.util.List;
 

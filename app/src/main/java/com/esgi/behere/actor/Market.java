@@ -16,6 +16,11 @@ public abstract class Market implements Serializable {
 
     private String webSiteLink;
 
+    public Market()
+    {
+
+    }
+
     public Market(long id, String name, Double latitude, Double longitutde, String description, String webSiteLink) {
         this.id = id;
         this.name = name;

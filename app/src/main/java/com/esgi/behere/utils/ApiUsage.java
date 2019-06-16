@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.esgi.behere.actor.User;
@@ -142,24 +141,18 @@ public class ApiUsage {
 
     private void getData(String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // response
-                        if(mResultCallback != null)
-                            mResultCallback.onSuccess(response);
-                    }
+                (JSONObject response) -> {
+                    // response
+                    if(mResultCallback != null)
+                        mResultCallback.onSuccess(response);
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Error.Response", " " + error.getMessage());
-                        error.printStackTrace();
-                        if(mResultCallback != null)
-                            mResultCallback.onError(error);
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", " " + error.getMessage());
+                    error.printStackTrace();
+                    if(mResultCallback != null)
+                        mResultCallback.onError(error);
 
-                    }
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -173,22 +166,16 @@ public class ApiUsage {
 
     private void postData(JSONObject params, String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+                (JSONObject response) -> {
                         // response
                         if(mResultCallback != null)
                             mResultCallback.onSuccess(response);
-                    }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                (VolleyError error) -> {
                         // error
                         Log.d("Error.Response", error.getMessage() +" ");
                         if(mResultCallback != null)
                             mResultCallback.onError(error);
-                    }
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -202,22 +189,16 @@ public class ApiUsage {
 
     private void postDataWithAccessToken(JSONObject params, String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // response
+                (JSONObject response) -> {
+                        // sucess
                         if(mResultCallback != null)
                             mResultCallback.onSuccess(response);
-                    }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                (VolleyError error) -> {
                         // error
                         Log.d("Error.Response", error.getMessage() +" ");
                         if(mResultCallback != null)
                             mResultCallback.onError(error);
-                    }
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -232,22 +213,16 @@ public class ApiUsage {
 
     private void putDataWithAccessToken(JSONObject params, String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+                (JSONObject response) -> {
                         // response
                         if(mResultCallback != null)
                             mResultCallback.onSuccess(response);
-                    }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                (VolleyError error) -> {
                         // error
                         Log.d("Error.Response", error.getMessage() +" ");
                         if(mResultCallback != null)
                             mResultCallback.onError(error);
-                    }
                 }) {
             @Override
             public Map<String, String> getHeaders() {
