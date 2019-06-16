@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     TabItem edit;
     TabItem wall;
     TextView tvNamePerson;
+    TextView tvFriends;
     SectionsAdapterProfile mSectionsPagerAdapter;
     ViewPager mViewPager;
     private SharedPreferences sharedPreferences;
@@ -43,6 +45,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
 
         edit = findViewById(R.id.tabInfo);
         wall = findViewById(R.id.tabWall);
+        tvFriends = findViewById(R.id.tvFriends);
         tvNamePerson = findViewById(R.id.tvNamePerson);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
@@ -54,12 +57,13 @@ public class DefaultProfileActivity extends AppCompatActivity {
 
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-        BottomNavigationView navigationView = findViewById(R.id.footer);
+        BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.getMenu().getItem(1).setChecked(true);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
         prepareGetUser();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
+        tvFriends.setOnClickListener(this::onFriendListCLick);
 
     }
 
@@ -119,6 +123,12 @@ public class DefaultProfileActivity extends AppCompatActivity {
             @Override
             public void onError(VolleyError error) { }
         };
+    }
+
+    public void onFriendListCLick(View view)
+    {
+        Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
+        startActivity(listFriend);
     }
 
     @Override

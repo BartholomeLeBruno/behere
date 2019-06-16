@@ -5,23 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esgi.behere.R;
-import com.esgi.behere.actor.Publication;
 
-import java.util.List;
-
-
-public class PublicationAdapter extends BaseAdapter {
+public class FriendAdpater extends BaseAdapter {
 
     Context context;
-    private List<Publication> data;
+    private String[] data;
     private static LayoutInflater inflater = null;
 
-    public PublicationAdapter(Context context, List<Publication> data) {
+    public FriendAdpater(Context context, String[] data) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
@@ -32,13 +28,13 @@ public class PublicationAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return data.size();
+        return data.length;
     }
 
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return data.get(position);
+        return data[position];
     }
 
     @Override
@@ -52,15 +48,12 @@ public class PublicationAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         View vi = convertView;
         if (vi == null)
-            vi = inflater.inflate(R.layout.fragment_publication, null);
-        ImageView imageView = vi.findViewById(R.id.imgPubPro);
-        TextView text =  vi.findViewById(R.id.PublicationText);
-        TextView textView = vi.findViewById(R.id.pseudoPubPro);
-        imageView.setImageResource(R.drawable.beerwallpaper2);
-        textView.setText(data.get(position).getPseudo());
-        text.setText(data.get(position).getContent());
-        text.setOnClickListener((View v) -> Toast.makeText(PublicationAdapter.inflater.getContext(),"voila"+position,Toast.LENGTH_SHORT).show());
+            vi = inflater.inflate(R.layout.fragment_friend, null);
+        TextView text =  vi.findViewById(R.id.pseudoPubPro);
+        Button addFriend = vi.findViewById(R.id.btnADDFriend);
+        addFriend.setEnabled(false);
+        text.setText(data[position]);
+        text.setOnClickListener((View v) -> Toast.makeText(FriendAdpater.inflater.getContext(),"voila"+position,Toast.LENGTH_SHORT).show());
         return vi;
     }
-
 }

@@ -49,7 +49,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-        BottomNavigationView navigationView = findViewById(R.id.footer);
+        BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
 
     }

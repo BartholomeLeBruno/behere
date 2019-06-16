@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.LoginActivity;
@@ -32,7 +31,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class WallProfileFragment extends Fragment {
 
     private ArrayList<Publication> publications =new ArrayList<>();
-    RecyclerView recyclerView;
+    ListView recyclerView;
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
@@ -55,11 +54,10 @@ public class WallProfileFragment extends Fragment {
         mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
         mVolleyService.getAllComments(sharedPreferences.getLong(PREFS_ID,0));
         // Create adapter passing in the sample user data
-        PublicationAdapter adapter = new PublicationAdapter(publications);
+        PublicationAdapter adapter = new PublicationAdapter(getContext(), publications);
         // Attach the adapter to the recyclerview to populate items
         recyclerView.setAdapter(adapter);
         // Set layout manager to position the items
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // That's all!
 
         return rootView;
@@ -95,9 +93,8 @@ public class WallProfileFragment extends Fragment {
                                 publications.add(new Publication("Test", objres.getString("text")));
                             }
                         }
-                        PublicationAdapter adapter = new PublicationAdapter(publications);
+                        PublicationAdapter adapter = new PublicationAdapter(getContext(),publications);
                         recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     }
                 }
                 catch (Exception e) {

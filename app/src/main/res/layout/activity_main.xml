@@ -21,7 +21,7 @@
             android:layout_marginBottom="24dp"
             android:layout_weight="1"
             android:clickable="true"
-            app:layout_constraintBottom_toTopOf="@+id/footer"
+            app:layout_constraintBottom_toTopOf="@+id/footerpub"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/ic_menu_compass" />
 
@@ -67,7 +67,7 @@
             tools:context=".MapActivity" />
 
         <android.support.design.widget.BottomNavigationView
-            android:id="@+id/footer"
+            android:id="@+id/footerpub"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"

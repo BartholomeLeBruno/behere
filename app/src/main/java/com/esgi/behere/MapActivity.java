@@ -92,7 +92,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         mDrawerLayout = findViewById(R.id.drawer_layout);
         btnRecenter = findViewById(R.id.btnCenter);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-        BottomNavigationView navigationView = findViewById(R.id.footer);
+        BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.getMenu().setGroupCheckable(4,true,false);
         navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> {
                      onOptionsItemSelected(menuItem);
@@ -177,6 +177,13 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         mMap.clear();
         CacheContainer.getInstance().getMarketHashMap().clear();
 
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
 

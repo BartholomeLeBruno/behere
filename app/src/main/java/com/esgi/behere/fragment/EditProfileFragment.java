@@ -52,7 +52,7 @@ public class EditProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
 
         tvEmail = rootView.findViewById(R.id.tvEmail);
-        tvName = rootView.findViewById(R.id.tvName);
+        tvName = rootView.findViewById(R.id.tvNameGroup);
         tvSurname = rootView.findViewById(R.id.tvSurname);
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
         btnupdate = rootView.findViewById(R.id.btnUpdate);

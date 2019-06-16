@@ -138,6 +138,17 @@ public class ApiUsage {
         }
     }
 
+    public void createGroup(String nameGroup, String acces_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("name", nameGroup);
+            postDataWithAccessToken(params, PATH_API+"groups/create", acces_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     private void getData(String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,

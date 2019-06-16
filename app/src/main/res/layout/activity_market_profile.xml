@@ -120,7 +120,7 @@
             app:layout_constraintTop_toBottomOf="@+id/map" />
 
         <android.support.design.widget.BottomNavigationView
-            android:id="@+id/footer"
+            android:id="@+id/footerpub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

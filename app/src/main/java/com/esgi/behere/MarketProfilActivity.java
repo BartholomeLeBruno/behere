@@ -72,7 +72,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-        BottomNavigationView navigationView = findViewById(R.id.footer);
+        BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
 
     }

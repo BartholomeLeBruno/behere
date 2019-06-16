@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -21,16 +24,27 @@ public class CreateGroupeActivity extends AppCompatActivity {
     private static final String PREFS = "PREFS";
     VolleyCallback mResultCallback = null;
     ApiUsage mVolleyService;
+    Button btnCreateGroup;
+    EditText tvNameGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+        btnCreateGroup = findViewById(R.id.btnCreateGroup);
+        tvNameGroup = findViewById(R.id.tvNameGroup);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-        BottomNavigationView navigationView = findViewById(R.id.footer);
+        BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
     }
 
+    public void createGroup(View view)
+    {
+        if(!tvNameGroup.getText().toString().equals(""))
+        {
+
+        }
+    }
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -75,6 +89,27 @@ public class CreateGroupeActivity extends AppCompatActivity {
                     if (!(boolean) response.get("error")) {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         sharedPreferences.edit().putString("ACESS_TOKEN",objres.getString("token")).apply();
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    void prepareCreateGroup(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("group").toString()).nextValue();
                     }
                 }
                 catch (Exception e)

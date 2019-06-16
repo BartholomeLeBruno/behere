@@ -26,6 +26,7 @@
         <activity android:name=".register.RegisterFirstStep" />
         <activity android:name=".CreateGroupeActivity" />
         <activity android:name=".MyGroupActivity"/>
+        <activity android:name=".FriendsListActivity"/>
         <activity android:name=".utils.InformationMessage"/>
         <activity android:name=".ProfilFriendGroupActivity"/>
         <activity android:name=".MapActivity">
