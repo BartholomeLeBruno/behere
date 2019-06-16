@@ -175,7 +175,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     {
         super.onDestroy();
         mMap.clear();
-        if(getIntent().getExtras() != null) { getIntent().getExtras().remove("destination"); }
         CacheContainer.getInstance().getMarketHashMap().clear();
 
     }
@@ -369,5 +368,37 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         Builder geoApiContext = new Builder();
         return geoApiContext.queryRateLimit(3).apiKey("AIzaSyBuAnhRy95K8XSSehEciHxGTbrlrAtQLj8").connectTimeout(1, TimeUnit.SECONDS)
                 .readTimeout(1, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        prepareAuthentification();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
+
+    }
+
+    void prepareAuthentification(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
+                        sharedPreferences.edit().putString("ACESS_TOKEN",objres.getString("token")).apply();
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 }

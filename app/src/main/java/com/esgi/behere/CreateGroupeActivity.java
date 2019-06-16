@@ -6,12 +6,21 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.android.volley.VolleyError;
+import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.VolleyCallback;
+
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class CreateGroupeActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
-
+    VolleyCallback mResultCallback = null;
+    ApiUsage mVolleyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,5 +55,37 @@ public class CreateGroupeActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        prepareAuthentification();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
+
+    }
+
+    void prepareAuthentification(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
+                        sharedPreferences.edit().putString("ACESS_TOKEN",objres.getString("token")).apply();
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 }
