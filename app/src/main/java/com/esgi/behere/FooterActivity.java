@@ -17,19 +17,19 @@ public class FooterActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_myprofile:
-                    mTextMessage.setText("My Profile");
+                    mTextMessage.setText(getString(R.string.myProfile));
                     return true;
                 case R.id.navigation_home:
-                    mTextMessage.setText("HOME");
+                    mTextMessage.setText(getString(R.string.home));
                     return true;
                 case R.id.disconnected:
-                    mTextMessage.setText("Disconnect");
+                    mTextMessage.setText(getString(R.string.disconnect));
                     return true;
                 case R.id.navigation_mygroups:
-                    mTextMessage.setText("My Groups");
+                    mTextMessage.setText(getString(R.string.mygroups));
                     return true;
                 case R.id.navigation_lexical:
-                    mTextMessage.setText("Lexical");
+                    mTextMessage.setText(getString(R.string.lexical));
                     return true;
             }
             return false;

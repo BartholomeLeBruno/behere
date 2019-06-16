@@ -29,6 +29,7 @@ import org.json.JSONTokener;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Calendar;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -61,7 +62,7 @@ public class EditProfileFragment extends Fragment {
         mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
 
-        btnBirthDate.setOnClickListener((View v) -> showDatePickerDialog(v));
+        btnBirthDate.setOnClickListener(this::showDatePickerDialog);
 
         btnupdate.setOnClickListener((View v) -> {
                 prepareUpdateUser();
@@ -112,7 +113,7 @@ public class EditProfileFragment extends Fragment {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                InformationMessage.createToastInformation(getActivity(), getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
+                InformationMessage.createToastInformation(Objects.requireNonNull(getActivity()), getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");
                 prepareGetUser();
                 mVolleyService = new ApiUsage(mResultCallback,getContext());
@@ -146,9 +147,8 @@ public class EditProfileFragment extends Fragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
             if(getActivity() != null) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                return new DatePickerDialog(getActivity(),
                         R.style.CustomDatePickerDialogTheme, this, year, month, day);
-                return datePickerDialog;
             }
             return null;
         }
@@ -156,9 +156,9 @@ public class EditProfileFragment extends Fragment {
         public void onDateSet(DatePicker view, int year, int month, int day) {
             month = month + 1;
             if(calculateAge(year,month,day) < 18)
-                InformationMessage.createToastInformation(getActivity(), getLayoutInflater(), getContext() ,R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
+                InformationMessage.createToastInformation(Objects.requireNonNull(getActivity()), getLayoutInflater(), Objects.requireNonNull(getContext()),R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
             else
-                ((Button) getActivity().findViewById(R.id.btnEditBirthDate)).setText(year + "-" + month + "-" + day);
+                ((Button) Objects.requireNonNull(getActivity()).findViewById(R.id.btnEditBirthDate)).setText(year + "-" + month + "-" + day);
 
         }
         public int calculateAge(int year, int month, int day) {

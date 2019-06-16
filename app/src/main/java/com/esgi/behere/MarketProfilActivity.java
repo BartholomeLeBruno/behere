@@ -2,7 +2,6 @@ package com.esgi.behere;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,6 +34,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 
 public class MarketProfilActivity extends AppCompatActivity  implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
@@ -45,8 +46,11 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
      TextView contentDesc;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
-    private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
-    private static final String PREFS = "PREFS";
+    private final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
+    private final String PREFS = "PREFS";
+     final String PREFS_LONGITUDE = "LONGITUDE";
+     final String PREFS_LATITUDE = "LATITUDE";
+
     private SharedPreferences sharedPreferences;
 
 
@@ -57,17 +61,18 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
 
         tvNameBar = findViewById(R.id.tvNameBar);
         contentDesc = findViewById(R.id.tvDescription);
-
-        Market market =  (Market) getIntent().getExtras().get("market");
+        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         if(market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
         }
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
         BottomNavigationView navigationView = findViewById(R.id.footer);
-        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> onOptionsItemSelected(menuItem));
+        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
 
     }
 
@@ -83,7 +88,8 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Market market =  (Market) getIntent().getExtras().get("market");
+        Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+        assert market != null;
         LatLng latLng = new LatLng(market.getLatitude(), market.getLongitutde());
         marker = mMap.addMarker(new MarkerOptions()
                 .position(latLng)
@@ -104,7 +110,8 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
             Intent destination = new Intent(getApplicationContext(), MapActivity.class);
-            destination.putExtra("destination", marker.getPosition());
+            sharedPreferences.edit().putLong(PREFS_LATITUDE,(long) marker.getPosition().latitude).apply();
+            sharedPreferences.edit().putLong(PREFS_LONGITUDE,(long) marker.getPosition().longitude).apply();
             startActivity(destination);
         }
         return false;
@@ -134,7 +141,8 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 Market market =  (Market) getIntent().getExtras().get("market");
                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                Log.d("voila", tvComment.getText().toString() + "-" + market.getId() + "-" + sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
+            assert market != null;
+            Log.d("voila", tvComment.getText().toString() + "-" + market.getId() + "-" + sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(),(int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
                 InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");

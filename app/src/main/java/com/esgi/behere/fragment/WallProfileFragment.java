@@ -65,12 +65,6 @@ public class WallProfileFragment extends Fragment {
         return rootView;
     }
 
-    /*ArrayList<Publication> getAllPublicationsOfActualUsers()
-    {
-        ApiUsage apiUsage = new ApiUsage()
-        return null;
-    }*/
-
 
 
     void prepareGetAllComments(){

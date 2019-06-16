@@ -31,5 +31,14 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="title_activity_test_tab">testTab</string>
     <string name="Profile">PROFILE</string>
+    <string name="myProfile">My Profile</string>
+    <string name="home">HOME</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="mygroups">My Groups</string>
+    <string name="lexical">Lexical</string>
+    <string name="access_token">ACCESS_TOKEN</string>
+    <string name="prefs">PREFS</string>
+    <string name="longitude">LONGITUDE</string>
+    <string name="latitude">LATITUDE</string>
 
 </resources>

@@ -3,7 +3,6 @@ package com.esgi.behere;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
@@ -56,7 +55,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
         BottomNavigationView navigationView = findViewById(R.id.footer);
         navigationView.getMenu().getItem(1).setChecked(true);
-        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> onOptionsItemSelected(menuItem));
+        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
         prepareGetUser();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));

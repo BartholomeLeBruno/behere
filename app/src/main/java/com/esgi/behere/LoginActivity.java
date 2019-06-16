@@ -1,6 +1,5 @@
 package com.esgi.behere;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -19,7 +17,6 @@ import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -96,35 +93,26 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         requestQueue = Volley.newRequestQueue(this);
         populateAutoComplete();
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+        mPasswordView.setOnEditorActionListener((TextView textView, int id, KeyEvent keyEvent) -> {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
                 }
                 return false;
-            }
         });
         Button register = findViewById(R.id.btnRegisterLastStep);
-        register.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        register.setOnClickListener((View v) -> {
                 Intent firstStep = new Intent(LoginActivity.this, RegisterFirstStep.class);
                 startActivity(firstStep);
-            }
         });
         Button btnSignIn =  findViewById(R.id.btnSignIn);
-        btnSignIn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnSignIn.setOnClickListener((View view) -> {
                 if (!mLoginView.getText().toString().equals("") && !mPasswordView.getText().toString().equals("")) {
                         prepareAuthentification();
                         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                         mVolleyService.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
 
                 }
-            }
         });
 
     }
@@ -143,12 +131,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mLoginView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
+                    .setAction(android.R.string.ok, (View v) -> {
                             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
                     });
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
@@ -266,7 +250,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     /**

@@ -3,7 +3,6 @@ package com.esgi.behere;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -20,8 +19,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_group);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footer);
-        navigationView.setOnNavigationItemReselectedListener(
-                (@NonNull MenuItem menuItem) -> onOptionsItemSelected(menuItem));
+        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
     }
 
 

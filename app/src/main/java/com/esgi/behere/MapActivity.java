@@ -64,6 +64,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private GoogleMap mMap;
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
+    private final String PREFS_LONGITUDE = "LONGITUDE";
+    private final String PREFS_LATITUDE = "LATITUDE";
     private SharedPreferences sharedPreferences;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -290,16 +292,16 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 location.addOnCompleteListener((@NonNull Task task) -> {
                         if(task.isSuccessful()){
                             Location homeLocation = (Location) task.getResult();
+                            assert homeLocation != null;
                             latLng = new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                             home = mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_current_location)));
-                            if(getIntent().getExtras()!=null) {
-                                if(getIntent().getExtras().get("destination") != null)
-                                {
-                                    addPolyline(home.getPosition(), (LatLng) getIntent().getExtras().get("destination"));
-                                }
+                            double latitude = sharedPreferences.getLong(PREFS_LATITUDE,0);
+                            double longitude = sharedPreferences.getLong(PREFS_LONGITUDE,0);
+                            if(latitude != 0 && longitude != 0) {
+                                addPolyline(home.getPosition(), new LatLng(latitude,longitude));
                             }
                         }else{
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();

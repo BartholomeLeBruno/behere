@@ -33,8 +33,7 @@ public class PublicationAdapter extends RecyclerView.Adapter<PublicationAdapter.
         View contactView = inflater.inflate(R.layout.fragment_publication, viewGroup, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
 
     }
 

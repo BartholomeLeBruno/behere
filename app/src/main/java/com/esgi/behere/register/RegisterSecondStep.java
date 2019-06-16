@@ -31,6 +31,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RegisterSecondStep extends Activity {
 
@@ -51,11 +52,9 @@ public class RegisterSecondStep extends Activity {
         lvBeerType = findViewById(R.id.lvBeerType);
         btnRegister = findViewById(R.id.btnRegisterLastStep);
         implementList();
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnRegister.setOnClickListener((View v) ->{
                 try {
-                    User newUser = (User) getIntent().getExtras().get("User");
+                    User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
                     prepareCreateAccount();
                     mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                     mVolleyService.createAccount(newUser);
@@ -64,14 +63,10 @@ public class RegisterSecondStep extends Activity {
                 {
                     Log.e("erroronclcoj,d",e.getMessage());
                 }
-            }
         });
-        lvBeerType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+        lvBeerType.setOnItemClickListener((AdapterView<?> adapterView, View view, int index, long l) -> {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
                 Toast.makeText(RegisterSecondStep.this, "You clicked " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();
-            }
         });
 
     }
@@ -102,7 +97,7 @@ public class RegisterSecondStep extends Activity {
                             JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                             listBeerType.add((String) objres.get("name"));
                         }
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, listBeerType) {
+                        ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, listBeerType) {
                             @Override
                             public View getView(int position, View convertView, ViewGroup parent) {
                                 // Get the Item from ListView
@@ -137,11 +132,12 @@ public class RegisterSecondStep extends Activity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        User newUser = (User) getIntent().getExtras().get("User");
+                        User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
                         JSONObject acessUser = (JSONObject) response.get("user");
                         idUser = (long) acessUser.get("id");
                         prepareAuthentification();
                         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                        assert newUser != null;
                         mVolleyService.authentificate(newUser.getEmail(),newUser.getPassword());
                     } else {
 
@@ -163,7 +159,7 @@ public class RegisterSecondStep extends Activity {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    User newUser = (User) getIntent().getExtras().get("User");
+                    User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
                     JSONObject userData = (JSONObject) response.get("user");
                     String token = (String) userData.get("token");
                     SparseBooleanArray checked = lvBeerType.getCheckedItemPositions();
@@ -175,6 +171,7 @@ public class RegisterSecondStep extends Activity {
 
                     Intent nextStep = new Intent(RegisterSecondStep.this, LoginActivity.class);
                     Mail mail = new Mail();
+                    assert newUser != null;
                     mail.send(newUser.getEmail(), newUser.getName());
                     startActivity(nextStep);
                 }
