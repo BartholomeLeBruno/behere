@@ -94,6 +94,16 @@ public class ApiUsage {
         }
     }
 
+    public void getBar(long idBar)
+    {
+        try {
+            getData(PATH_API+"bars/" + idBar);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void getAllUsers()
     {
         try {
@@ -128,6 +138,16 @@ public class ApiUsage {
     {
         try {
             getData(PATH_API+"bars");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllEntities()
+    {
+        try {
+            getData(PATH_API+"generals/getallusergroupbarbrewery");
         }catch (Exception e)
         {
             throw new RuntimeException(e);

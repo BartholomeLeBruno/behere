@@ -79,12 +79,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
-     FusedLocationProviderClient mFusedLocationProviderClient;
+    FusedLocationProviderClient mFusedLocationProviderClient;
     private LatLng latLng;
-     FloatingActionButton btnRecenter;
+    FloatingActionButton btnRecenter;
     private Marker marker, home;
-     Polyline polyline;
-     final String TAG = "MapActivity";
+    Polyline polyline;
+    final String TAG = "MapActivity";
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private ListView listView;
@@ -120,12 +120,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         setSupportActionBar(toolbar);
         searchView = findViewById(R.id.search_view);
         listView = findViewById(R.id.listView_result);
-        prepareGetAllUser();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.getAllUsers();
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
+                prepareGetAllEntities();
+                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                mVolleyService.getAllEntities();
                 listView.setVisibility(View.VISIBLE);
             }
 
@@ -143,19 +143,15 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 List<ResultSearch> lsFound = new ArrayList<>();
                 if(newText != null && !newText.trim().equals(""))
                 {
-                    listView.setVisibility(View.VISIBLE);
                     for (ResultSearch item : resultSearches) {
                         if(item.getName().contains(newText))
                             lsFound.add(item);
                     }
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this,  lsFound);
-                    listView.setAdapter(adapter);
-                }
-                else{
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
                     listView.setAdapter(adapter);
                 }
                 return true;
@@ -323,21 +319,24 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     JSONObject objres;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
+                        Log.d("voila", response.toString());
                         JSONArray res = (JSONArray) parser.parse(response.get("bar").toString());
-                        for (Object unres : res) {
-                            objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                            id =  Long.parseLong(objres.get("id").toString());
-                            name =  objres.get("name").toString();
-                            description =  objres.get("description").toString();
-                            latitude =  Double.parseDouble(objres.get("gpsLatitude").toString());
-                            longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
-                            webSiteLink =  objres.get("webSiteLink").toString();
-                            CacheContainer.getInstance().getMarketHashMap().put(name,  new Bar(id, name, latitude, longitutde, description, webSiteLink));
-                            marker = mMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(latitude,longitutde))
-                                    .title(name)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
-                            marker.setTag(0);
+                        if(!res.isEmpty()) {
+                            for (Object unres : res) {
+                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                id = Long.parseLong(objres.get("id").toString());
+                                name = objres.get("name").toString();
+                                description = objres.get("description").toString();
+                                latitude = Double.parseDouble(objres.get("gpsLatitude").toString());
+                                longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
+                                webSiteLink = objres.get("webSiteLink").toString();
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink));
+                                marker = mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(latitude, longitutde))
+                                        .title(name)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
+                                marker.setTag(0);
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -470,28 +469,73 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         };
     }
 
-    private  void prepareGetAllUser(){
+    private void prepareGetAllEntities(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
+                    ResultSearch resultSearch;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
-                        JSONArray resCommentBar = (JSONArray) parser.parse(response.get("user").toString());
-                        if (!resCommentBar.isEmpty()) {
-                            for (Object unres : resCommentBar) {
+                        JSONArray resUsers = (JSONArray) parser.parse(response.get("users").toString());
+                        if (!resUsers.isEmpty()) {
+                            for (Object unres : resUsers) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                 resultSearch = new ResultSearch();
+                                 resultSearch.setName(objres.getString("name") + " " +objres.getString("surname"));
+                                 resultSearch.setType("User");
+                                 resultSearch.setId(Long.parseLong(objres.getString("id")));
+                                 if(resultSearch.getId() != sharedPreferences.getLong(PREFS_ID,0))
+                                    resultSearches.add(resultSearch);
                             }
                         }
+                        JSONArray resBars = (JSONArray) parser.parse(response.get("bars").toString());
+                        if (!resBars.isEmpty()) {
+                            for (Object unres : resBars) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                resultSearch = new ResultSearch();
+                                resultSearch.setName(objres.getString("name"));
+                                resultSearch.setType("Bar");
+                                resultSearch.setId(Long.parseLong(objres.getString("id")));
+                                resultSearches.add(resultSearch);
+                            }
+                        }
+                        JSONArray resbrewerys = (JSONArray) parser.parse(response.get("brewerys").toString());
+                        if (!resbrewerys.isEmpty()) {
+                            for (Object unres : resbrewerys) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                resultSearch = new ResultSearch();
+                                resultSearch.setName(objres.getString("name"));
+                                resultSearch.setType("Brewery");
+                                resultSearch.setId(Long.parseLong(objres.getString("id")));
+                                resultSearches.add(resultSearch);
+                            }
+                        }
+                        JSONArray resGroups = (JSONArray) parser.parse(response.get("groups").toString());
+                        if (!resGroups.isEmpty()) {
+                            for (Object unres : resGroups) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                resultSearch = new ResultSearch();
+                                resultSearch.setName(objres.getString("name"));
+                                resultSearch.setType("Group");
+                                resultSearch.setId(Long.parseLong(objres.getString("id")));
+                                resultSearches.add(resultSearch);
+                            }
+                        }
+                        SearchAdapter adapter = new SearchAdapter(getApplicationContext(),resultSearches);
+                        listView.setAdapter(adapter);
                     }
                 }
                 catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+
             }
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
+                Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(loginActivity);
+
             }
         };
     }

@@ -51,9 +51,16 @@ public class WallProfileFragment extends Fragment {
         // Initialize contacts
         sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         prepareGetAllComments();
-        //prepareGetUser();
-        mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
-        mVolleyService.getAllComments(sharedPreferences.getLong(PREFS_ID,0));
+        if(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID") != null
+            && sharedPreferences.getLong(PREFS_ID, 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"))
+        {
+            mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+            mVolleyService.getAllComments((long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"));
+        }
+        else {
+            mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+            mVolleyService.getAllComments(sharedPreferences.getLong(PREFS_ID, 0));
+        }
         // Create adapter passing in the sample user data
         PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
         // Attach the adapter to the recyclerview to populate items

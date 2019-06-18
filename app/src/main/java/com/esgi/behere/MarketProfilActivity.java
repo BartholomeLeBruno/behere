@@ -141,8 +141,6 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-            assert market != null;
-            Log.d("voila", tvComment.getText().toString() + "-" + market.getId() + "-" + sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(),(int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
                 InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.esgi.behere.fragment.SectionsAdapterProfile;
+import com.esgi.behere.fragment.FriendOrGroupAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.VolleyCallback;
 
@@ -29,13 +29,14 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
     private TabLayout tabLayout;
     private TabItem edit;
     private TabItem wall;
-    private SectionsAdapterProfile mSectionsPagerAdapter;
+    private FriendOrGroupAdapterProfile mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private long entityId;
     private String entityType;
     private TextView tvNameEntity;
+
 
 
     @Override
@@ -48,7 +49,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
-        mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
+        mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager =  findViewById(R.id.activity_main_viewpager);
@@ -59,11 +60,17 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         if(Objects.requireNonNull(getIntent().getExtras()).get("entityID") != null && Objects.requireNonNull(getIntent().getExtras()).get("entityType") != null)
         {
             entityId = (long) getIntent().getExtras().get("entityID");
-            entityType = (String) getIntent().getExtras().get("entityString");
+            entityType = (String) getIntent().getExtras().get("entityType");
         }
         else{
             Intent goback = new Intent(getApplicationContext(), MapActivity.class);
             startActivity(goback);
+        }
+        if(Objects.equals(entityType, "User"))
+        {
+            prepareGetUser();
+            mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+            mVolleyService.getUser(entityId);
         }
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
@@ -137,6 +144,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         name = objres.getString("name");
                         surname = objres.getString("surname");
+                        tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
                         tvNameEntity.setText(name + " " + surname);
 
                     }
