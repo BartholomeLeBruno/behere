@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -18,6 +19,8 @@ import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import java.util.Objects;
 
 public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
@@ -30,6 +33,9 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
     private ViewPager mViewPager;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
+    private long entityId;
+    private String entityType;
+    private TextView tvNameEntity;
 
 
     @Override
@@ -39,6 +45,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
         edit = findViewById(R.id.tabInfo);
         wall = findViewById(R.id.tabWall);
+        tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
@@ -49,6 +56,15 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
+        if(Objects.requireNonNull(getIntent().getExtras()).get("entityID") != null && Objects.requireNonNull(getIntent().getExtras()).get("entityType") != null)
+        {
+            entityId = (long) getIntent().getExtras().get("entityID");
+            entityType = (String) getIntent().getExtras().get("entityString");
+        }
+        else{
+            Intent goback = new Intent(getApplicationContext(), MapActivity.class);
+            startActivity(goback);
+        }
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
 
@@ -107,6 +123,29 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             public void onError(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
             }
+        };
+    }
+
+    private void prepareGetUser() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    String name;
+                    String surname;
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
+                        name = objres.getString("name");
+                        surname = objres.getString("surname");
+                        tvNameEntity.setText(name + " " + surname);
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
         };
     }
 }

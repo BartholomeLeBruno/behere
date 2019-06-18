@@ -11,16 +11,19 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Bar;
 import com.esgi.behere.actor.Market;
+import com.esgi.behere.actor.ResultSearch;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.InformationMessage;
@@ -44,6 +47,8 @@ import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TransitMode;
 import com.google.maps.model.TravelMode;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.esgi.behere.adapter.SearchAdapter;
 
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
@@ -53,6 +58,7 @@ import org.json.simple.parser.JSONParser;
 
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -73,15 +79,19 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
+     FusedLocationProviderClient mFusedLocationProviderClient;
     private LatLng latLng;
-    private FloatingActionButton btnRecenter;
-    private DrawerLayout mDrawerLayout;
+     FloatingActionButton btnRecenter;
     private Marker marker, home;
-    private Polyline polyline;
-    private final String TAG = "MapActivity";
+     Polyline polyline;
+     final String TAG = "MapActivity";
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
+    private ListView listView;
+    private List<ResultSearch> resultSearches =new ArrayList<>();
+
+
+    MaterialSearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,16 +100,11 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         setContentView(R.layout.activity_main);
         initializeQueue();
         // Drawer navigation
-        mDrawerLayout = findViewById(R.id.drawer_layout);
         btnRecenter = findViewById(R.id.btnCenter);
 
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
-        navigationView.setOnNavigationItemReselectedListener((@NonNull MenuItem menuItem) -> {
-                     onOptionsItemSelected(menuItem);
-                     mDrawerLayout.closeDrawers();
-             }
-        );
+        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
         btnRecenter.setOnClickListener((View v) -> {
             if(latLng != null)
             {
@@ -111,8 +116,61 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getAllBar();
         getLocationPermission();
+        Toolbar toolbar = findViewById(R.id.toolbarMain);
+        setSupportActionBar(toolbar);
+        searchView = findViewById(R.id.search_view);
+        listView = findViewById(R.id.listView_result);
+        prepareGetAllUser();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.getAllUsers();
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                listView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                listView.setVisibility(View.INVISIBLE);
+
+            }
+        });
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<ResultSearch> lsFound = new ArrayList<>();
+                if(newText != null && !newText.trim().equals(""))
+                {
+                    listView.setVisibility(View.VISIBLE);
+                    for (ResultSearch item : resultSearches) {
+                        if(item.getName().contains(newText))
+                            lsFound.add(item);
+                    }
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this,  lsFound);
+                    listView.setAdapter(adapter);
+                }
+                else{
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                    listView.setAdapter(adapter);
+                }
+                return true;
+            }
+        });
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_item, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+        return  true;
+    }
 
     /**
      * Manipulates the map once available.
@@ -402,6 +460,32 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 }
                 catch (Exception e)
                 {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    private  void prepareGetAllUser(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray resCommentBar = (JSONArray) parser.parse(response.get("user").toString());
+                        if (!resCommentBar.isEmpty()) {
+                            for (Object unres : resCommentBar) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }

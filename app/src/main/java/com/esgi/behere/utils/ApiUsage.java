@@ -51,6 +51,7 @@ public class ApiUsage {
             params.put("password", user.getPassword());
             params.put("checkPassword", user.getCheckPassword());
             params.put("birthDate", user.getBirthDate());
+            params.put("id_phone", user.getPhone_id());
             postData(params,PATH_API+"users/create");
         }catch (Exception e)
         {
@@ -93,6 +94,16 @@ public class ApiUsage {
         }
     }
 
+    public void getAllUsers()
+    {
+        try {
+            getData(PATH_API+"users/");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void getAllComments(long idUser)
     {
         try {
@@ -122,6 +133,8 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
+
+
 
     public void updateUser(long id,String email, String name, String surname,String birthDate, String access_token)
     {

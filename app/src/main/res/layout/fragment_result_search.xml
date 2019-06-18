@@ -7,28 +7,28 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/imgPubPro"
+        android:id="@+id/imgRes"
         android:layout_width="50dp"
         android:layout_height="50dp"
         tools:background="#AAA" />
 
     <TextView
-        android:id="@+id/pseudo"
+        android:id="@+id/pseudoRes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imgPubPro"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/imgPubPro"
+        android:layout_alignTop="@+id/imgRes"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/imgRes"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         tools:text="Pseudo" />
 
     <TextView
-        android:id="@+id/PublicationText"
+        android:id="@+id/typeRes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pseudo"
-        android:layout_alignLeft="@+id/pseudo"
+        android:layout_below="@+id/pseudoRes"
+        android:layout_alignStart="@+id/pseudoRes"
         android:textColor="@android:color/black"
         tools:text="type" />
 

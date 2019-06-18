@@ -2,6 +2,7 @@ package com.esgi.behere.register;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,6 @@ import com.esgi.behere.LoginActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.User;
 import com.esgi.behere.utils.ApiUsage;
-import com.esgi.behere.utils.Mail;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONTokener;
@@ -41,6 +41,8 @@ public class RegisterSecondStep extends Activity {
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private int idUser;
+    SharedPreferences sharedPreferences;
+
 
 
     @Override
@@ -55,8 +57,11 @@ public class RegisterSecondStep extends Activity {
         btnRegister.setOnClickListener((View v) ->{
                 try {
                     User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
+
                     prepareCreateAccount();
                     mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                    assert newUser != null;
+                    newUser.setPhone_id(getIdPhone());
                     mVolleyService.createAccount(newUser);
                 }
                 catch(Exception e)
@@ -126,6 +131,13 @@ public class RegisterSecondStep extends Activity {
             public void onError(VolleyError error) { }
         };
     }
+
+    private String getIdPhone() {
+        sharedPreferences = getApplicationContext().getSharedPreferences("pref", MODE_PRIVATE);
+        Log.d("voila",sharedPreferences.getString("FCM_ID","0"));
+        return sharedPreferences.getString("FCM_ID","0");
+    }
+
     private void prepareCreateAccount(){
         mResultCallback = new VolleyCallback() {
             @Override
@@ -133,11 +145,11 @@ public class RegisterSecondStep extends Activity {
                 try {
                     if (!(boolean) response.get("error")) {
                         User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
+                        assert newUser != null;
                         JSONObject acessUser = (JSONObject) response.get("user");
                         idUser = (int) acessUser.get("id");
                         prepareAuthentification();
                         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                        assert newUser != null;
                         mVolleyService.authentificate(newUser.getEmail(),newUser.getPassword());
                     } else {
 
@@ -170,9 +182,9 @@ public class RegisterSecondStep extends Activity {
                         }
 
                     Intent nextStep = new Intent(RegisterSecondStep.this, LoginActivity.class);
-                    Mail mail = new Mail();
-                    assert newUser != null;
-                    mail.send(newUser.getEmail(), newUser.getName());
+                    //Mail mail = new Mail();
+                    //assert newUser != null;
+                    //mail.send(newUser.getEmail(), newUser.getName());
                     startActivity(nextStep);
                 }
                 catch (Exception e)

@@ -78,11 +78,12 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
+        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences.edit().clear().apply();
         // Set up the login form.
         initializeQueue();
         mLoginView = findViewById(R.id.login);
         mPasswordView = findViewById(R.id.password);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         mPasswordView.setOnEditorActionListener((TextView textView, int id, KeyEvent keyEvent) -> {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                     attemptLogin();

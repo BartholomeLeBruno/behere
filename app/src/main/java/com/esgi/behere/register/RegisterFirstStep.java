@@ -55,15 +55,16 @@ public class RegisterFirstStep extends AppCompatActivity {
                             && !btnBirthDate.getText().toString().toUpperCase().equals("BIRTHDATE")
                             && !password.getText().toString().equals("")
                             && !checkPassword.getText().toString().equals("")) {
-                        newUser.setName(name.getText().toString());
-                        newUser.setSurname(surname.getText().toString());
-                        newUser.setEmail(email.getText().toString());
-                        newUser.setBirthDate(btnBirthDate.getText().toString());
-                        newUser.setPassword(password.getText().toString());
-                        newUser.setCheckPassword(checkPassword.getText().toString());
-                        Intent nextStep = new Intent(RegisterFirstStep.this, RegisterSecondStep.class);
-                        nextStep.putExtra("User", newUser);
-                        startActivity(nextStep);
+
+                            newUser.setName(name.getText().toString());
+                            newUser.setSurname(surname.getText().toString());
+                            newUser.setEmail(email.getText().toString());
+                            newUser.setBirthDate(btnBirthDate.getText().toString());
+                            newUser.setPassword(password.getText().toString());
+                            newUser.setCheckPassword(checkPassword.getText().toString());
+                            Intent nextStep = new Intent(RegisterFirstStep.this, RegisterSecondStep.class);
+                            nextStep.putExtra("User", newUser);
+                            startActivity(nextStep);
                     }
             }
             else{

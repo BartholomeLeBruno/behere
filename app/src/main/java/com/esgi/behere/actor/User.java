@@ -22,6 +22,16 @@ public class User implements Serializable {
 
     private String pathPicture;
 
+    public String getPhone_id() {
+        return phone_id;
+    }
+
+    public void setPhone_id(String phone_id) {
+        this.phone_id = phone_id;
+    }
+
+    private String phone_id;
+
     private List<User> listFriends = new ArrayList<>();
 
     public List<BeerType> getListBeer() {

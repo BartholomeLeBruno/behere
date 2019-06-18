@@ -28,7 +28,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private TabItem edit;
     private TabItem wall;
     private TextView tvNamePerson;
-    private TextView tvFriends;
+    private TextView tvFriends, tvGroups;
     private SectionsAdapterProfile mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private SharedPreferences sharedPreferences;
@@ -46,6 +46,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         edit = findViewById(R.id.tabInfo);
         wall = findViewById(R.id.tabWall);
         tvFriends = findViewById(R.id.tvFriends);
+        tvGroups = findViewById(R.id.tvGroups);
         tvNamePerson = findViewById(R.id.tvNamePerson);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
@@ -64,6 +65,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
         tvFriends.setOnClickListener(this::onFriendListCLick);
+        tvGroups.setOnClickListener(this::onGroupListCLick);
 
     }
 
@@ -128,6 +130,11 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private void onFriendListCLick(View view)
     {
         Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
+        startActivity(listFriend);
+    }
+    private void onGroupListCLick(View view)
+    {
+        Intent listFriend = new Intent(getApplicationContext(), CreateGroupeActivity.class);
         startActivity(listFriend);
     }
 
