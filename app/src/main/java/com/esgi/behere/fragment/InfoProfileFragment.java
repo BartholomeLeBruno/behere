@@ -29,10 +29,7 @@ public class InfoProfileFragment extends Fragment {
     private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
-    private ApiUsage mVolleyService;
     private TextView tvEmail, tvName, tvBirthdate;
-    private long entityId;
-    private String entityType;
 
     @Nullable
     @Override
@@ -44,11 +41,11 @@ public class InfoProfileFragment extends Fragment {
         tvBirthdate = rootView.findViewById(R.id.tvBirthDateUser);
 
         sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-        entityId = (long) getActivity().getIntent().getExtras().get("entityID");
-        entityType = (String) getActivity().getIntent().getExtras().get("entityType");
+        long entityId = (long) getActivity().getIntent().getExtras().get("entityID");
+        String entityType = (String) getActivity().getIntent().getExtras().get("entityType");
         if(entityType.equals("User")) {
             prepareGetUser();
-            mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+            ApiUsage mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
             mVolleyService.getUser(entityId);
         }
         else{

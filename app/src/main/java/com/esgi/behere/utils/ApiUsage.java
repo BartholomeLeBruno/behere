@@ -120,7 +120,7 @@ public class ApiUsage {
     public void getAllUsers()
     {
         try {
-            getData(PATH_API+"users/");
+            getData(PATH_API+"users");
         }catch (Exception e)
         {
             throw new RuntimeException(e);

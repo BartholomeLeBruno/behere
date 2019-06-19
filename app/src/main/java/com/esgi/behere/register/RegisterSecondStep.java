@@ -62,11 +62,12 @@ public class RegisterSecondStep extends Activity {
                     mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                     assert newUser != null;
                     newUser.setPhone_id(getIdPhone());
+                    newUser.setEmail(newUser.getEmail().trim());
                     mVolleyService.createAccount(newUser);
                 }
                 catch(Exception e)
                 {
-                    Log.e("erroronclcoj,d",e.getMessage());
+                    Log.e("error",e.getMessage());
                 }
         });
         lvBeerType.setOnItemClickListener((AdapterView<?> adapterView, View view, int index, long l) -> {
@@ -148,6 +149,7 @@ public class RegisterSecondStep extends Activity {
                         assert newUser != null;
                         JSONObject acessUser = (JSONObject) response.get("user");
                         idUser = (int) acessUser.get("id");
+
                         prepareAuthentification();
                         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                         mVolleyService.authentificate(newUser.getEmail(),newUser.getPassword());

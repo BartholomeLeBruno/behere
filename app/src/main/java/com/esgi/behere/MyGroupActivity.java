@@ -23,7 +23,6 @@ public class MyGroupActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
-    private ApiUsage mVolleyService;
 
 
     @Override
@@ -82,7 +81,7 @@ public class MyGroupActivity extends AppCompatActivity {
     {
         super.onResume();
         prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        ApiUsage mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
 
     }

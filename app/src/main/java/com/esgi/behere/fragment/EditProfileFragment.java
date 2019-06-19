@@ -44,7 +44,6 @@ public class EditProfileFragment extends Fragment {
     private ApiUsage mVolleyService;
     private TextView tvEmail, tvName, tvSurname;
     private Button btnBirthDate;
-    private Button btnupdate;
 
     @Nullable
     @Override
@@ -55,7 +54,7 @@ public class EditProfileFragment extends Fragment {
         tvName = rootView.findViewById(R.id.tvNameGroup);
         tvSurname = rootView.findViewById(R.id.tvSurname);
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
-        btnupdate = rootView.findViewById(R.id.btnUpdate);
+        Button btnupdate = rootView.findViewById(R.id.btnUpdate);
 
         sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         prepareGetUser();

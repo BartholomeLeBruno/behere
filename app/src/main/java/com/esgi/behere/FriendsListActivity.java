@@ -12,7 +12,6 @@ import com.esgi.behere.adapter.FriendAdpater;
 
 public class FriendsListActivity extends AppCompatActivity {
 
-    private ListView listview;
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
 
@@ -21,7 +20,7 @@ public class FriendsListActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_friends);
-        listview =  findViewById(R.id.listFriends);
+        ListView listview = findViewById(R.id.listFriends);
         listview.setAdapter(new FriendAdpater(this, new String[] { "data1",
                 "data2","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","datalast" }));
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);

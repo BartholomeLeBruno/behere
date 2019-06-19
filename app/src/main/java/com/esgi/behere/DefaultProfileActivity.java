@@ -24,13 +24,7 @@ import org.json.JSONTokener;
 
 public class DefaultProfileActivity extends AppCompatActivity {
 
-    private TabLayout tabLayout;
-    private TabItem edit;
-    private TabItem wall;
     private TextView tvNamePerson;
-    private TextView tvFriends, tvGroups;
-    private SectionsAdapterProfile mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
@@ -43,20 +37,18 @@ public class DefaultProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default_profile);
 
-        edit = findViewById(R.id.tabInfo);
-        wall = findViewById(R.id.tabWall);
-        tvFriends = findViewById(R.id.tvFriends);
-        tvGroups = findViewById(R.id.tvGroups);
+        TextView tvFriends = findViewById(R.id.tvFriends);
+        TextView tvGroups = findViewById(R.id.tvGroups);
         tvNamePerson = findViewById(R.id.tvNamePerson);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
-        mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
+        SectionsAdapterProfile mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager =  findViewById(R.id.activity_main_viewpager);
+        ViewPager mViewPager = findViewById(R.id.activity_main_viewpager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        tabLayout =  findViewById(R.id.tabLayout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.getMenu().getItem(1).setChecked(true);

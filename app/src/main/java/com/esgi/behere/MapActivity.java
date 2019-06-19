@@ -101,7 +101,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         initializeQueue();
         // Drawer navigation
         btnRecenter = findViewById(R.id.btnCenter);
-
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);

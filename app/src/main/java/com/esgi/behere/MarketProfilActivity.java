@@ -42,17 +42,12 @@ import java.util.Objects;
 public class MarketProfilActivity extends AppCompatActivity  implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
 
-    private TextView tvNameBar;
-    private  GoogleMap mMap;
-    private  Marker marker;
-    private  TextView contentDesc;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
     private final String PREFS = "PREFS";
     private final String PREFS_LONGITUDE = "LONGITUDE";
     private final String PREFS_LATITUDE = "LATITUDE";
-    private Button btnWebsite;
 
     private SharedPreferences sharedPreferences;
 
@@ -62,10 +57,10 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_market_profile);
 
-        tvNameBar = findViewById(R.id.tvNameBar);
-        contentDesc = findViewById(R.id.tvDescription);
+        TextView tvNameBar = findViewById(R.id.tvNameBar);
+        TextView contentDesc = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-        btnWebsite = findViewById(R.id.btnWebsite);
+        Button btnWebsite = findViewById(R.id.btnWebsite);
         Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         if(market != null) {
             tvNameBar.setText(market.getName());
@@ -100,18 +95,17 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
         Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         assert market != null;
         LatLng latLng = new LatLng(market.getLatitude(), market.getLongitutde());
-        marker = mMap.addMarker(new MarkerOptions()
+        Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(market.getName())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
         marker.setTag(0);
-        mMap.setOnMarkerClickListener(this);
+        googleMap.setOnMarkerClickListener(this);
         CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(latLng, 16.0f);
-        mMap.animateCamera(yourLocation);
+        googleMap.animateCamera(yourLocation);
 
     }
 

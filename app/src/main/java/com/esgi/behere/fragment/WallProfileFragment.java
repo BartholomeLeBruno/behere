@@ -36,10 +36,7 @@ public class WallProfileFragment extends Fragment {
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
-    private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
-    private ApiUsage mVolleyService;
-
 
 
     @Nullable
@@ -49,8 +46,9 @@ public class WallProfileFragment extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.listPublication);
         // Initialize contacts
-        sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         prepareGetAllComments();
+        ApiUsage mVolleyService;
         if(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID") != null
             && sharedPreferences.getLong(PREFS_ID, 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"))
         {

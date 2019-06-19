@@ -17,7 +17,6 @@ import static com.esgi.behere.utils.CacheContainer.initializeQueue;
 
 public class SplashScreen extends Activity {
 
-    private static int SPLASH_TIME_OUT = 1000;
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
@@ -31,6 +30,7 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         initializeQueue();
+        int SPLASH_TIME_OUT = 1000;
         new Handler().postDelayed(() ->
         {
                 try {

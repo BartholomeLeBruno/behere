@@ -22,16 +22,13 @@ public class CreateGroupeActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
-    private ApiUsage mVolleyService;
-    private Button btnCreateGroup;
-    private EditText tvNameGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
-        btnCreateGroup = findViewById(R.id.btnCreateGroup);
-        tvNameGroup = findViewById(R.id.tvNameGroup);
+        Button btnCreateGroup = findViewById(R.id.btnCreateGroup);
+        EditText tvNameGroup = findViewById(R.id.tvNameGroup);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
@@ -67,7 +64,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
     {
         super.onResume();
         prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        ApiUsage mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
 
     }

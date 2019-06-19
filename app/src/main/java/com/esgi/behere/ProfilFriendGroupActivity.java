@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +17,7 @@ import com.esgi.behere.fragment.FriendOrGroupAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.VolleyCallback;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -26,11 +27,6 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
-    private TabLayout tabLayout;
-    private TabItem edit;
-    private TabItem wall;
-    private FriendOrGroupAdapterProfile mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private long entityId;
@@ -44,18 +40,16 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_profile_groups);
 
-        edit = findViewById(R.id.tabInfo);
-        wall = findViewById(R.id.tabWall);
         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
-        mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
+        FriendOrGroupAdapterProfile mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager =  findViewById(R.id.activity_main_viewpager);
+        ViewPager mViewPager = findViewById(R.id.activity_main_viewpager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        tabLayout =  findViewById(R.id.tabLayout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
         if(Objects.requireNonNull(getIntent().getExtras()).get("entityID") != null && Objects.requireNonNull(getIntent().getExtras()).get("entityType") != null)
         {
@@ -146,7 +140,17 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         surname = objres.getString("surname");
                         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
                         tvNameEntity.setText(name + " " + surname);
-
+                        Button btnChat = findViewById(R.id.btnTestChat);
+                        btnChat.setOnClickListener(v -> {
+                            try {
+                                Intent chatroul = new Intent(getApplicationContext(), Chat.class);
+                                chatroul.putExtra("reponsderEmail",objres.getString("email"));
+                                chatroul.putExtra("reponsderID",objres.getLong("id"));
+                                startActivity(chatroul);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
