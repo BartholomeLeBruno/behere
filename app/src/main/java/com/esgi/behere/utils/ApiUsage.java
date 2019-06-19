@@ -84,6 +84,19 @@ public class ApiUsage {
         }
     }
 
+    public void addCommentsToBrewery(String text, int brewery_id, String acces_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("text", text);
+            params.put("brewery_id", brewery_id);
+            postDataWithAccessToken(params, PATH_API+"commentsBrewerys/create", acces_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void getUser(long idUser)
     {
         try {
@@ -138,6 +151,16 @@ public class ApiUsage {
     {
         try {
             getData(PATH_API+"bars");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllBrewery()
+    {
+        try {
+            getData(PATH_API+"brewerys");
         }catch (Exception e)
         {
             throw new RuntimeException(e);

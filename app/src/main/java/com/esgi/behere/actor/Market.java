@@ -16,15 +16,22 @@ public abstract class Market implements Serializable {
 
     private String webSiteLink;
 
+    private String type;
 
-     Market(long id, String name, Double latitude, Double longitutde, String description, String webSiteLink) {
+
+     Market(long id, String name, Double latitude, Double longitutde, String description, String webSiteLink, String type) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitutde = longitutde;
         this.description = description;
         this.webSiteLink = webSiteLink;
+        this.type = type;
     }
+
+    public String getType() { return type; }
+
+    public void setType(String type) { this.type = type; }
 
     public long getId() {
         return id;

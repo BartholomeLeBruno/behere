@@ -115,6 +115,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         prepareGetAllBar();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getAllBar();
+        prepareGetAllBrewery();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.getAllBrewery();
         getLocationPermission();
         Toolbar toolbar = findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbar);
@@ -330,7 +333,50 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 latitude = Double.parseDouble(objres.get("gpsLatitude").toString());
                                 longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
                                 webSiteLink = objres.get("webSiteLink").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink));
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, "Bar"));
+                                marker = mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(latitude, longitutde))
+                                        .title(name)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
+                                marker.setTag(0);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
+    private void prepareGetAllBrewery() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    long id;
+                    String name;
+                    double latitude;
+                    double longitutde;
+                    String description;
+                    String webSiteLink;
+                    JSONObject objres;
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        Log.d("voila", response.toString());
+                        JSONArray res = (JSONArray) parser.parse(response.get("brewery").toString());
+                        if(!res.isEmpty()) {
+                            for (Object unres : res) {
+                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                id = Long.parseLong(objres.get("id").toString());
+                                name = objres.get("name").toString();
+                                description = objres.get("description").toString();
+                                latitude = Double.parseDouble(objres.get("gpsLatitude").toString());
+                                longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
+                                webSiteLink = objres.get("webSiteLink").toString();
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink,"Brewery"));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)

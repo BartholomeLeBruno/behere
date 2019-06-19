@@ -65,16 +65,15 @@ public class SearchAdapter extends BaseAdapter {
                     parent.getContext().startActivity(nextStep);
                     break;
                 case "Bar":
-                    Market m = CacheContainer.getInstance().getMarketHashMap().get(data.get(position).getName());
+                    Market bar = CacheContainer.getInstance().getMarketHashMap().get(data.get(position).getName());
                     nextStep = new Intent(v.getContext(), MarketProfilActivity.class);
-                    nextStep.putExtra("market", m);
+                    nextStep.putExtra("market", bar);
                     parent.getContext().startActivity(nextStep);
                     break;
                 case "Brewery":
-                    //todo handle brewery as we handle bar
+                    Market brewery = CacheContainer.getInstance().getMarketHashMap().get(data.get(position).getName());
                     nextStep = new Intent(v.getContext(), MarketProfilActivity.class);
-                    nextStep.putExtra("entityID", data.get(position).getId());
-                    nextStep.putExtra("entityType", data.get(position).getType());
+                    nextStep.putExtra("market", brewery);
                     parent.getContext().startActivity(nextStep);
                     break;
                 case "Group":

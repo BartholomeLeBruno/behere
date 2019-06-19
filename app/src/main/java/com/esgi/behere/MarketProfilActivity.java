@@ -2,6 +2,7 @@ package com.esgi.behere;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
     private final String PREFS = "PREFS";
     private final String PREFS_LONGITUDE = "LONGITUDE";
     private final String PREFS_LATITUDE = "LATITUDE";
+    private Button btnWebsite;
 
     private SharedPreferences sharedPreferences;
 
@@ -63,10 +65,20 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         tvNameBar = findViewById(R.id.tvNameBar);
         contentDesc = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        btnWebsite = findViewById(R.id.btnWebsite);
         Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         if(market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
+            if(market.getWebSiteLink().isEmpty()) {
+                btnWebsite.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse(market.getWebSiteLink()));
+                    startActivity(intent);
+                });
+            }
         }
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -137,17 +149,27 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
         EditText tvComment =  popupView.findViewById(R.id.tvComment);
         btnSendComment.setOnClickListener((View v) -> {
-                prepareAddCommentBar();
+            Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+            prepareAddComment();
+            if(market.getType().equals("Bar")) {
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-                Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
-                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                mVolleyService.addCommentsToBar(tvComment.getText().toString(),(int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
-                InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN, ""));
+                InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");
                 popupWindow.dismiss();
+            }
+            else{
+                sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN, ""));
+                InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
+                        "We love you my love");
+                popupWindow.dismiss();
+            }
         });
     }
-    private void prepareAddCommentBar(){
+    private void prepareAddComment(){
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
