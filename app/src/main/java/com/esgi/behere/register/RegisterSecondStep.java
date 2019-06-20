@@ -36,7 +36,6 @@ import java.util.Objects;
 public class RegisterSecondStep extends Activity {
 
     private ListView lvBeerType;
-    private Button btnRegister;
     private List<String> listBeerType = new ArrayList<>();
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
@@ -52,7 +51,7 @@ public class RegisterSecondStep extends Activity {
         setContentView(R.layout.activity_register_second_step);
 
         lvBeerType = findViewById(R.id.lvBeerType);
-        btnRegister = findViewById(R.id.btnRegisterLastStep);
+        Button btnRegister = findViewById(R.id.btnRegisterLastStep);
         implementList();
         btnRegister.setOnClickListener((View v) ->{
                 try {

@@ -120,6 +120,8 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             sharedPreferences.edit().putString(PREFS_LATITUDE, marker.getPosition().latitude + "").apply();
             sharedPreferences.edit().putString(PREFS_LONGITUDE, marker.getPosition().longitude + "").apply();
             startActivity(destination);
+            InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(),
+                    R.drawable.my_icon_bar, "Suivez le chemin de la bière mes amies !");
         }
         return false;
     }

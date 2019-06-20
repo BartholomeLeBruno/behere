@@ -26,8 +26,10 @@ import com.esgi.behere.actor.Market;
 import com.esgi.behere.actor.ResultSearch;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.CacheContainer;
-import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.VolleyCallback;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.GeoApiContext.Builder;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -88,7 +90,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private ListView listView;
-    private List<ResultSearch> resultSearches =new ArrayList<>();
+    private List<ResultSearch> resultSearches = new ArrayList<>();
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationCallback mLocationCallback;
+
 
 
     MaterialSearchView searchView;
@@ -101,24 +106,19 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         initializeQueue();
         // Drawer navigation
         btnRecenter = findViewById(R.id.btnCenter);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
-        btnRecenter.setOnClickListener((View v) -> {
-            if(latLng != null)
-            {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
-            }
 
-        });
         prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD", ""));
         prepareGetAllBar();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllBar();
         prepareGetAllBrewery();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllBrewery();
         getLocationPermission();
         Toolbar toolbar = findViewById(R.id.toolbarMain);
@@ -129,7 +129,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             @Override
             public void onSearchViewShown() {
                 prepareGetAllEntities();
-                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.getAllEntities();
                 listView.setVisibility(View.VISIBLE);
             }
@@ -150,19 +150,69 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public boolean onQueryTextChange(String newText) {
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 List<ResultSearch> lsFound = new ArrayList<>();
-                if(newText != null && !newText.trim().equals(""))
-                {
+                if (newText != null && !newText.trim().equals("")) {
                     for (ResultSearch item : resultSearches) {
-                        if(item.getName().contains(newText))
+                        if (item.getName().contains(newText))
                             lsFound.add(item);
                     }
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this,  lsFound);
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
                     listView.setAdapter(adapter);
                 }
                 return true;
             }
         });
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if(home != null) {
+                    home.remove();
+                }
+                if(polyline != null) {
+                    polyline.remove();
+                }
+                home = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_current_location)));
+                home.setTag(0);
+                btnRecenter.setOnClickListener((View v) -> {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()), DEFAULT_ZOOM));
+                });
+                if (!Objects.equals(sharedPreferences.getString(PREFS_LATITUDE, ""), "")) {
+                    double latitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LATITUDE, "")));
+                    double longitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LONGITUDE, "")));
+                    if (latitude != 0 && longitude != 0) {
+                        addPolyline(home.getPosition(), new LatLng(latitude, longitude));
+                    }
+                }
+            }
+        };
+        startTrackingLocation();
+    }
 
+    private void startTrackingLocation() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION},1
+                    );
+        } else {
+            mFusedLocationClient.requestLocationUpdates
+                    (getLocationRequest(),
+                            mLocationCallback,
+                            null /* Looper */);
+        }
+    }
+
+    private LocationRequest getLocationRequest() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return locationRequest;
     }
 
     @Override
@@ -170,7 +220,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         getMenuInflater().inflate(R.menu.menu_item, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
-        return  true;
+        return true;
     }
 
     /**
@@ -209,7 +259,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         }
     }
 
-    private void addPolyline(LatLng home,LatLng toMarket) {
+    private void addPolyline(LatLng home, LatLng toMarket) {
         try {
             DirectionsResult result = DirectionsApi.newRequest(getBuilder().build()).mode(TravelMode.WALKING)
                     .transitMode(TransitMode.TRAIN)
@@ -221,22 +271,16 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
             polyline.remove();
             polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-            InformationMessage.createToastInformation(MapActivity.this,getLayoutInflater(),getApplicationContext(),
-                    R.drawable.my_icon_bar,"Suivez le chemin de la bière mes amies !");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public  void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         mMap.clear();
         CacheContainer.getInstance().getMarketHashMap().clear();
-
 
 
     }
@@ -249,20 +293,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
     @Override
     public void onLocationChanged(Location location) {
-        mMap.clear();
-
-        MarkerOptions mp = new MarkerOptions();
-
-        mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
-
-        mp.title("my position");
-
-        mMap.addMarker(mp);
-
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(location.getLatitude(), location.getLongitude()), 16));
-
-
+        Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -275,10 +306,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
-                Market m = CacheContainer.getInstance().getMarketHashMap().get(marker.getTitle());
-                Intent nextStep = new Intent(MapActivity.this, MarketProfilActivity.class);
-                nextStep.putExtra("market", m);
-                startActivity(nextStep);
+            Market m = CacheContainer.getInstance().getMarketHashMap().get(marker.getTitle());
+            Intent nextStep = new Intent(MapActivity.this, MarketProfilActivity.class);
+            nextStep.putExtra("market", m);
+            startActivity(nextStep);
         }
 
         // Return false to indicate that we have not consumed the event and that we wish
@@ -326,7 +357,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         JSONParser parser = new JSONParser();
                         Log.d("voila", response.toString());
                         JSONArray res = (JSONArray) parser.parse(response.get("bar").toString());
-                        if(!res.isEmpty()) {
+                        if (!res.isEmpty()) {
                             for (Object unres : res) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 id = Long.parseLong(objres.get("id").toString());
@@ -348,8 +379,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 
@@ -369,7 +402,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         JSONParser parser = new JSONParser();
                         Log.d("voila", response.toString());
                         JSONArray res = (JSONArray) parser.parse(response.get("brewery").toString());
-                        if(!res.isEmpty()) {
+                        if (!res.isEmpty()) {
                             for (Object unres : res) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 id = Long.parseLong(objres.get("id").toString());
@@ -378,7 +411,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 latitude = Double.parseDouble(objres.get("gpsLatitude").toString());
                                 longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
                                 webSiteLink = objres.get("webSiteLink").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink,"Brewery"));
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, "Brewery"));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
@@ -391,49 +424,41 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        try{
-            if(mLocationPermissionsGranted){
+        try {
+            if (mLocationPermissionsGranted) {
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener((@NonNull Task task) -> {
-                        if(task.isSuccessful()){
-                            Location homeLocation = (Location) task.getResult();
-                            assert homeLocation != null;
-                            latLng = new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
-                            home = mMap.addMarker(new MarkerOptions()
-                                    .position(latLng)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_current_location)));
-                            if(!Objects.equals(sharedPreferences.getString(PREFS_LATITUDE, ""), "")) {
-                                double latitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LATITUDE, "")));
-                                double longitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LONGITUDE, "")));
-                                if (latitude != 0 && longitude != 0) {
-                                    addPolyline(home.getPosition(), new LatLng(latitude, longitude));
-                                }
+                            if (task.isSuccessful()) {
+                                Location homeLocation = (Location) task.getResult();
+                                assert homeLocation != null;
+                                latLng = new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude());
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                            } else {
+                                Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                             }
-                        }else{
-                            Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
-                    }
                 );
             }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         mLocationPermissionsGranted = false;
-        if(grantResults.length > 0){
-            for (int grant: grantResults) {
-                if(grant != PackageManager.PERMISSION_GRANTED){
+        if (grantResults.length > 0) {
+            for (int grant : grantResults) {
+                if (grant != PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionsGranted = false;
                     return;
                 }
@@ -443,27 +468,27 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         }
     }
 
-    private void initMap(){
+    private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if(mapFragment != null) mapFragment.getMapAsync(MapActivity.this);
+        if (mapFragment != null) mapFragment.getMapAsync(MapActivity.this);
     }
 
-    private void getLocationPermission(){
+    private void getLocationPermission() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionsGranted = true;
                 initMap();
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
-        }else{
+        } else {
             ActivityCompat.requestPermissions(this,
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -473,7 +498,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     @Override
     public void onBackPressed() {
         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
 
@@ -486,14 +511,14 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD", ""));
 
     }
+
 
     private void prepareAuthentification(){
         mResultCallback = new VolleyCallback() {
