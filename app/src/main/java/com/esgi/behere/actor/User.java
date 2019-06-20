@@ -22,6 +22,16 @@ public class User implements Serializable {
 
     private String pathPicture;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    private long id;
+
     public String getPhone_id() {
         return phone_id;
     }

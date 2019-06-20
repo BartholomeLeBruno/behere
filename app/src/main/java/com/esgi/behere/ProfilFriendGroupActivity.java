@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
     private String entityType;
     private TextView tvNameEntity;
     private Button btnJoinORAdd;
+    private TextView tvFriendsOrMembers;
 
 
 
@@ -46,6 +48,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_other_profile_groups);
 
         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
+        tvFriendsOrMembers = findViewById(R.id.tvFriendsOrMembers);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         btnJoinORAdd = findViewById(R.id.btnJoinOrAdd);
         FriendOrGroupAdapterProfile mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
@@ -71,13 +74,21 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getUser(entityId);
             btnJoinORAdd.setText(getString(R.string.add));
-            prepareGetAllFriends();
+            prepareGetAllPersonnalFriends();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-            mVolleyService.getAllFriends(entityId);
+            mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
             btnJoinORAdd.setOnClickListener(v -> {
                 prepareEmpty();
                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                 mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID,0),(int)entityId,sharedPreferences.getString("ACESS_TOKEN",""));
+            });
+            prepareGetAllFriends();
+            mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+            mVolleyService.getAllFriendsOfFriend(entityId);
+            tvFriendsOrMembers.setOnClickListener(v -> {
+                Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
+                listFriend.putExtra("entityID", entityId);
+                startActivity(listFriend);
             });
         }
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
@@ -175,6 +186,35 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         };
     }
 
+    private void prepareGetAllPersonnalFriends()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray resFriends = (JSONArray) parser.parse(response.get("friend").toString());
+                        if (!resFriends.isEmpty()) {
+                            for (Object unres : resFriends) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                if(Long.parseLong(objres.get("user_friend_id").toString()) == entityId)
+                                {
+                                    btnJoinORAdd.setEnabled(false);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
     private void prepareGetAllFriends()
     {
         mResultCallback = new VolleyCallback() {
@@ -184,16 +224,9 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
-                        if (!resFriend.isEmpty()) {
-                            for (Object unres : resFriend) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                if(Long.parseLong(objres.get("user_friend_id").toString()) == entityId)
-                                {
-                                    btnJoinORAdd.setEnabled(false);
-                                    break;
-                                }
-                            }
-                        }                    }
+                        Log.d("voila",resFriend.size()+"");
+                        tvFriendsOrMembers.setText(resFriend.size() + " Friends");
+                    }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

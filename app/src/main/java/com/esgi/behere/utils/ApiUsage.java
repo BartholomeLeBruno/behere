@@ -7,7 +7,6 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.esgi.behere.actor.User;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
@@ -111,9 +110,19 @@ public class ApiUsage {
     public void getAllFriends(long idUser)
     {
         try {
-            JSONObject params = new JSONObject();
-            params.put("user_id", idUser);
-            getDataWithParam(params,PATH_API+"friends");
+            Log.d("getAllFriends",PATH_API+"friends?user_id="+idUser+"&status=true");
+            getData(PATH_API+"friends?user_id="+idUser+"&status=true");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllFriendsOfFriend(long idUser)
+    {
+        try {
+            Log.d("getAllFriendsOfFriend",PATH_API+"friends?user_friend_id="+idUser+"&status=true");
+            getData(PATH_API+"friends?user_friend_id="+idUser+"&status=true");
         }catch (Exception e)
         {
             throw new RuntimeException(e);

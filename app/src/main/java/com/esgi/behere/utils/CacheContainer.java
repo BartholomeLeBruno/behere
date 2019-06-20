@@ -3,8 +3,11 @@ package com.esgi.behere.utils;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.esgi.behere.actor.Market;
+import com.esgi.behere.actor.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -17,9 +20,13 @@ public class CacheContainer {
     private static RequestQueue queue;
     private static HashMap<String, Market> marketHashMap;
 
+
+    private static List<User> friends;
+
     private CacheContainer()
     {
         marketHashMap = new HashMap<>();
+        friends = new ArrayList<>();
     }
 
     /** Instance unique non préinitialisée */
@@ -43,6 +50,9 @@ public class CacheContainer {
     {
         return marketHashMap;
     }
+
+    public List<User> getFriends() { return friends; }
+
 
 
 

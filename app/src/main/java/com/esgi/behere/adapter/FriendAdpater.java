@@ -1,24 +1,32 @@
 package com.esgi.behere.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.esgi.behere.DefaultProfileActivity;
+import com.esgi.behere.ProfilFriendGroupActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.User;
 
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FriendAdpater extends BaseAdapter {
 
     private Context context;
     private List<User> data;
     private static LayoutInflater inflater = null;
+    private SharedPreferences sharedPreferences;
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_ID = "USER_ID";
 
     public FriendAdpater(Context context, List<User> data) {
         // TODO Auto-generated constructor stub
@@ -49,14 +57,25 @@ public class FriendAdpater extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
+        sharedPreferences = parent.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         View vi = convertView;
         if (vi == null)
             vi = inflater.inflate(R.layout.fragment_friend, null);
         TextView text =  vi.findViewById(R.id.pseudoPubPro);
-        Button addFriend = vi.findViewById(R.id.btnADDFriend);
-        addFriend.setEnabled(false);
-        text.setText(data.get(position).getName());
-        text.setOnClickListener((View v) -> Toast.makeText(FriendAdpater.inflater.getContext(),"voila"+position,Toast.LENGTH_SHORT).show());
+        text.setText(String.format("%s%s", data.get(position).getName(), data.get(position).getName()));
+        vi.setOnClickListener(v -> {
+            Intent next;
+            if (sharedPreferences.getLong(PREFS_ID, 0) != data.get(position).getId()) {
+                next = new Intent(parent.getContext(), ProfilFriendGroupActivity.class);
+                next.putExtra("entityID", data.get(position).getId());
+                next.putExtra("entityType", "User");
+                parent.getContext().startActivity(next);
+            }
+        else {
+                next = new Intent(parent.getContext(), DefaultProfileActivity.class);
+                parent.getContext().startActivity(next);
+            }
+        });
         return vi;
     }
 }

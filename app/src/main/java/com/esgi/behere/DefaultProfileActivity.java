@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +19,8 @@ import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 
 public class DefaultProfileActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private static final String PREFS_ID = "USER_ID";
+    private TextView tvFriends;
 
 
     @Override
@@ -37,7 +39,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default_profile);
 
-        TextView tvFriends = findViewById(R.id.tvFriends);
+        tvFriends = findViewById(R.id.tvFriends);
         TextView tvGroups = findViewById(R.id.tvGroups);
         tvNamePerson = findViewById(R.id.tvNamePerson);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
@@ -58,6 +60,9 @@ public class DefaultProfileActivity extends AppCompatActivity {
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
         tvFriends.setOnClickListener(this::onFriendListCLick);
         tvGroups.setOnClickListener(this::onGroupListCLick);
+        prepareGetAllFriends();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
 
     }
 
@@ -122,6 +127,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private void onFriendListCLick(View view)
     {
         Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
+        listFriend.putExtra("entityID", sharedPreferences.getLong(PREFS_ID,0));
         startActivity(listFriend);
     }
     private void onGroupListCLick(View view)
@@ -160,6 +166,26 @@ public class DefaultProfileActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
                 throw new RuntimeException(error);
             }
+        };
+    }
+
+    private void prepareGetAllFriends()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
+                        tvFriends.setText(resFriend.size() + " Friends");
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
         };
     }
 }
