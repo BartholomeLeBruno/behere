@@ -55,6 +55,7 @@ public class RegisterFirstStep extends AppCompatActivity {
                             && !btnBirthDate.getText().toString().toUpperCase().equals("BIRTHDATE")
                             && !password.getText().toString().equals("")
                             && !checkPassword.getText().toString().equals("")) {
+                        if(password.getText().toString().matches("(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)[0-9a-zA-Z!@#$%^&*()]*$")) {
 
                             newUser.setName(name.getText().toString());
                             newUser.setSurname(surname.getText().toString());
@@ -65,6 +66,11 @@ public class RegisterFirstStep extends AppCompatActivity {
                             Intent nextStep = new Intent(RegisterFirstStep.this, RegisterSecondStep.class);
                             nextStep.putExtra("User", newUser);
                             startActivity(nextStep);
+                        }
+                        else{
+                            InformationMessage.createToastInformation(RegisterFirstStep.this, getLayoutInflater(), getApplicationContext() ,R.drawable.ic_highlight_off_red_24dp,
+                                    "Your password isn't correct, it should contains 1 uppercase, 8 characters and 1 digit at least !");
+                        }
                     }
             }
             else{
