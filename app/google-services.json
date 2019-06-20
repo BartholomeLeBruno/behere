@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "1045499122533",
-    "firebase_url": "https://behere-77018.firebaseio.com",
-    "project_id": "behere-77018",
-    "storage_bucket": "behere-77018.appspot.com"
+    "project_number": "447074272998",
+    "firebase_url": "https://behere-f3e4b.firebaseio.com",
+    "project_id": "behere-f3e4b",
+    "storage_bucket": "behere-f3e4b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1045499122533:android:dbd8329e1d160170",
+        "mobilesdk_app_id": "1:447074272998:android:dbd8329e1d160170",
         "android_client_info": {
           "package_name": "com.esgi.behere"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1045499122533-qoetinmh6q4nm8r2opu3sgvtq6s46e4n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.esgi.behere",
-            "certificate_hash": "3104e836ed00992c47fb98cdefbe5cb2573bd091"
-          }
-        },
-        {
-          "client_id": "1045499122533-qt0v0cs4kcbi49ji209n4fro7onqma42.apps.googleusercontent.com",
+          "client_id": "447074272998-290ugjgp94mgjja3erf2vnu2gue0fc9h.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9wzEBPPT2Yy6z7dWE8MUl6n7cKM2Cv4k"
+          "current_key": "AIzaSyByLPArLF28OmRTFa1rnnqBjk8RnSn3eD0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1045499122533-qt0v0cs4kcbi49ji209n4fro7onqma42.apps.googleusercontent.com",
+              "client_id": "447074272998-290ugjgp94mgjja3erf2vnu2gue0fc9h.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

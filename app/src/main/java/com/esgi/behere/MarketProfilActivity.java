@@ -65,7 +65,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         if(market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
-            if(market.getWebSiteLink().isEmpty()) {
+            if(!market.getWebSiteLink().isEmpty()) {
                 btnWebsite.setOnClickListener(v -> {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
@@ -145,7 +145,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         btnSendComment.setOnClickListener((View v) -> {
             Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
             prepareAddComment();
-            if(market.getType().equals("Bar")) {
+            if(Objects.requireNonNull(market).getType().equals("Bar")) {
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN, ""));

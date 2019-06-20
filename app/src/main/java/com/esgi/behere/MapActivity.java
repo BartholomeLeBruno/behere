@@ -111,6 +111,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             }
 
         });
+        prepareAuthentification();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
         prepareGetAllBar();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getAllBar();

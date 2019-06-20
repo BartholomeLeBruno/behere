@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-import com.esgi.behere.adapter.FriendAdpater;
 
 public class FriendsListActivity extends AppCompatActivity {
 
@@ -20,9 +18,9 @@ public class FriendsListActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_friends);
-        ListView listview = findViewById(R.id.listFriends);
-        listview.setAdapter(new FriendAdpater(this, new String[] { "data1",
-                "data2","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","datalast" }));
+
+        //listview.setAdapter(new FriendAdpater(this, new String[] { "data1",
+          //      "data2","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","data1","datalast" }));
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.getMenu().setGroupCheckable(4,true,false);
@@ -54,4 +52,42 @@ public class FriendsListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*private void prepareGetAllFriends(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    ListView listview = findViewById(R.id.listFriends);
+                    ResultSearch resultSearch;
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray resUsers = (JSONArray) parser.parse(response.get("message").toString());
+                        if (!resUsers.isEmpty()) {
+                            for (Object unres : resUsers) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                resultSearch = new ResultSearch();
+                                resultSearch.setName(objres.getString("name") + " " +objres.getString("surname"));
+                                resultSearch.setType("User");
+                                resultSearch.setId(Long.parseLong(objres.getString("id")));
+                                if(resultSearch.getId() != sharedPreferences.getLong(PREFS_ID,0))
+                                    resultSearches.add(resultSearch);
+                            }
+                        }
+                        SearchAdapter adapter = new SearchAdapter(getApplicationContext(),resultSearches);
+                        listview.setAdapter(adapter);
+                    }
+                }
+                catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(loginActivity);
+
+            }
+        };
+    }*/
 }

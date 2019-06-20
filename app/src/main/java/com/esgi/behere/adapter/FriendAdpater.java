@@ -10,14 +10,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esgi.behere.R;
+import com.esgi.behere.actor.User;
+
+import java.util.List;
 
 public class FriendAdpater extends BaseAdapter {
 
     private Context context;
-    private String[] data;
+    private List<User> data;
     private static LayoutInflater inflater = null;
 
-    public FriendAdpater(Context context, String[] data) {
+    public FriendAdpater(Context context, List<User> data) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
@@ -28,13 +31,13 @@ public class FriendAdpater extends BaseAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return data.length;
+        return data.size();
     }
 
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return data[position];
+        return data.get(position);
     }
 
     @Override
@@ -52,7 +55,7 @@ public class FriendAdpater extends BaseAdapter {
         TextView text =  vi.findViewById(R.id.pseudoPubPro);
         Button addFriend = vi.findViewById(R.id.btnADDFriend);
         addFriend.setEnabled(false);
-        text.setText(data[position]);
+        text.setText(data.get(position).getName());
         text.setOnClickListener((View v) -> Toast.makeText(FriendAdpater.inflater.getContext(),"voila"+position,Toast.LENGTH_SHORT).show());
         return vi;
     }

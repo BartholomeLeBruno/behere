@@ -24,7 +24,10 @@ import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -76,29 +79,37 @@ public class WallProfileFragment extends Fragment {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
+                    SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         JSONArray resCommentBar = (JSONArray) parser.parse(response.get("commentsBars").toString());
                         if (!resCommentBar.isEmpty()) {
                             for (Object unres : resCommentBar) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                publications.add(new Publication("Test", objres.getString("text")));
+                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
+                                 Date created_at= formatter.parse(resDate);
+                                publications.add(new Publication("Test", objres.getString("text"),created_at));
                             }
                         }
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBrewery").toString());
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                publications.add(new Publication("Test", objres.getString("text")));
+                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
+                                Date created_at= formatter.parse(resDate);
+                                publications.add(new Publication("Test", objres.getString("text"),created_at));
                             }
                         }
                         JSONArray resCommentBeer = (JSONArray) parser.parse(response.get("commentsBeers").toString());
                         if (!resCommentBeer.isEmpty()) {
                             for (Object unres : resCommentBeer) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                publications.add(new Publication("Test", objres.getString("text")));
+                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
+                                Date created_at= formatter.parse(resDate);
+                                publications.add(new Publication("Test", objres.getString("text"),created_at));
                             }
                         }
+                        Collections.sort(publications);
                         PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()),publications);
                         recyclerView.setAdapter(adapter);
                     }
