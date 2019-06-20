@@ -1,11 +1,16 @@
 package com.esgi.behere;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,11 +22,14 @@ import com.esgi.behere.utils.VolleyCallback;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.Objects;
+
 public class CreateGroupeActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
+    private Button btnUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +37,19 @@ public class CreateGroupeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_group);
         Button btnCreateGroup = findViewById(R.id.btnCreateGroup);
         EditText tvNameGroup = findViewById(R.id.tvNameGroup);
+        btnUpload = findViewById(R.id.btnUpload);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
+        btnUpload.setOnClickListener(v -> {
+            Intent intent1 = new Intent();
+            intent1.setType("image/*");
+            intent1.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent1, "Select Picture"), 200);
+        });
     }
+
+
 
 
     public boolean onOptionsItemSelected(MenuItem item) {

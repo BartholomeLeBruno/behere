@@ -64,7 +64,7 @@ public class ApiUsage {
         try {
             JSONObject params = new JSONObject();
             params.put("typeOfBeer_id", typeBeer_ID);
-            postDataWithAccessToken(params, PATH_API+"users/" + user_ID + "/addTypeOfBeer", acces_token);
+            putDataWithAccessToken(params, PATH_API+"users/" + user_ID + "/addTypeOfBeer", acces_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
