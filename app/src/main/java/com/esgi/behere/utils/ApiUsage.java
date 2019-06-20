@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.esgi.behere.actor.User;
+import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
@@ -101,6 +102,18 @@ public class ApiUsage {
     {
         try {
             getData(PATH_API+"users/" + idUser);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllFriends(long idUser)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("user_id", idUser);
+            getDataWithParam(params,PATH_API+"friends");
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -206,8 +219,46 @@ public class ApiUsage {
         }
     }
 
+    public void addFriend(long id, int friend_id ,String acces_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("user_id", id);
+            params.put("user_friend_id", friend_id);
+            postDataWithAccessToken(params, PATH_API+"friends/create", acces_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void getData(String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                (JSONObject response) -> {
+                    // response
+                    if(mResultCallback != null)
+                        mResultCallback.onSuccess(response);
+                },
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", " " + error.getMessage());
+                    error.printStackTrace();
+                    if(mResultCallback != null)
+                        mResultCallback.onError(error);
+
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
+
+    private void getDataWithParam(JSONObject params, String url) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, params,
                 (JSONObject response) -> {
                     // response
                     if(mResultCallback != null)

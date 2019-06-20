@@ -42,7 +42,6 @@ public class FooterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_footer);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         mTextMessage = findViewById(R.id.message);
-        navView.getMenu().getItem(0).setCheckable(false);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 

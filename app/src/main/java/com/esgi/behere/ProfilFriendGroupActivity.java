@@ -15,11 +15,14 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.esgi.behere.fragment.FriendOrGroupAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 import java.util.Objects;
 
@@ -28,10 +31,12 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
+    private static final String PREFS_ID = "USER_ID";
     private ApiUsage mVolleyService;
     private long entityId;
     private String entityType;
     private TextView tvNameEntity;
+    private Button btnJoinORAdd;
 
 
 
@@ -42,7 +47,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-
+        btnJoinORAdd = findViewById(R.id.btnJoinOrAdd);
         FriendOrGroupAdapterProfile mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -65,6 +70,15 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             prepareGetUser();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getUser(entityId);
+            btnJoinORAdd.setText(getString(R.string.add));
+            prepareGetAllFriends();
+            mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+            mVolleyService.getAllFriends(entityId);
+            btnJoinORAdd.setOnClickListener(v -> {
+                prepareEmpty();
+                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID,0),(int)entityId,sharedPreferences.getString("ACESS_TOKEN",""));
+            });
         }
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
@@ -139,7 +153,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         name = objres.getString("name");
                         surname = objres.getString("surname");
                         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
-                        tvNameEntity.setText(name + " " + surname);
+                        tvNameEntity.setText(String.format("%s %s", name, surname));
                         Button btnChat = findViewById(R.id.btnTestChat);
                         btnChat.setOnClickListener(v -> {
                             try {
@@ -152,6 +166,55 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                             }
                         });
                     }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
+    private void prepareGetAllFriends()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
+                        if (!resFriend.isEmpty()) {
+                            for (Object unres : resFriend) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                if(Long.parseLong(objres.get("user_friend_id").toString()) == entityId)
+                                {
+                                    btnJoinORAdd.setEnabled(false);
+                                    break;
+                                }
+                            }
+                        }                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
+    private void prepareEmpty()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                       //todo handle error response
+                        InformationMessage.createToastInformation(ProfilFriendGroupActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
+                                "Added to Friend");
+                        btnJoinORAdd.setEnabled(false);
+                        }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

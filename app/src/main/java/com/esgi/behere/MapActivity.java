@@ -382,7 +382,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.beergarden)));
                                 marker.setTag(0);
                             }
                         }
