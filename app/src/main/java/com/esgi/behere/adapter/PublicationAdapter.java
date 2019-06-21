@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -58,9 +57,7 @@ public class PublicationAdapter extends BaseAdapter {
         View vi = convertView;
         if (vi == null)
             vi = inflater.inflate(R.layout.fragment_publication, parent,false);
-        ImageView imageView = vi.findViewById(R.id.imgPubPro);
         TextView text =  vi.findViewById(R.id.PublicationText);
-        imageView.setImageResource(R.drawable.beerwallpaper2);
         text.setText(data.get(position).getContent());
         switch (data.get((int)getItemId(position)).getType())
         {

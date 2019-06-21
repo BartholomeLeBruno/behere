@@ -217,6 +217,18 @@ public class ApiUsage {
         }
     }
 
+    public void getFun()
+    {
+
+        try {
+            getData("https://api.chucknorris.io/jokes/random");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
 
     public void updateUser(long id,String email, String name, String surname,String birthDate, String access_token)
@@ -335,7 +347,7 @@ public class ApiUsage {
     private void postDataWithAccessToken(JSONObject params, String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
                 (JSONObject response) -> {
-                        // sucess
+                        // success
                         if(mResultCallback != null)
                             mResultCallback.onSuccess(response);
                 },

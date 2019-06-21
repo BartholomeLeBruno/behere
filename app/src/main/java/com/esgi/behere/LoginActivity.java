@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.esgi.behere.register.RegisterFirstStep;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.VolleyCallback;
 import com.facebook.CallbackManager;
 
@@ -235,10 +236,32 @@ public class LoginActivity extends Activity {
                         sharedPreferences.edit().putString(PREFS_USERNAME, mLoginView.getText().toString()).apply();
                         sharedPreferences.edit().putString(PREFS_PASSWORD, mPasswordView.getText().toString()).apply();
                         startActivity(mapActivity);
+                        prepareFun();
+                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                        mVolleyService.getFun();
                     } else
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                         Intent loginActivity = new Intent(LoginActivity.this, MapActivity.class);
                         startActivity(loginActivity);
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    private void prepareFun(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                        InformationMessage.createToastInformation(LoginActivity.this,getLayoutInflater(),getApplicationContext(),R.drawable.ic_insert_emoticon_blue_24dp,response.getString("value"));
                 }
                 catch (Exception e)
                 {

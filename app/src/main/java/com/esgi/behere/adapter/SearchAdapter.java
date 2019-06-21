@@ -18,12 +18,10 @@ import java.util.List;
 
 public class SearchAdapter extends BaseAdapter {
 
-    private Context context;
     private List<ResultSearch> data;
     private static LayoutInflater inflater = null;
 
     public SearchAdapter(Context context, List<ResultSearch> data) {
-        this.context = context;
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -49,7 +47,7 @@ public class SearchAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         View vi = convertView;
         if (vi == null)
-            vi = inflater.inflate(R.layout.fragment_result_search, null);
+            vi = inflater.inflate(R.layout.fragment_result_search, parent,false);
         TextView textpseudo =  vi.findViewById(R.id.pseudoRes);
         TextView texttype =  vi.findViewById(R.id.typeRes);
         textpseudo.setText(data.get(position).getName());

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import com.esgi.behere.R;
 import com.esgi.behere.actor.Publication;
 import com.esgi.behere.adapter.PublicationAdapter;
 import com.esgi.behere.utils.ApiUsage;
-import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
@@ -130,71 +128,5 @@ public class WallProfileFragment extends Fragment {
             }
         };
     }
-    private void prepareGetBar() {
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("bar").toString()).nextValue();
-                        CacheContainer.getInstance().setStringEntities(objres.getString("name"));
-                        //todo get image
-
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void onError(VolleyError error) { }
-        };
-    }
-    private void prepareGetBrewery() {
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("brewery").toString()).nextValue();
-                        CacheContainer.getInstance().setStringEntities(objres.getString("name"));
-
-
-                        //todo get image
-
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void onError(VolleyError error) { }
-        };
-    }
-    private void prepareGetBeer() {
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("beer").toString()).nextValue();
-                        CacheContainer.getInstance().setStringEntities(objres.getString("name"));
-
-                        //todo get image
-
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void onError(VolleyError error) { }
-        };
-    }
-
-
-
-
-
-
 
 }
