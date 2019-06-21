@@ -53,8 +53,15 @@ public class CacheContainer {
 
     public List<User> getFriends() { return friends; }
 
+    public String getStringEntities() {
+        return stringEntities;
+    }
 
+    public void setStringEntities(String stringEntities) {
+        CacheContainer.stringEntities = stringEntities;
+    }
 
+    private static String stringEntities;
 
 
 }

@@ -36,9 +36,7 @@ public class RegisterSecondStep extends Activity {
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private int idUser;
-    List<BeerType> beerTypeList;
-    SharedPreferences sharedPreferences;
-
+    private List<BeerType> beerTypeList;
 
 
     @Override
@@ -52,10 +50,8 @@ public class RegisterSecondStep extends Activity {
         implementList();
         btnRegister.setOnClickListener((View v) ->{
                     User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
-                    Log.d("user", newUser.getEmail());
                     prepareCreateAccount();
-                    assert newUser != null;
-                    newUser.setPhone_id(getIdPhone());
+                    Objects.requireNonNull(newUser).setPhone_id(getIdPhone());
                     newUser.setEmail(newUser.getEmail().trim());
                     mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                     mVolleyService.createAccount(newUser);
@@ -109,9 +105,9 @@ public class RegisterSecondStep extends Activity {
     }
 
     private String getIdPhone() {
-        sharedPreferences = getApplicationContext().getSharedPreferences("PREFS", MODE_PRIVATE);
-        Log.d("voila",sharedPreferences.getString("FCM_ID","0"));
-        if(sharedPreferences.getString("FCM_ID","0").equals("0"))
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("PREFS", MODE_PRIVATE);
+        Log.d("voila", sharedPreferences.getString("FCM_ID","0"));
+        if(Objects.equals(sharedPreferences.getString("FCM_ID", "0"), "0"))
         {
             return "empty";
         }
@@ -183,17 +179,10 @@ public class RegisterSecondStep extends Activity {
             }
         };
     }
-    void prepareEmpty(){
+    private void prepareEmpty(){
         mResultCallback = new VolleyCallback() {
             @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
+            public void onSuccess(JSONObject response) { }
             @Override
             public void onError(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();

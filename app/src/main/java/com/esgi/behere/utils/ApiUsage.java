@@ -138,6 +138,24 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
+    public void getBeer(long idBeer)
+    {
+        try {
+            getData(PATH_API+"beers/" + idBeer);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+    public void getBrewery(long idBrewery)
+    {
+        try {
+            getData(PATH_API+"brewerys/" + idBrewery);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void getAllUsers()
     {

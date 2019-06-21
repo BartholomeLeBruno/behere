@@ -1,11 +1,13 @@
 package com.esgi.behere.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.esgi.behere.R;
 import com.esgi.behere.actor.Publication;
 import com.esgi.behere.adapter.PublicationAdapter;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
@@ -40,6 +43,7 @@ public class WallProfileFragment extends Fragment {
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private VolleyCallback mResultCallback = null;
+    ApiUsage mVolleyService;
 
 
     @Nullable
@@ -51,7 +55,6 @@ public class WallProfileFragment extends Fragment {
         // Initialize contacts
         SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         prepareGetAllComments();
-        ApiUsage mVolleyService;
         if(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID") != null
             && sharedPreferences.getLong(PREFS_ID, 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"))
         {
@@ -79,25 +82,25 @@ public class WallProfileFragment extends Fragment {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
-                        JSONArray resCommentBar = (JSONArray) parser.parse(response.get("commentsBars").toString());
-                        if (!resCommentBar.isEmpty()) {
-                            for (Object unres : resCommentBar) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
-                                 Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("Test", objres.getString("text"),created_at));
-                            }
-                        }
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBrewery").toString());
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
                                 Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("Test", objres.getString("text"),created_at));
+                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("brewery_id"),"brewery"));
+                            }
+                        }
+                        JSONArray resCommentBar = (JSONArray) parser.parse(response.get("commentsBars").toString());
+                        if (!resCommentBar.isEmpty()) {
+                            for (Object unres : resCommentBar) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
+                                 Date created_at= formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("bar_id"),"bar"));
                             }
                         }
                         JSONArray resCommentBeer = (JSONArray) parser.parse(response.get("commentsBeers").toString());
@@ -106,7 +109,7 @@ public class WallProfileFragment extends Fragment {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
                                 Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("Test", objres.getString("text"),created_at));
+                                publications.add(new Publication("", objres.getString("text"),created_at, objres.getLong("beer_id"),"beer"));
                             }
                         }
                         Collections.sort(publications);
@@ -127,5 +130,71 @@ public class WallProfileFragment extends Fragment {
             }
         };
     }
+    private void prepareGetBar() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("bar").toString()).nextValue();
+                        CacheContainer.getInstance().setStringEntities(objres.getString("name"));
+                        //todo get image
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+    private void prepareGetBrewery() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("brewery").toString()).nextValue();
+                        CacheContainer.getInstance().setStringEntities(objres.getString("name"));
+
+
+                        //todo get image
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+    private void prepareGetBeer() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("beer").toString()).nextValue();
+                        CacheContainer.getInstance().setStringEntities(objres.getString("name"));
+
+                        //todo get image
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
+
+
+
+
+
 
 }

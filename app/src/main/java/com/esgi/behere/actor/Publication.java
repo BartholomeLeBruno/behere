@@ -25,12 +25,33 @@ public class Publication implements Comparable<Publication> {
 
     private String pseudo;
 
+    private long from_id;
 
-    public Publication(String pseudo, String content, Date created_at)
+    public long getFrom_id() {
+        return from_id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private String type;
+
+    public void setFrom_id(long from_id) {
+        this.from_id = from_id;
+    }
+
+    public Publication(String pseudo, String content, Date created_at, long from_id, String type)
     {
         this.pseudo = pseudo;
         this.content = content;
         this.created_at = created_at;
+        this.from_id = from_id;
+        this.type = type;
     }
 
 

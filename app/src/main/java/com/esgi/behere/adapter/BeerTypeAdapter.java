@@ -1,7 +1,6 @@
 package com.esgi.behere.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,10 @@ import java.util.List;
 
 public class BeerTypeAdapter extends BaseAdapter {
 
-    private Context context;
     private List<BeerType> data;
     private static LayoutInflater inflater = null;
 
     public BeerTypeAdapter(Context context, List<BeerType> data) {
-        this.context = context;
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,7 +45,7 @@ public class BeerTypeAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null)
-            vi = inflater.inflate(R.layout.fragment_beertype, null);
+            vi = inflater.inflate(R.layout.fragment_beertype, parent,false);
         TextView text =  vi.findViewById(R.id.beerTypeName);
         Button button = vi.findViewById(R.id.btnAddTypeOfBeer);
         text.setText(data.get(position).getName());
