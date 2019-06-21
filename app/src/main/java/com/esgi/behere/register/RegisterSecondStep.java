@@ -45,6 +45,7 @@ public class RegisterSecondStep extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        finallistBeerType = new ArrayList<>();
         setContentView(R.layout.activity_register_second_step);
         lvBeerType = findViewById(R.id.lvBeerType);
         Button btnRegister = findViewById(R.id.btnRegisterLastStep);
@@ -101,7 +102,9 @@ public class RegisterSecondStep extends Activity {
 
             }
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"error GetAllTypeOfBeer",Toast.LENGTH_LONG).show();
+            }
         };
     }
 
@@ -143,7 +146,7 @@ public class RegisterSecondStep extends Activity {
             }
             @Override
             public void onError(VolleyError error) {
-                Log.d("error",error.getMessage() + "");
+                Toast.makeText(getApplicationContext(),"error Create Account",Toast.LENGTH_LONG).show();
             }
         };
     }
@@ -175,7 +178,9 @@ public class RegisterSecondStep extends Activity {
 
             }
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"error Authentificate",Toast.LENGTH_LONG).show();
+            }
         };
     }
     void prepareEmpty(){
