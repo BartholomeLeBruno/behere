@@ -49,12 +49,19 @@ public class RegisterSecondStep extends Activity {
         Button btnRegister = findViewById(R.id.btnRegisterLastStep);
         implementList();
         btnRegister.setOnClickListener((View v) ->{
-                    User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
-                    prepareCreateAccount();
-                    Objects.requireNonNull(newUser).setPhone_id(getIdPhone());
-                    newUser.setEmail(newUser.getEmail().trim());
-                    mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                    mVolleyService.createAccount(newUser);
+            try {
+                User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
+                prepareCreateAccount();
+                Objects.requireNonNull(newUser).setPhone_id(getIdPhone());
+                newUser.setEmail(newUser.getEmail().trim());
+                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                mVolleyService.createAccount(newUser);
+            }
+            catch (Exception e)
+            {
+                Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+            }
+
         });
     }
 
@@ -142,7 +149,7 @@ public class RegisterSecondStep extends Activity {
             }
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"error Create Account",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"error Create Account",Toast.LENGTH_LONG).show();
             }
         };
     }
