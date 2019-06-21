@@ -39,7 +39,7 @@ public class FriendsListActivity extends AppCompatActivity {
         listFriends = findViewById(R.id.listFriends);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
-        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
+        navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         CacheContainer.getInstance().getFriends().clear();
         if(sharedPreferences.getLong(PREFS_ID,0) == (long) getIntent().getExtras().get("entityID")) {
             prepareGetAllFriends();

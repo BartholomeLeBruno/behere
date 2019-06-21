@@ -32,7 +32,7 @@ public class MyGroupActivity extends AppCompatActivity {
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.getMenu().getItem(2).setChecked(true);
-        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
+        navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
 
     }
 

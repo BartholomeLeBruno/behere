@@ -92,7 +92,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             });
         }
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
-        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
+        navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
 
     }
 

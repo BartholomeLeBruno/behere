@@ -109,8 +109,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
-        navigationView.setOnNavigationItemReselectedListener(this::onOptionsItemSelected);
-
+        navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareAuthentification();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD", ""));
@@ -337,7 +336,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 startActivity(next);
                 return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
 
