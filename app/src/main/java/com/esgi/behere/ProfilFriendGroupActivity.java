@@ -78,10 +78,18 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
             btnJoinORAdd.setOnClickListener(v -> {
-                prepareEmpty();
-                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID,0),(int)entityId,sharedPreferences.getString("ACESS_TOKEN",""));
-            });
+                if(btnJoinORAdd.getText().toString().equals("ADD")) {
+                    prepareEmpty();
+                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                    mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString("ACESS_TOKEN", ""));
+                }
+                if(btnJoinORAdd.getText().toString().equals("DELETE"))
+                {
+                    prepareDeleteFriend();
+                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                    mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString("ACESS_TOKEN", ""));
+                }
+                });
             prepareGetAllFriends();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getAllFriends(entityId);
@@ -246,8 +254,31 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                        //todo handle error response
                         InformationMessage.createToastInformation(ProfilFriendGroupActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                                 "Added to Friend");
-                        btnJoinORAdd.setEnabled(false);
+                        btnJoinORAdd.setText("DELETE");
+
                         }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
+    private void prepareDeleteFriend()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        //todo handle error response
+                        InformationMessage.createToastInformation(ProfilFriendGroupActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_highlight_off_red_24dp,
+                                "Deleted from friend");
+                        btnJoinORAdd.setText("ADD");
+
+                    }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

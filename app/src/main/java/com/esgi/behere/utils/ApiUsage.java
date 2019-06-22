@@ -259,6 +259,18 @@ public class ApiUsage {
         }
     }
 
+    public void deleteFriend(long id, int friend_id, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("user_id", id);
+            deleteDataWithAccessToken(params,PATH_API+"friends/delete/" + friend_id, access_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void getData(String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 (JSONObject response) -> {
@@ -368,6 +380,30 @@ public class ApiUsage {
                         Log.d("Error.Response", error.getMessage() +" ");
                         if(mResultCallback != null)
                             mResultCallback.onError(error);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("x-access-token", acces_token);
+                return headers;
+            }
+        };
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
+
+    private void deleteDataWithAccessToken(JSONObject params, String url, String acces_token) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, params,
+                (JSONObject response) -> {
+                    // response
+                    if(mResultCallback != null)
+                        mResultCallback.onSuccess(response);
+                },
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", error.getMessage() +" ");
+                    if(mResultCallback != null)
+                        mResultCallback.onError(error);
                 }) {
             @Override
             public Map<String, String> getHeaders() {
