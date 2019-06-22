@@ -110,19 +110,7 @@ public class ApiUsage {
     public void getAllFriends(long idUser)
     {
         try {
-            Log.d("getAllFriends",PATH_API+"friends?user_id="+idUser+"&status=true");
-            getData(PATH_API+"friends?user_id="+idUser+"&status=true");
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void getAllFriendsOfFriend(long idUser)
-    {
-        try {
-            Log.d("getAllFriendsOfFriend",PATH_API+"friends?user_friend_id="+idUser+"&status=true");
-            getData(PATH_API+"friends?user_friend_id="+idUser+"&status=true");
+            getData(PATH_API+"friends?id="+idUser);
         }catch (Exception e)
         {
             throw new RuntimeException(e);

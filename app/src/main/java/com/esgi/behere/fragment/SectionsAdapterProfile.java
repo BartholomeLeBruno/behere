@@ -18,6 +18,8 @@ public class SectionsAdapterProfile extends FragmentPagerAdapter {
                 return new EditProfileFragment();
             case 1:
                 return new WallProfileFragment();
+            case 2:
+                return new MyReservationFragment();
             default:
                 return null;
         }
@@ -25,7 +27,7 @@ public class SectionsAdapterProfile extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -35,6 +37,8 @@ public class SectionsAdapterProfile extends FragmentPagerAdapter {
                 return "EDIT";
             case 1:
                 return "WALL";
+            case 2:
+                return "RESERVATION";
         }
         return null;
     }

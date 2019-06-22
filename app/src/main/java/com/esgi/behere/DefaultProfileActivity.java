@@ -52,7 +52,6 @@ public class DefaultProfileActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
-        navigationView.getMenu().getItem(1).setChecked(true);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetUser();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());

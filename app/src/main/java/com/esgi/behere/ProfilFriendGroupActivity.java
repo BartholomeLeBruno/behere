@@ -84,7 +84,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             });
             prepareGetAllFriends();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-            mVolleyService.getAllFriendsOfFriend(entityId);
+            mVolleyService.getAllFriends(entityId);
             tvFriendsOrMembers.setOnClickListener(v -> {
                 Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
                 listFriend.putExtra("entityID", entityId);

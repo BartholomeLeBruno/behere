@@ -449,6 +449,11 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             }
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+            Intent next = new Intent(getApplicationContext(), LoginActivity.class);
+            sharedPreferences.edit().clear().apply();
+            next.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(next);
+            finish();
         }
     }
 

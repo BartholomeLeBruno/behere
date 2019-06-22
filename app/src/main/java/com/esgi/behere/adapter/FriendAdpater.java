@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.esgi.behere.DefaultProfileActivity;
@@ -62,7 +61,7 @@ public class FriendAdpater extends BaseAdapter {
         if (vi == null)
             vi = inflater.inflate(R.layout.fragment_friend, null);
         TextView text =  vi.findViewById(R.id.pseudoPubPro);
-        text.setText(String.format("%s%s", data.get(position).getName(), data.get(position).getName()));
+        text.setText(String.format("%s %s", data.get(position).getName(), data.get(position).getSurname()));
         vi.setOnClickListener(v -> {
             Intent next;
             if (sharedPreferences.getLong(PREFS_ID, 0) != data.get(position).getId()) {

@@ -49,7 +49,7 @@ public class FriendsListActivity extends AppCompatActivity {
         else{
             prepareGetAllFriends();
             mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-            mVolleyService.getAllFriendsOfFriend(getIntent().getExtras().getLong("entityID"));
+            mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
         }
     }
     @Override
