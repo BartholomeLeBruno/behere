@@ -300,6 +300,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
+        if(marker.equals(home)) { return  true; }
         // Retrieve the data from the marker.
         Integer clickCount = (Integer) marker.getTag();
 

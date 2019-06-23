@@ -76,6 +76,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Chat" />
+        <activity android:name=".ReservationActivity" />
     </application>
 
 </manifest>

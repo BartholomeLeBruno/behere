@@ -159,6 +159,15 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         };
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent next;
+        next = new Intent(getApplicationContext(), MapActivity.class);
+        startActivity(next);
+        finish();
+    }
+
+
     private void prepareGetUser() {
         mResultCallback = new VolleyCallback() {
             @Override
