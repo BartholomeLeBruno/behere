@@ -73,23 +73,22 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             prepareGetUser();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getUser(entityId);
-            btnJoinORAdd.setText(getString(R.string.add));
+            btnJoinORAdd.setText("ADD");
             prepareGetAllPersonnalFriends();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
-            btnJoinORAdd.setOnClickListener(v -> {
-                if(btnJoinORAdd.getText().toString().equals("ADD")) {
+            if(btnJoinORAdd.getText().toString().equals("ADD"))
+            {
+                Log.d("onCreate",btnJoinORAdd.getText().toString());
+                btnJoinORAdd.setOnClickListener(v -> {
                     prepareEmpty();
                     mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                     mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString("ACESS_TOKEN", ""));
-                }
-                if(btnJoinORAdd.getText().toString().equals("DELETE"))
-                {
-                    prepareDeleteFriend();
-                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                    mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString("ACESS_TOKEN", ""));
-                }
+                    prepareGetAllFriends();
+                    mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                    mVolleyService.getAllFriends(entityId);
                 });
+            }
             prepareGetAllFriends();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getAllFriends(entityId);
@@ -208,10 +207,21 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 if(Long.parseLong(objres.get("user_friend_id").toString()) == entityId)
                                 {
-                                    btnJoinORAdd.setEnabled(false);
+                                    btnJoinORAdd.setText("DELETE");
                                     break;
                                 }
                             }
+                        }
+                        if(btnJoinORAdd.getText().toString().equals("DELETE"))
+                        {
+                            btnJoinORAdd.setOnClickListener(v -> {
+                                prepareDeleteFriend();
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                mVolleyService.deleteFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString("ACESS_TOKEN", ""));
+                                prepareGetAllFriends();
+                                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                                mVolleyService.getAllFriends(entityId);
+                            });
                         }
                     }
                 } catch (Exception e) {
