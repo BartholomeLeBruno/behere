@@ -110,9 +110,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
-        prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD", ""));
         prepareGetAllBar();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllBar();
@@ -176,9 +173,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         .position(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()))
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_current_location)));
                 home.setTag(0);
-                btnRecenter.setOnClickListener((View v) -> {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()), DEFAULT_ZOOM));
-                });
+                btnRecenter.setOnClickListener((View v) -> mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()), DEFAULT_ZOOM)));
                 if (!Objects.equals(sharedPreferences.getString(PREFS_LATITUDE, ""), "")) {
                     double latitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LATITUDE, "")));
                     double longitude = Double.parseDouble(Objects.requireNonNull(sharedPreferences.getString(PREFS_LONGITUDE, "")));
@@ -513,38 +508,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         Builder geoApiContext = new Builder();
         return geoApiContext.queryRateLimit(3).apiKey("AIzaSyBuAnhRy95K8XSSehEciHxGTbrlrAtQLj8").connectTimeout(1, TimeUnit.SECONDS)
                 .readTimeout(1, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD", ""));
-
-    }
-
-
-    private void prepareAuthentification(){
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
-                        sharedPreferences.edit().putString("ACESS_TOKEN",objres.getString("token")).apply();
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
-            }
-        };
     }
 
     private void prepareGetAllEntities(){

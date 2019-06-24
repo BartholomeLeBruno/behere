@@ -34,7 +34,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.Objects;
 
@@ -217,37 +216,5 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         Intent next;
         next = new Intent(getApplicationContext(), MapActivity.class);
         startActivity(next);
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
-
-    }
-
-    private void prepareAuthentification(){
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
-                        sharedPreferences.edit().putString("ACESS_TOKEN",objres.getString("token")).apply();
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
-            }
-        };
     }
 }

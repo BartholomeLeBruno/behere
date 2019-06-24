@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.fragment.FriendOrGroupAdapterProfile;
@@ -79,7 +78,6 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
             if(btnJoinORAdd.getText().toString().equals("ADD"))
             {
-                Log.d("onCreate",btnJoinORAdd.getText().toString());
                 btnJoinORAdd.setOnClickListener(v -> {
                     prepareEmpty();
                     mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
@@ -127,37 +125,6 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        prepareAuthentification();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.authentificate(sharedPreferences.getString("USERNAME", ""), sharedPreferences.getString("PASSWORD",""));
-
-    }
-
-    private void prepareAuthentification(){
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
-                        sharedPreferences.edit().putString("ACESS_TOKEN",objres.getString("token")).apply();
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
 
     @Override
     public void onBackPressed() {
@@ -167,6 +134,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         finish();
     }
 
+    // todo recueperer l'id du friend dans le personnal, si l'id est user_rf machin
 
     private void prepareGetUser() {
         mResultCallback = new VolleyCallback() {

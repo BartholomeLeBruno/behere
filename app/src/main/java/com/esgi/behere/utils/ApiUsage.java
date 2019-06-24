@@ -59,38 +59,38 @@ public class ApiUsage {
         }
     }
 
-    public void addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String acces_token)
+    public void addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String access_token)
     {
         try {
             JSONObject params = new JSONObject();
             params.put("typeOfBeer_id", typeBeer_ID);
-            putDataWithAccessToken(params, PATH_API+"users/" + user_ID + "/addTypeOfBeer", acces_token);
+            putDataWithAccessToken(params, PATH_API+"users/" + user_ID + "/addTypeOfBeer", access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
         }
     }
 
-    public void addCommentsToBar(String text, int bar_id, String acces_token)
+    public void addCommentsToBar(String text, int bar_id, String access_token)
     {
         try {
             JSONObject params = new JSONObject();
             params.put("text", text);
             params.put("bar_id", bar_id);
-            postDataWithAccessToken(params, PATH_API+"commentsBars/create", acces_token);
+            postDataWithAccessToken(params, PATH_API+"commentsBars/create", access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
         }
     }
 
-    public void addCommentsToBrewery(String text, int brewery_id, String acces_token)
+    public void addCommentsToBrewery(String text, int brewery_id, String access_token)
     {
         try {
             JSONObject params = new JSONObject();
             params.put("text", text);
             params.put("brewery_id", brewery_id);
-            postDataWithAccessToken(params, PATH_API+"commentsBrewerys/create", acces_token);
+            postDataWithAccessToken(params, PATH_API+"commentsBrewerys/create", access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -234,25 +234,25 @@ public class ApiUsage {
         }
     }
 
-    public void createGroup(String nameGroup, String acces_token)
+    public void createGroup(String nameGroup, String access_token)
     {
         try {
             JSONObject params = new JSONObject();
             params.put("name", nameGroup);
-            postDataWithAccessToken(params, PATH_API+"groups/create", acces_token);
+            postDataWithAccessToken(params, PATH_API+"groups/create", access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
         }
     }
 
-    public void addFriend(long id, int friend_id ,String acces_token)
+    public void addFriend(long id, int friend_id ,String access_token)
     {
         try {
             JSONObject params = new JSONObject();
             params.put("user_id", id);
             params.put("user_friend_id", friend_id);
-            postDataWithAccessToken(params, PATH_API+"friends/create", acces_token);
+            postDataWithAccessToken(params, PATH_API+"friends/create", access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);

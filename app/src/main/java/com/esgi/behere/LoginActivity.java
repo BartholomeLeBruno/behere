@@ -44,8 +44,6 @@ public class LoginActivity extends Activity {
     private static final String PREFS = "PREFS";
     private static final String PREFS_ID = "USER_ID";
     private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
-    private static final String PREFS_USERNAME = "USERNAME";
-    private static final String PREFS_PASSWORD = "PASSWORD";
 
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
@@ -233,8 +231,6 @@ public class LoginActivity extends Activity {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         sharedPreferences.edit().putLong(PREFS_ID, Long.parseLong(objres.get("id").toString())).apply();
                         sharedPreferences.edit().putString(PREFS_ACCESS_TOKEN, objres.get("token").toString()).apply();
-                        sharedPreferences.edit().putString(PREFS_USERNAME, mLoginView.getText().toString()).apply();
-                        sharedPreferences.edit().putString(PREFS_PASSWORD, mPasswordView.getText().toString()).apply();
                         startActivity(mapActivity);
                         prepareFun();
                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
