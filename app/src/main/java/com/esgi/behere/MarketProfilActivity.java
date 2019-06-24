@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.InformationMessage;
+import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,8 +46,6 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
     private ApiUsage mVolleyService;
     private final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
     private final String PREFS = "PREFS";
-    private final String PREFS_LONGITUDE = "LONGITUDE";
-    private final String PREFS_LATITUDE = "LATITUDE";
 
     private SharedPreferences sharedPreferences;
 
@@ -118,7 +117,9 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
             Intent destination = new Intent(getApplicationContext(), MapActivity.class);
+            String PREFS_LATITUDE = "LATITUDE";
             sharedPreferences.edit().putString(PREFS_LATITUDE, marker.getPosition().latitude + "").apply();
+            String PREFS_LONGITUDE = "LONGITUDE";
             sharedPreferences.edit().putString(PREFS_LONGITUDE, marker.getPosition().longitude + "").apply();
             startActivity(destination);
             InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(),
@@ -183,7 +184,12 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
 
             }
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+                if(error.networkResponse.statusCode == 401)
+                {
+                    new PopupAchievement().popupAuthentification(getCurrentFocus());
+                }
+            }
         };
     }
 

@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.esgi.behere.fragment.FriendOrGroupAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.InformationMessage;
+import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONException;
@@ -249,7 +250,12 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                 }
             }
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+                if(error.networkResponse.statusCode == 401)
+                {
+                    new PopupAchievement().popupAuthentification(getCurrentFocus());
+                }
+            }
         };
     }
 
@@ -271,7 +277,12 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                 }
             }
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+                if(error.networkResponse.statusCode == 401)
+                {
+                    new PopupAchievement().popupAuthentification(getCurrentFocus());
+                }
+            }
         };
     }
 }

@@ -21,6 +21,7 @@ import com.esgi.behere.LoginActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.InformationMessage;
+import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
@@ -120,9 +121,10 @@ public class EditProfileFragment extends Fragment {
             }
             @Override
             public void onError(VolleyError error) {
-                Intent loginActivity = new Intent(getContext(), LoginActivity.class);
-                sharedPreferences.getAll().clear();
-                startActivity(loginActivity);
+                if(error.networkResponse.statusCode == 401)
+                {
+                    new PopupAchievement().popupAuthentification(getView());
+                }
             }
         };
     }

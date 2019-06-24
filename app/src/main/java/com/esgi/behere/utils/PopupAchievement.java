@@ -38,7 +38,7 @@ public class PopupAchievement extends Activity {
         setContentView(R.layout.popup_connection);
     }
 
-    public  void popupAuthentification(View view)
+    public void popupAuthentification(View view)
     {
         convertView = view;
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
