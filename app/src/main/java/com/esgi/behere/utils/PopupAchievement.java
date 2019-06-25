@@ -1,12 +1,9 @@
 package com.esgi.behere.utils;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -19,32 +16,27 @@ import com.esgi.behere.R;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
 
-public class PopupAchievement extends Activity {
+
+public class PopupAchievement{
 
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
     private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
-    PopupWindow popupWindow;
-    View convertView;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.popup_connection);
-    }
+    private PopupWindow popupWindow;
+    private View convertView, popupView;
 
     public void popupAuthentification(View view)
     {
         convertView = view;
-        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = convertView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         // inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_connection, null);
+        LayoutInflater inflater = (LayoutInflater) convertView.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        popupView = inflater.inflate(R.layout.popup_connection, null);
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         popupWindow = new PopupWindow(popupView, width, height, true);
@@ -56,7 +48,7 @@ public class PopupAchievement extends Activity {
             prepareAuthentification();
             if(!edEmail.getText().toString().equals("") && !edPasword.getText().toString().equals(""))
             {
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService = new ApiUsage(mResultCallback,  convertView.getContext());
                 mVolleyService.authentificate(edEmail.getText().toString(), edPasword.getText().toString());
             }
         });
@@ -82,7 +74,7 @@ public class PopupAchievement extends Activity {
             @Override
             public void onError(VolleyError error) {
                 popupAuthentification(convertView);
-                TextView testError = findViewById(R.id.textError);
+                TextView testError =  popupView.findViewById(R.id.textError);
                 testError.setVisibility(View.VISIBLE);
 
             }
