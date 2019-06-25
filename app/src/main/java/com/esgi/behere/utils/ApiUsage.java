@@ -227,6 +227,7 @@ public class ApiUsage {
             params.put("name", name);
             params.put("surname", surname);
             params.put("birthdate", birthDate);
+            Log.d("params", params.toString());
             putDataWithAccessToken(params,PATH_API+"users/update/"+id, access_token);
         }catch (Exception e)
         {

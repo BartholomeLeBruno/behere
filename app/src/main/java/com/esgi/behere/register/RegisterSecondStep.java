@@ -149,7 +149,6 @@ public class RegisterSecondStep extends Activity {
             }
             @Override
             public void onError(VolleyError error) {
-                //Toast.makeText(getApplicationContext(),"error Create Account",Toast.LENGTH_LONG).show();
             }
         };
     }
@@ -159,7 +158,6 @@ public class RegisterSecondStep extends Activity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        Log.d("prepareAtuh", response.toString());
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         String token = objres.getString("token");
                         prepareEmpty();

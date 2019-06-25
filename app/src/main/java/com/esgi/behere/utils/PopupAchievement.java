@@ -41,7 +41,7 @@ public class PopupAchievement extends Activity {
     public void popupAuthentification(View view)
     {
         convertView = view;
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_connection, null);

@@ -58,7 +58,6 @@ import org.json.JSONObject;
 
 import org.json.simple.parser.JSONParser;
 
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +182,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 }
             }
         };
+        FloatingActionButton btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(v -> {
+            if(polyline != null) polyline.remove();
+            sharedPreferences.edit().remove(PREFS_LONGITUDE).apply();
+            sharedPreferences.edit().remove(PREFS_LATITUDE).apply();
+        });
         startTrackingLocation();
     }
 
@@ -260,6 +265,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     .origin(new com.google.maps.model.LatLng(home.latitude, home.longitude))
                     .destination(new com.google.maps.model.LatLng(toMarket.latitude, toMarket.longitude)).departureTime(Instant.now()).await();
             List<LatLng> decodedPath = PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
+            String duration =  result.routes[0].legs[0].duration.humanReadable;
             // decodedPath.add(home);
             // decodedPath.add(toMarket);
             polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
