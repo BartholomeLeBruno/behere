@@ -28,7 +28,6 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
-    private ApiUsage mVolleyService;
     private static final String PREFS_ID = "USER_ID";
     private TextView tvFriends;
 
@@ -54,7 +53,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetUser();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        ApiUsage mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
         tvFriends.setOnClickListener(this::onFriendListCLick);
         tvGroups.setOnClickListener(this::onGroupListCLick);

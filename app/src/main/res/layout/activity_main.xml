@@ -29,8 +29,47 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbarMain"
-        android:orientation="vertical">
+        android:layout_below="@id/toolbarMain">
+
+        <RelativeLayout
+            android:id="@+id/rlTimeResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:translationZ="1dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/iVLegs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_directions_walk_red_48dp" />
+
+            <TextView
+                android:id="@+id/tvLegsTimeInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="false"
+                android:layout_centerVertical="false"
+                android:layout_toEndOf="@id/iVLegs"
+                android:text="Arrival Time by legs :"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tvLegsTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/tvLegsTimeInformation"
+                android:textSize="24sp" />
+
+        </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btnDelete"

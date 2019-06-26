@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@android:drawable/dialog_holo_light_frame"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/iVLegs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_directions_walk_red_48dp" />
+
+    <TextView
+        android:id="@+id/tvLegsTimeInformation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
+        android:layout_toEndOf="@id/iVLegs"
+        android:text="Arrival Time by legs :"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tvLegsTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/tvLegsTimeInformation"
+        android:textSize="24sp" />
+
+</RelativeLayout>

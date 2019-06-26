@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
@@ -47,7 +49,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.maps.DirectionsApi;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.TransitMode;
 import com.google.maps.model.TravelMode;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.esgi.behere.adapter.SearchAdapter;
@@ -187,6 +188,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             if(polyline != null) polyline.remove();
             sharedPreferences.edit().remove(PREFS_LONGITUDE).apply();
             sharedPreferences.edit().remove(PREFS_LATITUDE).apply();
+            RelativeLayout relativeLayout = findViewById(R.id.rlTimeResult);
+            relativeLayout.setVisibility(View.INVISIBLE);
         });
         startTrackingLocation();
     }
@@ -261,11 +264,14 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private void addPolyline(LatLng home, LatLng toMarket) {
         try {
             DirectionsResult result = DirectionsApi.newRequest(getBuilder().build()).mode(TravelMode.WALKING)
-                    .transitMode(TransitMode.TRAIN)
                     .origin(new com.google.maps.model.LatLng(home.latitude, home.longitude))
                     .destination(new com.google.maps.model.LatLng(toMarket.latitude, toMarket.longitude)).departureTime(Instant.now()).await();
             List<LatLng> decodedPath = PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
-            String duration =  result.routes[0].legs[0].duration.humanReadable;
+            String durationLegs =  result.routes[0].legs[0].duration.humanReadable;
+            RelativeLayout rlTime = findViewById(R.id.rlTimeResult);
+            rlTime.setVisibility(View.VISIBLE);
+            TextView tvLegsTime = findViewById(R.id.tvLegsTime);
+            tvLegsTime.setText(durationLegs);
             // decodedPath.add(home);
             // decodedPath.add(toMarket);
             polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
