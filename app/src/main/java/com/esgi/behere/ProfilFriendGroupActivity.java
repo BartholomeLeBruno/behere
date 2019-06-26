@@ -82,7 +82,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                 btnJoinORAdd.setOnClickListener(v -> {
                     prepareEmpty();
                     mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                    mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString("ACESS_TOKEN", ""));
+                    mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
                     prepareGetAllFriends();
                     mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                     mVolleyService.getAllFriends(entityId);
@@ -195,7 +195,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                             btnJoinORAdd.setOnClickListener(v -> {
                                 prepareDeleteFriend();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                mVolleyService.deleteFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString("ACESS_TOKEN", ""));
+                                mVolleyService.deleteFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
                                 prepareGetAllFriends();
                                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                                 mVolleyService.getAllFriends(entityId);

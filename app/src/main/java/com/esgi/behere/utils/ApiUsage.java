@@ -253,6 +253,7 @@ public class ApiUsage {
             JSONObject params = new JSONObject();
             params.put("user_id", id);
             params.put("user_friend_id", friend_id);
+            Log.d("param",access_token + "truc");
             postDataWithAccessToken(params, PATH_API+"friends/create", access_token);
         }catch (Exception e)
         {
@@ -354,7 +355,7 @@ public class ApiUsage {
                 },
                 (VolleyError error) -> {
                         // error
-                        Log.d("Error.Response", error.getMessage() +" ");
+                        Log.d("Error.Response", error.getLocalizedMessage() +" ");
                         if(mResultCallback != null)
                             mResultCallback.onError(error);
                 }) {
