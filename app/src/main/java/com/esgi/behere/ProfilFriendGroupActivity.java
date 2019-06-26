@@ -251,7 +251,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             }
             @Override
             public void onError(VolleyError error) {
-                if(error.networkResponse.statusCode == 401)
+                if(error.networkResponse.statusCode == 500)
                 {
                     new PopupAchievement().popupAuthentification(getCurrentFocus());
                 }
@@ -278,7 +278,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             }
             @Override
             public void onError(VolleyError error) {
-                if(error.networkResponse.statusCode == 401)
+                if(error.networkResponse.statusCode == 500)
                 {
                     new PopupAchievement().popupAuthentification(getCurrentFocus());
                 }
