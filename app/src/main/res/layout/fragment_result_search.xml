@@ -12,6 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:srcCompat="@drawable/default_image"
+        android:contentDescription="@string/default_piece"
         tools:background="#AAA" />
 
     <TextView

@@ -109,7 +109,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         name = objres.getString("name");
                         surname = objres.getString("surname");
-                        tvNamePerson.setText(name + " " + surname);
+                        tvNamePerson.setText(String.format("%s %s", name, surname));
 
                     }
                 } catch (Exception e) {
@@ -121,13 +121,13 @@ public class DefaultProfileActivity extends AppCompatActivity {
         };
     }
 
-    private void onFriendListCLick(View view)
+    public void onFriendListCLick(View view)
     {
         Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
         listFriend.putExtra("entityID", sharedPreferences.getLong(PREFS_ID,0));
         startActivity(listFriend);
     }
-    private void onGroupListCLick(View view)
+    public void onGroupListCLick(View view)
     {
         Intent listFriend = new Intent(getApplicationContext(), CreateGroupeActivity.class);
         startActivity(listFriend);

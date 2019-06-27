@@ -48,6 +48,7 @@
 
             <ImageView
                 android:id="@+id/iVLegs"
+                android:contentDescription="@string/default_piece"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_directions_walk_red_48dp" />

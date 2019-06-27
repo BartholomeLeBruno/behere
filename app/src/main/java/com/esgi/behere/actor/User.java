@@ -1,5 +1,7 @@
 package com.esgi.behere.actor;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +132,7 @@ public class User implements Serializable {
         this.error = error;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "User{" +

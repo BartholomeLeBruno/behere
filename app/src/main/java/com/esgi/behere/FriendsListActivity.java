@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -25,8 +24,6 @@ import org.json.simple.parser.JSONParser;
 public class FriendsListActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
-    private static final String PREFS = "PREFS";
-    private static final String PREFS_ID = "USER_ID";
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private ListView listFriends;
@@ -37,19 +34,21 @@ public class FriendsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_friends);
         listFriends = findViewById(R.id.listFriends);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         CacheContainer.getInstance().getFriends().clear();
-        if(sharedPreferences.getLong(PREFS_ID,0) == (long) getIntent().getExtras().get("entityID")) {
-            prepareGetAllFriends();
-            mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-            mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
-        }
-        else{
-            prepareGetAllFriends();
-            mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-            mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
+        if(getIntent().getExtras() != null) {
+            if (sharedPreferences.getLong(getString(R.string.prefs_id), 0) == (long) getIntent().getExtras().get("entityID")) {
+                prepareGetAllFriends();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
+            } else {
+                prepareGetAllFriends();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
+            }
+
         }
     }
     @Override
@@ -100,19 +99,20 @@ public class FriendsListActivity extends AppCompatActivity {
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
-                        Log.d("all", response.toString());
+                        JSONObject objres;
                         if (!resFriend.isEmpty()) {
                             for (Object unres : resFriend) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                if(sharedPreferences.getLong(PREFS_ID,0) == (long) getIntent().getExtras().get("entityID")) {
-                                    prepareGetUser();
-                                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                    mVolleyService.getUser(objres.getInt("user_friend_id"));
-                                }
-                                else {
-                                    prepareGetUser();
-                                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                    mVolleyService.getUser(objres.getInt("user_id"));
+                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                if(getIntent().getExtras() != null) {
+                                    if (sharedPreferences.getLong(getString(R.string.prefs_id), 0) == (long) getIntent().getExtras().get("entityID")) {
+                                        prepareGetUser();
+                                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                        mVolleyService.getUser(objres.getInt("user_friend_id"));
+                                    } else {
+                                        prepareGetUser();
+                                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                        mVolleyService.getUser(objres.getInt("user_id"));
+                                    }
                                 }
                             }
                         }

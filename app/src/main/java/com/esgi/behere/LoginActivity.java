@@ -41,8 +41,6 @@ public class LoginActivity extends Activity {
     /**
      * Id to identity READ_CONTACTS permission request.
      */
-    private static final String PREFS = "PREFS";
-    private static final String PREFS_ID = "USER_ID";
     private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
 
     private SharedPreferences sharedPreferences;
@@ -77,7 +75,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         sharedPreferences.edit().clear().apply();
         // Set up the login form.
         initializeQueue();
@@ -115,8 +113,7 @@ public class LoginActivity extends Activity {
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            }else{
+                    COURSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
@@ -229,7 +226,7 @@ public class LoginActivity extends Activity {
                         Intent mapActivity = new Intent(LoginActivity.this, MapActivity.class);
 
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
-                        sharedPreferences.edit().putLong(PREFS_ID, Long.parseLong(objres.get("id").toString())).apply();
+                        sharedPreferences.edit().putLong(getString(R.string.prefs_id), Long.parseLong(objres.get("id").toString())).apply();
                         sharedPreferences.edit().putString(PREFS_ACCESS_TOKEN, objres.get("token").toString()).apply();
                         startActivity(mapActivity);
                         prepareFun();

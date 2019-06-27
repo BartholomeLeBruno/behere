@@ -3,6 +3,7 @@ package com.esgi.behere.utils;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.esgi.behere.actor.Market;
+import com.esgi.behere.actor.ResultSearch;
 import com.esgi.behere.actor.User;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class CacheContainer {
 
     private static RequestQueue queue;
     private static HashMap<String, Market> marketHashMap;
+    private static List<ResultSearch> resultSearches;
 
 
     private static List<User> friends;
@@ -27,6 +29,7 @@ public class CacheContainer {
     {
         marketHashMap = new HashMap<>();
         friends = new ArrayList<>();
+        resultSearches = new ArrayList<>();
     }
 
     /** Instance unique non préinitialisée */
@@ -44,6 +47,10 @@ public class CacheContainer {
     public static void initializeQueue()
     {
         queue = Volley.newRequestQueue(getApplicationContext());
+    }
+
+    public  List<ResultSearch> getResultSearches() {
+        return resultSearches;
     }
 
     public HashMap<String,Market> getMarketHashMap()

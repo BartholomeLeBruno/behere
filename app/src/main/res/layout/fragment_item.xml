@@ -9,6 +9,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
+        android:contentDescription="@string/default_piece"
         android:layout_marginEnd="6dip"
         android:src="@drawable/ic_exit_24dp" />
 

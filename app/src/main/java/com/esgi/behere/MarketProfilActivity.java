@@ -44,9 +44,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
 
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
-    private final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
     private final String PREFS = "PREFS";
-
     private SharedPreferences sharedPreferences;
 
 
@@ -152,7 +150,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             if(Objects.requireNonNull(market).getType().equals("Bar")) {
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN, ""));
+                mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");
                 popupWindow.dismiss();
@@ -160,7 +158,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             else{
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(PREFS_ACCESS_TOKEN, ""));
+                mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");
                 popupWindow.dismiss();
@@ -187,7 +185,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             public void onError(VolleyError error) {
                 if(error.networkResponse.statusCode == 500)
                 {
-                    new PopupAchievement().popupAuthentification(getCurrentFocus());
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
                 }
             }
         };

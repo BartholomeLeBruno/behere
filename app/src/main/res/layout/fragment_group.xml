@@ -5,17 +5,14 @@
     android:layout_height="100dp"
     android:padding="10dp"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingRight="16dp">
+    android:paddingEnd="16dp">
 
     <TextView
         android:id="@+id/pseudoPubPro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imgPubPro"
         android:layout_marginStart="10dp"
         android:layout_marginTop="13dp"
-        android:layout_toEndOf="@+id/imgPubPro"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="Name" />

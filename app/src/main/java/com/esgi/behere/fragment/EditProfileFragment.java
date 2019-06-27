@@ -138,8 +138,8 @@ public class EditProfileFragment extends Fragment {
             implements DatePickerDialog.OnDateSetListener {
 
 
-        @Override
         @NonNull
+        @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
             // Use the current date as the default date in the picker
@@ -151,7 +151,7 @@ public class EditProfileFragment extends Fragment {
                 return new DatePickerDialog(getActivity(),
                         R.style.CustomDatePickerDialogTheme, this, year, month, day);
             }
-            return null;
+            throw new RuntimeException();
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
