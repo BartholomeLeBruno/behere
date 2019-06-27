@@ -8,18 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.InformationMessage;
+import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 public class CreateGroupeActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
+    private VolleyCallback mResultCallback = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +29,15 @@ public class CreateGroupeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_group);
         Button btnCreateGroup = findViewById(R.id.btnCreateGroup);
         EditText tvNameGroup = findViewById(R.id.tvNameGroup);
-        Button btnUpload = findViewById(R.id.btnUpload);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
-        btnUpload.setOnClickListener(v -> {
-            Intent intent1 = new Intent();
-            intent1.setType("image/*");
-            intent1.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent1, "Select Picture"), 200);
+        btnCreateGroup.setOnClickListener(v -> {
+            if(!tvNameGroup.getText().toString().equals("")) {
+                prepareCreateGroup();
+                ApiUsage volleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                volleyService.createGroup(tvNameGroup.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
+            }
         });
     }
 
@@ -66,13 +68,17 @@ public class CreateGroupeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void prepareCreateGroup(){
-        VolleyCallback mResultCallback = new VolleyCallback() {
+    private void prepareCreateGroup(){
+         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("group").toString()).nextValue();
+                        InformationMessage.createToastInformation(CreateGroupeActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
+                                "Thanks now you can share your beer !");
+                        Intent gotoAllGroups = new Intent(getApplicationContext(), MyGroupActivity.class);
+                        finish();
+                        startActivity(gotoAllGroups);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -81,7 +87,10 @@ public class CreateGroupeActivity extends AppCompatActivity {
 
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
+                if(error.networkResponse.statusCode == 500)
+                {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
             }
         };
     }

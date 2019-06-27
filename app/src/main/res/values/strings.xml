@@ -46,4 +46,5 @@
     <string name="friends">Friends</string>
     <string name="prefs_id">USER_ID</string>
     <string name="default_piece">default</string>
+    <string name="join_upercase">JOIN</string>
 </resources>

@@ -21,25 +21,53 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MarketProfilActivity" />
-        <activity android:name=".DefaultProfileActivity" />
-        <activity android:name=".FooterActivity" />
-        <activity android:name=".register.RegisterSecondStep" />
-        <activity android:name=".register.RegisterFirstStep" />
-        <activity android:name=".CreateGroupeActivity" />
-        <activity android:name=".MyGroupActivity"/>
-        <activity android:name=".FriendsListActivity"/>
-        <activity android:name=".utils.InformationMessage"/>
-        <activity android:name=".ProfilFriendGroupActivity"/>
-        <activity android:name=".MapActivity">
+        <activity
+            android:name=".GroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MarketProfilActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".DefaultProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".FooterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".register.RegisterSecondStep"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".register.RegisterFirstStep"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".CreateGroupeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MyGroupActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".FriendsListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".utils.InformationMessage"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ProfilFriendGroupActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MapActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -75,8 +103,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Chat" />
-        <activity android:name=".ReservationActivity" />
+        <activity
+            android:name=".Chat"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ReservationActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

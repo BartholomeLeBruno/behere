@@ -16,41 +16,41 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNamePersonOrGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/tvNameGroup" />
 
     <Button
-            android:id="@+id/btnCommentWall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="COMMENT"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnJoinOrAdd"
-            app:layout_constraintTop_toBottomOf="@+id/tvGroupsOrPosts" />
+        android:id="@+id/btnCommentWall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="COMMENT"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnJoinOrAdd"
+        app:layout_constraintTop_toBottomOf="@+id/tvPosts" />
 
-        <Button
-            android:id="@+id/btnJoinOrAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/tvGroupsOrPosts"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvFriendsOrMembers" />
+    <Button
+        android:id="@+id/btnJoinOrAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/tvPosts"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvMembers" />
 
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/footerpub"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:labelVisibilityMode="labeled"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_nav_menu" />
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/footerpub"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:labelVisibilityMode="labeled"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -65,7 +65,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvNamePersonOrGroup"
+        android:id="@+id/tvNameGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -81,34 +81,33 @@
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
     <TextView
-        android:id="@+id/tvFriendsOrMembers"
+        android:id="@+id/tvMembers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="#2A2E43"
-        android:onClick="onFriendListCLick"
         android:textColor="#FFFFFF"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
-        app:layout_constraintEnd_toStartOf="@+id/tvGroupsOrPosts"
+        app:layout_constraintEnd_toStartOf="@+id/tvPosts"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNamePersonOrGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/tvNameGroup" />
 
-        <TextView
-            android:id="@+id/tvGroupsOrPosts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="64dp"
-            android:layout_marginBottom="8dp"
-            android:background="#2A2E43"
-            android:text="0 Groups"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNamePersonOrGroup" />
+    <TextView
+        android:id="@+id/tvPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="8dp"
+        android:background="#2A2E43"
+        android:text="0 posts"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameGroup" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
@@ -136,19 +135,19 @@
             android:text="WALL" />
     </android.support.design.widget.TabLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/activity_main_viewpager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-            app:layout_constraintVertical_bias="0.0" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_main_viewpager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        app:layout_constraintVertical_bias="0.0" />
 
 
-    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

@@ -82,6 +82,7 @@ public class WallProfileFragment extends Fragment {
                 try {
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
+                        publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBrewery").toString());
                         if (!resCommentBrewery.isEmpty()) {

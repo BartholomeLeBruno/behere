@@ -159,6 +159,16 @@ public class ApiUsage {
         }
     }
 
+    public void getGroup(long idGroup)
+    {
+        try {
+            getData(PATH_API+"groups/" + idGroup);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void getAllUsers()
     {
         try {
@@ -173,6 +183,16 @@ public class ApiUsage {
     {
         try {
             getData(PATH_API+"generals/commentsUser/" + idUser);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllGroups(long idUser)
+    {
+        try {
+            getData(PATH_API+"groups/?user_id=" + idUser);
         }catch (Exception e)
         {
             throw new RuntimeException(e);

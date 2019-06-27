@@ -75,35 +75,38 @@
            app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
            app:layout_constraintEnd_toEndOf="parent" />
 
-       <android.support.design.widget.TabLayout
-           android:id="@+id/tabLayout"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           >
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:tabBackground="@drawable/tab_layout_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tabTextColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-           <android.support.design.widget.TabItem
-               android:id="@+id/tabInfo"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="EDIT" />
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDIT" />
 
-           <android.support.design.widget.TabItem
-               android:id="@+id/tabWall"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="WALL" />
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabWall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WALL" />
 
-           <android.support.design.widget.TabItem
-               android:id="@+id/tabNotification"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:textColor="@android:color/white"
-               android:text="NOTIFICATION" />
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOTIFICATION"
+            android:textColor="@android:color/white" />
 
-       </android.support.design.widget.TabLayout>
+    </android.support.design.widget.TabLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/activity_main_viewpager"

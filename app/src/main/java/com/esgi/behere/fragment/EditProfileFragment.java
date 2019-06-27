@@ -37,9 +37,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class EditProfileFragment extends Fragment {
 
-    private static final String PREFS = "PREFS";
-    private static final String PREFS_ID = "USER_ID";
-    private static final String PREFS_ACCESS_TOKEN = "ACCESS_TOKEN";
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
@@ -58,19 +55,19 @@ public class EditProfileFragment extends Fragment {
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
         Button btnupdate = rootView.findViewById(R.id.btnUpdate);
 
-        sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         prepareGetUser();
         mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
-        mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
+        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id),0));
 
         btnBirthDate.setOnClickListener(this::showDatePickerDialog);
 
         btnupdate.setOnClickListener((View v) -> {
                 prepareUpdateUser();
                 mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
-                mVolleyService.updateUser(sharedPreferences.getLong(PREFS_ID,0),
+                mVolleyService.updateUser(sharedPreferences.getLong(getString(R.string.prefs_id),0),
                         tvEmail.getText().toString(), tvName.getText().toString(),
-                        tvSurname.getText().toString(), btnBirthDate.getText().toString(), sharedPreferences.getString(PREFS_ACCESS_TOKEN,""));
+                        tvSurname.getText().toString(), btnBirthDate.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
         });
 
 
@@ -120,7 +117,7 @@ public class EditProfileFragment extends Fragment {
                         "We love you my love");
                 prepareGetUser();
                 mVolleyService = new ApiUsage(mResultCallback,getContext());
-                mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
+                mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id),0));
             }
             @Override
             public void onError(VolleyError error) {

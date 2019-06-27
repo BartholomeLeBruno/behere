@@ -2,27 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:padding="10dp"
+    android:background="@android:drawable/dialog_holo_light_frame"
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
     <TextView
-        android:id="@+id/pseudoPubPro"
+        android:id="@+id/tvNameGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="13dp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
         android:textStyle="bold"
         tools:text="Name" />
-
-    <Button
-        android:id="@+id/btnADDFriend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="202dp"
-        android:layout_toEndOf="@id/pseudoPubPro"
-        android:text="ADD" />
 
 </RelativeLayout>
