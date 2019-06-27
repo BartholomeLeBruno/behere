@@ -20,7 +20,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FriendAdpater extends BaseAdapter {
 
-    private Context context;
     private List<User> data;
     private static LayoutInflater inflater = null;
     private SharedPreferences sharedPreferences;
@@ -29,7 +28,6 @@ public class FriendAdpater extends BaseAdapter {
 
     public FriendAdpater(Context context, List<User> data) {
         // TODO Auto-generated constructor stub
-        this.context = context;
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

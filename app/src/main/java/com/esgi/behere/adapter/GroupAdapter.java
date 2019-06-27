@@ -13,13 +13,11 @@ import java.util.List;
 
 public class GroupAdapter extends BaseAdapter {
 
-    private Context context;
     private List<Group> data;
     private static LayoutInflater inflater = null;
 
     public GroupAdapter(Context context, List<Group> data) {
         // TODO Auto-generated constructor stub
-        this.context = context;
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

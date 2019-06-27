@@ -20,8 +20,6 @@ public class CreateGroupeActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String PREFS = "PREFS";
-    private VolleyCallback mResultCallback = null;
-    private Button btnUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +27,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_group);
         Button btnCreateGroup = findViewById(R.id.btnCreateGroup);
         EditText tvNameGroup = findViewById(R.id.tvNameGroup);
-        btnUpload = findViewById(R.id.btnUpload);
+        Button btnUpload = findViewById(R.id.btnUpload);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
@@ -69,19 +67,18 @@ public class CreateGroupeActivity extends AppCompatActivity {
     }
 
     void prepareCreateGroup(){
-        mResultCallback = new VolleyCallback() {
+        VolleyCallback mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("group").toString()).nextValue();
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
             public void onError(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();

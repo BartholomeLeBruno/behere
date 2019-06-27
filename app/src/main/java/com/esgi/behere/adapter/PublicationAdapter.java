@@ -24,7 +24,6 @@ public class PublicationAdapter extends BaseAdapter {
     private List<Publication> data;
     private static LayoutInflater inflater = null;
     private VolleyCallback mResultCallback = null;
-    private  ApiUsage mVolleyService;
 
     public PublicationAdapter(Context context, List<Publication> data) {
         // TODO Auto-generated constructor stub
@@ -63,7 +62,7 @@ public class PublicationAdapter extends BaseAdapter {
         {
             case "bar":
                 prepareGetBar(vi);
-                mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+                ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
                 mVolleyService.getBar(data.get(position).getFrom_id());
                 break;
             case "beer":
