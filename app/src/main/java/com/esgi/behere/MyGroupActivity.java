@@ -14,7 +14,6 @@ import com.esgi.behere.utils.VolleyCallback;
 public class MyGroupActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
-    private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
 
 
@@ -22,7 +21,7 @@ public class MyGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_groups);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.getMenu().getItem(2).setChecked(true);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
