@@ -43,17 +43,18 @@ public class EditProfileFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
-    private TextView tvEmail, tvName, tvSurname;
+    private TextView tvEmail, tvName, tvSurname, tvNamePerson;
     private Button btnBirthDate;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
-
         tvEmail = rootView.findViewById(R.id.tvEmail);
         tvName = rootView.findViewById(R.id.tvNameGroup);
         tvSurname = rootView.findViewById(R.id.tvSurname);
+
+        tvNamePerson = Objects.requireNonNull(getActivity()).findViewById(R.id.tvNamePerson);
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
         Button btnupdate = rootView.findViewById(R.id.btnUpdate);
 
@@ -94,6 +95,8 @@ public class EditProfileFragment extends Fragment {
                         tvName.setText(name);
                         tvSurname.setText(surname);
                         tvEmail.setText(email);
+
+                        tvNamePerson.setText(String.format("%s %s", name, surname));
                         btnBirthDate.setText(objres.getString("birthDate").substring(0,10));
                     }
                 } catch (Exception e) {

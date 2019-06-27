@@ -86,6 +86,8 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                     prepareGetAllFriends();
                     mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                     mVolleyService.getAllFriends(entityId);
+                    finish();
+                    startActivity(getIntent());
                 });
             }
             prepareGetAllFriends();
@@ -200,6 +202,8 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                                 prepareGetAllFriends();
                                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                                 mVolleyService.getAllFriends(entityId);
+                                finish();
+                                startActivity(getIntent());
                             });
                         }
                     }

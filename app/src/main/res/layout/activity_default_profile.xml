@@ -97,10 +97,11 @@
                android:text="WALL" />
 
            <android.support.design.widget.TabItem
-               android:id="@+id/tabReservation"
+               android:id="@+id/tabNotification"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:text="RESERVATION" />
+               android:textColor="@android:color/white"
+               android:text="NOTIFICATION" />
 
        </android.support.design.widget.TabLayout>
 

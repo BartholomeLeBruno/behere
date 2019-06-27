@@ -38,7 +38,7 @@ public class SectionsAdapterProfile extends FragmentPagerAdapter {
             case 1:
                 return "WALL";
             case 2:
-                return "RESERVATION";
+                return "NOTIFICATION";
         }
         return null;
     }
