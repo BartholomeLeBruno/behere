@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.esgi.behere.actor.Message;
 import com.esgi.behere.actor.User;
 
 import org.json.JSONObject;
@@ -53,6 +54,19 @@ public class ApiUsage {
             params.put("birthDate", user.getBirthDate());
             params.put("id_phone", user.getPhone_id());
             postData(params,PATH_API+"users/create");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createMessage(Message message, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("text", message.getTextMessage());
+            params.put("user_receiver_id", message.getUser_receiver_id());
+            postDataWithAccessToken(params,PATH_API+"messages/create", access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -216,6 +230,7 @@ public class ApiUsage {
         }
 
     }
+
 
 
 

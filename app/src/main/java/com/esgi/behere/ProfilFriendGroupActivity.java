@@ -25,14 +25,13 @@ import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import java.text.MessageFormat;
 import java.util.Objects;
 
 public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
-    private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
-    private static final String PREFS_ID = "USER_ID";
     private ApiUsage mVolleyService;
     private long entityId;
     private String entityType;
@@ -49,7 +48,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
 
         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
         tvFriendsOrMembers = findViewById(R.id.tvFriendsOrMembers);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         btnJoinORAdd = findViewById(R.id.btnJoinOrAdd);
         FriendOrGroupAdapterProfile mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
 
@@ -76,13 +75,13 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             btnJoinORAdd.setText(getString(R.string.add_upercase));
             prepareGetAllPersonnalFriends();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-            mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
+            mVolleyService.getAllFriends(sharedPreferences.getLong(getString(R.string.prefs_id),0));
             if(btnJoinORAdd.getText().toString().equals(getString(R.string.add_upercase)))
             {
                 btnJoinORAdd.setOnClickListener(v -> {
                     prepareEmpty();
                     mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                    mVolleyService.addFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
+                    mVolleyService.addFriend(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
                     prepareGetAllFriends();
                     mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                     mVolleyService.getAllFriends(entityId);
@@ -156,7 +155,6 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         btnChat.setOnClickListener(v -> {
                             try {
                                 Intent chatroul = new Intent(getApplicationContext(), Chat.class);
-                                chatroul.putExtra("reponsderEmail",objres.getString("email"));
                                 chatroul.putExtra("reponsderID",objres.getLong("id"));
                                 startActivity(chatroul);
                             } catch (JSONException e) {
@@ -198,7 +196,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                             btnJoinORAdd.setOnClickListener(v -> {
                                 prepareDeleteFriend();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                mVolleyService.deleteFriend(sharedPreferences.getLong(PREFS_ID, 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
+                                mVolleyService.deleteFriend(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
                                 prepareGetAllFriends();
                                 mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
                                 mVolleyService.getAllFriends(entityId);
@@ -226,7 +224,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         JSONParser parser = new JSONParser();
                         JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
                         Log.d("voila",resFriend.size()+"");
-                        tvFriendsOrMembers.setText(resFriend.size() + getString(R.string.friends));
+                        tvFriendsOrMembers.setText(MessageFormat.format("{0}{1}", resFriend.size(), getString(R.string.friends)));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
