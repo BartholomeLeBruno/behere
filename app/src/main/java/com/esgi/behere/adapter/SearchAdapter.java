@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.esgi.behere.GroupActivity;
 import com.esgi.behere.MarketProfilActivity;
 import com.esgi.behere.ProfilFriendGroupActivity;
 import com.esgi.behere.R;
@@ -75,10 +77,8 @@ public class SearchAdapter extends BaseAdapter {
                     parent.getContext().startActivity(nextStep);
                     break;
                 case "Group":
-                    //todo handle all group and as user
-                    nextStep = new Intent(v.getContext(), ProfilFriendGroupActivity.class);
+                    nextStep = new Intent(v.getContext(), GroupActivity.class);
                     nextStep.putExtra("entityID", data.get(position).getId());
-                    nextStep.putExtra("entityType", data.get(position).getType());
                     parent.getContext().startActivity(nextStep);
                     break;
             }
