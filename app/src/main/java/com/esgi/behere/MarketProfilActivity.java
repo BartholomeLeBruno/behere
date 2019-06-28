@@ -52,13 +52,19 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_market_profile);
 
-        Button btnReservation = findViewById(R.id.btnReservation);
-        btnReservation.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), ReservationActivity.class)));
+        Button btnSeeComment = findViewById(R.id.btnSeeComment);
+
         TextView tvNameBar = findViewById(R.id.tvNameBar);
         TextView contentDesc = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         Button btnWebsite = findViewById(R.id.btnWebsite);
         Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+        btnSeeComment.setOnClickListener(v -> {
+            Intent comments = new Intent(getApplicationContext(), CommentaryListActivity.class);
+            comments.putExtra("entityID",market.getId());
+            comments.putExtra("entityType",market.getType());
+            startActivity(comments);
+        });
         if(market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());

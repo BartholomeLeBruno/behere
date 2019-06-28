@@ -198,6 +198,24 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
+    public void getAllCommentsBar(long idBar)
+    {
+        try {
+            getData(PATH_API+"commentsBars/?bar_id=" + idBar);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+    public void getAllCommentsBrewerys(long idBrewery)
+    {
+        try {
+            getData(PATH_API+"commentsBrewerys/?brewery_id=" + idBrewery);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void getAllTypeOfBeer()
     {

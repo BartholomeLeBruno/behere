@@ -107,14 +107,14 @@
             tools:context=".MarketProfilActivity" />
 
         <Button
-            android:id="@+id/btnReservation"
+            android:id="@+id/btnSeeComment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="28dp"
             android:layout_marginEnd="24dp"
             android:background="#3ACCE1"
-            android:text="RESERVATION"
+            android:text="SEE COMMMENTS"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -132,7 +132,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnReservation"
+            app:layout_constraintTop_toBottomOf="@+id/btnSeeComment"
             app:layout_constraintVertical_bias="1.0"
             app:menu="@menu/bottom_nav_menu" />
 
