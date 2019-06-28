@@ -184,7 +184,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         if (!resFriends.isEmpty()) {
                             for (Object unres : resFriends) {
                                  objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                if(Long.parseLong(objres.get("user_id").toString()) == entityId)
+                                if(Long.parseLong(objres.get("user_friend_id").toString()) == entityId)
                                 {
                                     btnJoinORAdd.setText(getString(R.string.delete_upercase));
                                     break;

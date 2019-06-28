@@ -107,11 +107,11 @@ public class FriendsListActivity extends AppCompatActivity {
                                     if (sharedPreferences.getLong(getString(R.string.prefs_id), 0) == (long) getIntent().getExtras().get("entityID")) {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                        mVolleyService.getUser(objres.getInt("user_id"));
+                                        mVolleyService.getUser(objres.getInt("user_friend_id"));
                                     } else {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                        mVolleyService.getUser(objres.getInt("user_friend_id"));
+                                        mVolleyService.getUser(objres.getInt("user_id"));
                                     }
                                 }
                             }
