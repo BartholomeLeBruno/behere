@@ -109,7 +109,7 @@ public class CommentaryListActivity extends AppCompatActivity {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
                                 Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("bar_id"),"bar"));
+                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("user_id"),"bar"));
                             }
                         }
                         Collections.sort(publications);
