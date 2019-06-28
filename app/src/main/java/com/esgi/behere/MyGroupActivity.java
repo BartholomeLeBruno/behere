@@ -102,8 +102,8 @@ public class MyGroupActivity extends AppCompatActivity {
                         JSONObject objGroup;
                         long id;
                         String name;
-                        Group onegroup = new Group();
                         for (Object group : resGroup) {
+                            Group onegroup = new Group();
                             objGroup = (JSONObject) new JSONTokener(group.toString()).nextValue();
                             name = objGroup.getString("name");
                             id = objGroup.getLong("id");
