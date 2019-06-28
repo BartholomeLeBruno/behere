@@ -64,11 +64,13 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
             contentDesc.setText(market.getDescription());
             if(!market.getWebSiteLink().isEmpty()) {
                 btnWebsite.setOnClickListener(v -> {
+                    if (!market.getWebSiteLink().isEmpty()){
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
                     intent.setData(Uri.parse(market.getWebSiteLink()));
                     startActivity(intent);
+                }
                 });
             }
         }
