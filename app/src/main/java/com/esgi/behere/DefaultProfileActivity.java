@@ -29,7 +29,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
     private static final String PREFS_ID = "USER_ID";
-    private TextView tvFriends;
+    private TextView tvFriends, tvGroups;
 
 
     @Override
@@ -38,7 +38,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_default_profile);
 
         tvFriends = findViewById(R.id.tvFriends);
-        TextView tvGroups = findViewById(R.id.tvGroups);
+        tvGroups = findViewById(R.id.tvGroups);
         tvNamePerson = findViewById(R.id.tvNamePerson);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
@@ -60,6 +60,9 @@ public class DefaultProfileActivity extends AppCompatActivity {
         prepareGetAllFriends();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
         mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
+        prepareGetAllGroups();
+        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+        mVolleyService.getAllGroups(sharedPreferences.getLong(PREFS_ID,0));
 
     }
 
@@ -129,8 +132,8 @@ public class DefaultProfileActivity extends AppCompatActivity {
     }
     public void onGroupListCLick(View view)
     {
-        Intent listFriend = new Intent(getApplicationContext(), CreateGroupeActivity.class);
-        startActivity(listFriend);
+        Intent listGroup = new Intent(getApplicationContext(), MyGroupActivity.class);
+        startActivity(listGroup);
     }
 
 
@@ -144,6 +147,27 @@ public class DefaultProfileActivity extends AppCompatActivity {
                         JSONParser parser = new JSONParser();
                         JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
                         tvFriends.setText(resFriend.size() + " Friends");
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
+
+    private void prepareGetAllGroups()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray resGroup = (JSONArray) parser.parse(response.get("group").toString());
+                        tvGroups.setText(resGroup.size() + " Groups");
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);

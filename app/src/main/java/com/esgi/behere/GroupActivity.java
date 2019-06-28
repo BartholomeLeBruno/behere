@@ -2,6 +2,7 @@ package com.esgi.behere;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -29,6 +30,8 @@ public class GroupActivity extends AppCompatActivity {
         Button btnAdd = findViewById(R.id.btnJoinOrAdd);
         tvNameGroup = findViewById(R.id.tvNameGroup);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
+        BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         btnAdd.setText(getString(R.string.join_upercase));
         if(getIntent().getExtras() != null) {
             long entityID = getIntent().getExtras().getLong("entityID");
