@@ -81,6 +81,7 @@
             android:layout_marginBottom="24dp"
             android:layout_weight="1"
             android:clickable="true"
+            app:backgroundTint="#2A2E43"
             app:layout_constraintBottom_toTopOf="@+id/footerpub"
             app:layout_constraintStart_toStartOf="parent"
             app:rippleColor="#00FFFFFF"
@@ -92,6 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
+            app:backgroundTint="#2A2E43"
             android:layout_weight="1"
             android:clickable="true"
             app:layout_constraintBottom_toTopOf="@+id/footerpub"
@@ -157,6 +159,12 @@
         app:tabMode="fixed"
         app:tabSelectedTextColor="#3ACCE1"
         app:tabTextColor="@android:color/white">
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All" />
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabUser"

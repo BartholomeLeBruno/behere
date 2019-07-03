@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="80dp"
     android:id="@+id/relativeLayout"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:padding="10dp">
@@ -17,16 +16,38 @@
         android:layout_marginTop="13dp"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        tools:text="Vous avez reçu une nouvelle demande d'ami" />
+        tools:text="Vous avez reçu une nouvelle demande d'ami de :" />
 
-    <ImageView
-        android:id="@+id/imgAdd"
+    <TextView
+        android:id="@+id/tvAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="empty"
-        tools:background="@drawable/ic_check_green_24dp"
-        android:layout_below="@+id/tvDemand"/>
+        android:textStyle="bold"
+        android:layout_below="@id/tvDemand"
+        android:drawableStart="@drawable/ic_check_green_24dp"
+        android:text="Agree" />
 
+
+    <TextView
+        android:id="@+id/tvNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvDemand"
+        android:layout_toEndOf="@+id/tvAdd"
+        android:drawableStart="@drawable/ic_close_red_24dp"
+        android:textStyle="bold"
+        android:text="Denied" />
+
+
+    <TextView
+        android:id="@+id/tvSeeProfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvDemand"
+        android:layout_toEndOf="@+id/tvNo"
+        android:drawableStart="@drawable/ic_person_black_24dp"
+        android:textStyle="bold"
+        android:text="See Profil" />
 
 
 </RelativeLayout>

@@ -19,7 +19,7 @@ public class SectionsAdapterProfile extends FragmentPagerAdapter {
             case 1:
                 return new WallProfileFragment();
             case 2:
-                return new MyReservationFragment();
+                return new NotificationFragment();
             default:
                 return null;
         }

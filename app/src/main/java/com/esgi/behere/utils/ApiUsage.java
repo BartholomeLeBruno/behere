@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.esgi.behere.actor.Message;
+import com.esgi.behere.actor.Notification;
 import com.esgi.behere.actor.User;
 
 import org.json.JSONObject;
@@ -68,6 +69,44 @@ public class ApiUsage {
             params.put("text", message.getTextMessage());
             params.put("user_receiver_id", message.getUser_receiver_id());
             postDataWithAccessToken(params,PATH_API+"messages/create", access_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createNotification(Notification notification, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("texte", notification.getText());
+            params.put("type", notification.getType());
+            params.put("user_id", notification.getUser_id());
+            params.put("other_user_id", notification.getOther_user_id());
+            params.put("group_id", JSONObject.NULL);
+            Log.d("Notification", params.toString() + access_token);
+            postDataWithAccessToken(params,PATH_API+"notifications/create", access_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void getNotification(long user_id, String access_token)
+    {
+        try {
+            getDataWithAcessToken(PATH_API+"notifications/?user_id=" + user_id, access_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteNotification(long notif_id, String access_token)
+    {
+        try {
+            deleteDataWithAccessToken(PATH_API+"notifications/delete/" + notif_id, access_token);
         }catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -388,6 +427,31 @@ public class ApiUsage {
         };
         CacheContainer.getQueue().add(jsonObjectRequest);
     }
+    private void getDataWithAcessToken(String url, String acces_token) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                (JSONObject response) -> {
+                    // response
+                    if(mResultCallback != null)
+                        mResultCallback.onSuccess(response);
+                },
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", " " + error.getMessage());
+                    error.printStackTrace();
+                    if(mResultCallback != null)
+                        mResultCallback.onError(error);
+
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("x-access-token", acces_token);
+                return headers;
+            }
+        };
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
 
     private void postData(JSONObject params, String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
@@ -462,6 +526,30 @@ public class ApiUsage {
 
     private void deleteDataWithAccessToken(JSONObject params, String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, params,
+                (JSONObject response) -> {
+                    // response
+                    if(mResultCallback != null)
+                        mResultCallback.onSuccess(response);
+                },
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", error.getMessage() +" ");
+                    if(mResultCallback != null)
+                        mResultCallback.onError(error);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("x-access-token", acces_token);
+                return headers;
+            }
+        };
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
+
+    private void deleteDataWithAccessToken(String url, String acces_token) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 (JSONObject response) -> {
                     // response
                     if(mResultCallback != null)

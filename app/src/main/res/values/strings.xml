@@ -47,4 +47,5 @@
     <string name="prefs_id">USER_ID</string>
     <string name="default_piece">default</string>
     <string name="join_upercase">JOIN</string>
+    <string name="waiting_uppercase">WAITING</string>
 </resources>

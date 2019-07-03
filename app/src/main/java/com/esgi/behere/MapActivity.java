@@ -90,7 +90,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private LocationCallback mLocationCallback;
     private MaterialSearchView searchView;
     private TabLayout tabLayout;
-    private String selectedTab = "User";
+    private String selectedTab = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,13 +104,18 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public void onTabSelected(TabLayout.Tab tab) {
                 selectedTab = Objects.requireNonNull(tab.getText()).toString();
                 List<ResultSearch> lsFound = new ArrayList<>();
-                for (ResultSearch item : resultSearches) {
-                    if (item.getType().equals(selectedTab))
-                        lsFound.add(item);
-                }
-                SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                listView.setAdapter(adapter);
+                if(!"All".equals(selectedTab)) {
+                    for (ResultSearch item : resultSearches) {
+                        if (item.getType().equals(selectedTab))
+                            lsFound.add(item);
+                    }
 
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                    listView.setAdapter(adapter);
+                }else {
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
+                    listView.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -145,12 +150,17 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.getAllEntities();
                 List<ResultSearch> lsFound = new ArrayList<>();
+                if(!"All".equals(selectedTab)) {
                     for (ResultSearch item : resultSearches) {
                         if (item.getType().equals(selectedTab))
                             lsFound.add(item);
                     }
-                SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                listView.setAdapter(adapter);
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                    listView.setAdapter(adapter);
+                }else {
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
+                    listView.setAdapter(adapter);
+                }
                 listView.setVisibility(View.VISIBLE);
                 tabLayout.setVisibility(View.VISIBLE);
             }
@@ -172,12 +182,18 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public boolean onQueryTextChange(String newText) {
                 List<ResultSearch> lsFound = new ArrayList<>();
                 if (newText != null && !newText.trim().equals("")) {
-                    for (ResultSearch item : resultSearches) {
-                        if (item.getName().contains(newText) && item.getType().equals(selectedTab))
-                            lsFound.add(item);
+                    if(!"All".equals(selectedTab)) {
+                        for (ResultSearch item : resultSearches) {
+                            if (item.getName().contains(newText) && item.getType().equals(selectedTab))
+                                lsFound.add(item);
+                        }
+
+                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                        listView.setAdapter(adapter);
+                    }else {
+                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
+                        listView.setAdapter(adapter);
                     }
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                    listView.setAdapter(adapter);
                 }
                 return true;
             }
@@ -603,8 +619,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 resultSearches.add(resultSearch);
                             }
                         }
-                        SearchAdapter adapter = new SearchAdapter(getApplicationContext(),resultSearches);
-                        listView.setAdapter(adapter);
+                        //SearchAdapter adapter = new SearchAdapter(getApplicationContext(),resultSearches);
+                        //listView.setAdapter(adapter);
                     }
                 }
                 catch (Exception e) {
