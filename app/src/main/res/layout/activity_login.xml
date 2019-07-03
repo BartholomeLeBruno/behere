@@ -60,12 +60,12 @@
         <EditText
             android:id="@+id/login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:autofillHints="@string/email_champ"
             android:background="@android:drawable/dialog_holo_light_frame"
             android:hint="@string/email_champ"
+            android:gravity="center_horizontal|center_vertical"
             android:inputType="textEmailAddress"
-            android:textAlignment="viewStart"
             android:textColorHint="#F6F6F6" />
     </android.support.design.widget.TextInputLayout>
 
@@ -83,9 +83,10 @@
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
             android:autofillHints="@string/password_champ"
             android:background="@android:drawable/dialog_holo_light_frame"
+            android:gravity="center_horizontal|center_vertical"
             android:hint="@string/password_champ"
             android:imeActionId="6"
             android:imeActionLabel="@string/action_sign_in_short"
@@ -95,39 +96,39 @@
     </android.support.design.widget.TextInputLayout>
 
 
-    <Button
-        android:id="@+id/btnSignIn"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:text="SIGN IN"
-        android:backgroundTint="#2C83DB"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        <Button
+            android:id="@+id/btnSignIn"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:backgroundTint="#2C83DB"
+            android:text="SIGN IN"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
-    <Button
-        android:id="@+id/btnRegisterLastStep"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:textColor="#FFFFFF"
-        android:layout_marginEnd="16dp"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:backgroundTint="#2C83DB"
-        android:text="REGISTER"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
+        <Button
+            android:id="@+id/btnRegisterLastStep"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:backgroundTint="#2C83DB"
+            android:text="REGISTER"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
 
 
     </android.support.constraint.ConstraintLayout>

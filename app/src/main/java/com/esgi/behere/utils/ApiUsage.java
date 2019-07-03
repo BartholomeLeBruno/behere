@@ -12,6 +12,7 @@ import com.esgi.behere.actor.User;
 import org.json.JSONObject;
 
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -287,6 +288,18 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
+    public void uploadPictureUser(File photo, long id, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("file", photo);
+            Log.d("params", params.toString());
+            putDataWithAccessToken(params,PATH_API+"users/upload/" + id, access_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void createGroup(String nameGroup, String access_token)
     {
@@ -432,7 +445,7 @@ public class ApiUsage {
                 },
                 (VolleyError error) -> {
                         // error
-                        Log.d("Error.Response", error.getMessage() +" ");
+                        Log.d("Error.Response", error.getLocalizedMessage() +" ");
                         if(mResultCallback != null)
                             mResultCallback.onError(error);
                 }) {

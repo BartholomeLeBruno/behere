@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:backgroundTint="#353A50"
     android:padding="10dp">
@@ -13,6 +13,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="empty"
+        android:foregroundGravity="center_vertical"
         app:srcCompat="@drawable/default_image"
         tools:background="#AAA" />
 
@@ -21,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imgPubPro"
-        android:layout_marginStart="17dp"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@+id/imgPubPro"
         android:textColor="@android:color/white"
@@ -32,8 +32,8 @@
         android:id="@+id/PublicationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imgPubPro"
-        android:layout_marginStart="17dp"
+        android:layout_below="@+id/pseudoPubPro"
+        android:layout_toEndOf="@+id/imgPubPro"
         android:textColor="@android:color/white"
         tools:text="Texte de mon tweet" />
 

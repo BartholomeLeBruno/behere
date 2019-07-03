@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -88,15 +89,40 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
     private MaterialSearchView searchView;
+    private TabLayout tabLayout;
+    private String selectedTab = "User";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         initializeQueue();
-        // Drawer navigation
         btnRecenter = findViewById(R.id.btnCenter);
+        tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                selectedTab = Objects.requireNonNull(tab.getText()).toString();
+                List<ResultSearch> lsFound = new ArrayList<>();
+                for (ResultSearch item : resultSearches) {
+                    if (item.getType().equals(selectedTab))
+                        lsFound.add(item);
+                }
+                SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                listView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
@@ -118,12 +144,21 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 prepareGetAllEntities();
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.getAllEntities();
+                List<ResultSearch> lsFound = new ArrayList<>();
+                    for (ResultSearch item : resultSearches) {
+                        if (item.getType().equals(selectedTab))
+                            lsFound.add(item);
+                    }
+                SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                listView.setAdapter(adapter);
                 listView.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onSearchViewClosed() {
                 listView.setVisibility(View.INVISIBLE);
+                tabLayout.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -135,11 +170,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
                 List<ResultSearch> lsFound = new ArrayList<>();
                 if (newText != null && !newText.trim().equals("")) {
                     for (ResultSearch item : resultSearches) {
-                        if (item.getName().contains(newText))
+                        if (item.getName().contains(newText) && item.getType().equals(selectedTab))
                             lsFound.add(item);
                     }
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);

@@ -10,8 +10,9 @@
         android:id="@+id/toolbarMain"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
+        android:background="#2A2E43"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="@color/colorPrimaryWhite" />
 
     <com.miguelcatalan.materialsearchview.MaterialSearchView
         android:id="@+id/search_view"
@@ -19,11 +20,11 @@
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
-        app:searchBackIcon="@drawable/ic_navigation_arrow_back"
+        app:searchBackIcon="@drawable/ic_arrow_back_white_24dp"
         app:searchBackground="@color/colorPrimary"
-        app:searchCloseIcon="@drawable/ic_navigation_close_inverted"
+        app:searchCloseIcon="@drawable/ic_close_white_24dp"
         app:searchSuggestionBackground="@color/colorPrimary"
-        app:searchSuggestionIcon="@drawable/ic_child_friendly_blue_24dp" />
+        app:searchSuggestionIcon="@drawable/ic_person_white_24dp" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_frame"
@@ -145,11 +146,51 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_view"
+        android:background="#2A2E43"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="#3ACCE1"
+        app:tabTextColor="@android:color/white">
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bar" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabBrewery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Brewery"
+            android:textColor="@android:color/white" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabBeer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beer"
+            android:textColor="@android:color/white" />
+
+    </android.support.design.widget.TabLayout>
+
     <ListView
         android:id="@+id/listView_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/search_view"
+        android:layout_below="@id/tabLayout"
         android:layout_alignStart="@+id/content_frame"
         android:layout_alignEnd="@+id/content_frame"
         android:layout_marginStart="16dp"

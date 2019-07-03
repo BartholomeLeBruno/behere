@@ -4,17 +4,24 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.LoginActivity;
@@ -27,6 +34,7 @@ import com.esgi.behere.utils.VolleyCallback;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Calendar;
@@ -41,7 +49,12 @@ public class EditProfileFragment extends Fragment {
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private TextView tvEmail, tvName, tvSurname, tvNamePerson;
-    private Button btnBirthDate;
+    private Button btnBirthDate, btnUploadPhoto;
+    private   static final int PICK_IMAGE =1;
+    private View view;
+    private File file;
+    private Bitmap yourSelectedImage;
+    ImageView imageView;
 
     @Nullable
     @Override
@@ -50,7 +63,18 @@ public class EditProfileFragment extends Fragment {
         tvEmail = rootView.findViewById(R.id.tvEmail);
         tvName = rootView.findViewById(R.id.tvNameGroup);
         tvSurname = rootView.findViewById(R.id.tvSurname);
-
+        btnUploadPhoto = rootView.findViewById(R.id.btnUploadPhoto);
+        imageView = rootView.findViewById(R.id.imageViewtest);
+        btnUploadPhoto.setOnClickListener(v -> {
+            Intent intent=new Intent(Intent.ACTION_PICK);
+            // Sets the type as image/*. This ensures only components of type image are selected
+            intent.setType("image/*");
+            //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+            String[] mimeTypes = {"image/jpeg", "image/png"};
+            intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+            // Launching the Intent
+            startActivityForResult(intent,PICK_IMAGE);
+        });
         tvNamePerson = Objects.requireNonNull(getActivity()).findViewById(R.id.tvNamePerson);
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
         Button btnupdate = rootView.findViewById(R.id.btnUpdate);
@@ -74,6 +98,35 @@ public class EditProfileFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == PICK_IMAGE)
+        {
+            Bitmap bitmap = null;
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            // Get the cursor
+            Cursor cursor =getContext().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            // Move to first row
+            cursor.moveToFirst();
+            //Get the column index of MediaStore.Images.Media.DATA
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            //Gets the String value in the column
+            String imgDecodableString = cursor.getString(columnIndex);
+            btnUploadPhoto.setText(imgDecodableString);
+            cursor.close();
+            prepareEmty();
+            File file = new File(imgDecodableString);
+            if(file.exists())
+                Log.d("exist",file.getAbsolutePath());
+
+
+            mVolleyService = new ApiUsage(mResultCallback,getContext());
+            mVolleyService.uploadPictureUser(file, sharedPreferences.getLong(getString(R.string.prefs_id),0),sharedPreferences.getString(getString(R.string.access_token),""));
+            imageView.setImageBitmap(bitmap);
+
+            }
+        }
 
 
     private void prepareGetUser(){
@@ -125,6 +178,18 @@ public class EditProfileFragment extends Fragment {
                 {
                     new PopupAchievement().popupAuthentification(getView());
                 }
+            }
+        };
+    }
+
+    private void prepareEmty(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+            }
+            @Override
+            public void onError(VolleyError error) {
+               Toast.makeText(getApplicationContext(),error.getLocalizedMessage()+"",Toast.LENGTH_LONG).show();
             }
         };
     }
