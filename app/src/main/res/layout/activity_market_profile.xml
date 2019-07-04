@@ -39,6 +39,16 @@
             app:layout_constraintTop_toTopOf="@+id/linearLayout"
             app:layout_constraintVertical_bias="1.0" />
 
+        <LinearLayout
+            android:id="@+id/linearLayoutStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+            app:layout_constraintStart_toEndOf="@+id/tvNameBar" />
+
         <TextView
             android:id="@+id/tvNameBar"
             android:layout_width="wrap_content"

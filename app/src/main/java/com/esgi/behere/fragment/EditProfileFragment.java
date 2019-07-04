@@ -51,9 +51,6 @@ public class EditProfileFragment extends Fragment {
     private TextView tvEmail, tvName, tvSurname, tvNamePerson;
     private Button btnBirthDate, btnUploadPhoto;
     private   static final int PICK_IMAGE =1;
-    private View view;
-    private File file;
-    private Bitmap yourSelectedImage;
     ImageView imageView;
 
     @Nullable

@@ -150,6 +150,32 @@ public class ApiUsage {
         }
     }
 
+    public  void addNoteToBar(long note, long bar_id, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("note", note);
+            params.put("bar_id", bar_id);
+            postDataWithAccessToken(params, PATH_API+"notesBars/create", access_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public  void addNoteToBrewery(long note, long bar_id, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("note", note);
+            params.put("brewery_id", bar_id);
+            postDataWithAccessToken(params, PATH_API+"notesBrewerys/create", access_token);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void addCommentsToBrewery(String text, int brewery_id, String access_token)
     {
         try {
@@ -167,6 +193,30 @@ public class ApiUsage {
     {
         try {
             getData(PATH_API+"users/" + idUser);
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getNotesBar(long idBar)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("bar_id", idBar);
+            getDataWithParam(params,PATH_API+"notesBars");
+        }catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getNotesBrewery(long idBrewery)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("brewery_id", idBrewery);
+            getDataWithParam(params,PATH_API+"notesBrewerys");
         }catch (Exception e)
         {
             throw new RuntimeException(e);

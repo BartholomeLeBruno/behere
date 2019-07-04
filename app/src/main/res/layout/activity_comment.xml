@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#3ACCE1">
@@ -10,12 +10,57 @@
         android:layout_width="match_parent"
         android:layout_height="109dp"
         android:autofillHints="Comment"
-        android:inputType="text"
         android:hint="Votre commentaire..."
-        android:textColorHint="#FFFFFF"
-        android:textColor="#FFFFFF"
+        android:inputType="text"
         android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         android:textSize="22sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvComment"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/firstStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+
+        <ImageView
+            android:id="@+id/secondStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/firstStar"
+            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+
+        <ImageView
+            android:id="@+id/thirdStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/secondStar"
+            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+
+        <ImageView
+            android:id="@+id/fourthStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/thirdStar"
+            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+
+
+        <ImageView
+            android:id="@+id/fifthStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/fourthStar"
+            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btnSendComment"
@@ -23,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvComment"
         android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
         android:text="ENVOYER"
         android:textAlignment="center" />
 

@@ -63,7 +63,7 @@ public class InfoProfileFragment extends Fragment {
                         name = objres.getString("name");
                         surname = objres.getString("surname");
                         email = objres.getString("email");
-                        tvName.setText(name + " " + surname);
+                        tvName.setText(String.format("%s %s", name, surname));
                         tvBirthdate.setText(objres.getString("birthDate").substring(0,10));
                         tvEmail.setText(email);
                     }

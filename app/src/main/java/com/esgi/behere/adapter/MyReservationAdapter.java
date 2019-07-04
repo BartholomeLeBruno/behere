@@ -17,7 +17,6 @@ public class MyReservationAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
     public MyReservationAdapter(Context context, List<Reservation> data) {
-        // TODO Auto-generated constructor stub
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -25,25 +24,21 @@ public class MyReservationAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         View vi = convertView;
         if (vi == null)
             vi = inflater.inflate(R.layout.fragment_reservation, parent,false);

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Market;
+import com.esgi.behere.tools.StarTools;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.PopupAchievement;
@@ -34,17 +36,23 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 
-public class MarketProfilActivity extends AppCompatActivity  implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
+public class MarketProfilActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
 
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private final String PREFS = "PREFS";
     private SharedPreferences sharedPreferences;
+    private LinearLayout linearLayoutStar;
+    private Market market;
 
 
     @Override
@@ -53,30 +61,36 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         setContentView(R.layout.activity_market_profile);
 
         Button btnSeeComment = findViewById(R.id.btnSeeComment);
-
+        linearLayoutStar = findViewById(R.id.linearLayoutStar);
         TextView tvNameBar = findViewById(R.id.tvNameBar);
         TextView contentDesc = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         Button btnWebsite = findViewById(R.id.btnWebsite);
-        Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+        market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+        prepareStar();
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        if (market.getType().equals("Bar"))
+            mVolleyService.getNotesBar(market.getId());
+        if (market.getType().equals("Brewery"))
+            mVolleyService.getNotesBrewery(market.getId());
         btnSeeComment.setOnClickListener(v -> {
             Intent comments = new Intent(getApplicationContext(), CommentaryListActivity.class);
-            comments.putExtra("entityID",market.getId());
-            comments.putExtra("entityType",market.getType());
+            comments.putExtra("entityID", market.getId());
+            comments.putExtra("entityType", market.getType());
             startActivity(comments);
         });
-        if(market != null) {
+        if (market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
-            if(!market.getWebSiteLink().isEmpty()) {
+            if (!market.getWebSiteLink().isEmpty()) {
                 btnWebsite.setOnClickListener(v -> {
-                    if (!market.getWebSiteLink().isEmpty()){
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(market.getWebSiteLink()));
-                    startActivity(intent);
-                }
+                    if (!market.getWebSiteLink().isEmpty()) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        intent.setData(Uri.parse(market.getWebSiteLink()));
+                        startActivity(intent);
+                    }
                 });
             }
         }
@@ -100,7 +114,7 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+        Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         assert market != null;
         LatLng latLng = new LatLng(market.getLatitude(), market.getLongitutde());
         Marker marker = googleMap.addMarker(new MarkerOptions()
@@ -114,7 +128,9 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
 
     }
 
-    /** Called when the user clicks a marker. */
+    /**
+     * Called when the user clicks a marker.
+     */
     @Override
     public boolean onMarkerClick(final Marker marker) {
         Integer clickCount = (Integer) marker.getTag();
@@ -140,35 +156,86 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.activity_comment, null);
-
+        AtomicLong note = new AtomicLong();
+        note.set(0);
         // create the popup window
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
-
+        ImageView firstStar = popupView.findViewById(R.id.firstStar);
+        ImageView secondStar = popupView.findViewById(R.id.secondStar);
+        ImageView thirdStar = popupView.findViewById(R.id.thirdStar);
+        ImageView fourthStar = popupView.findViewById(R.id.fourthStar);
+        ImageView fifthStar = popupView.findViewById(R.id.fifthStar);
+        firstStar.setOnClickListener(first -> {
+            firstStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            secondStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            thirdStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            fourthStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            fifthStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            note.set(1);
+        });
+        secondStar.setOnClickListener(second -> {
+            firstStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            secondStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            thirdStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            fourthStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            fifthStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            note.set(2);
+        });
+        thirdStar.setOnClickListener(third -> {
+            firstStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            secondStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            thirdStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            fourthStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            fifthStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            note.set(3);
+        });
+        fourthStar.setOnClickListener(fourth -> {
+            firstStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            secondStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            thirdStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            fourthStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            fifthStar.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            note.set(4);
+        });
+        fifthStar.setOnClickListener(fifth -> {
+            firstStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            secondStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            thirdStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            fourthStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            fifthStar.setImageResource(R.drawable.ic_star_yellow_24dp);
+            note.set(5);
+        });
         // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window tolken
+        // which view you pass in doesn't matter, it is only used for the window token
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
         Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
-        EditText tvComment =  popupView.findViewById(R.id.tvComment);
+        EditText tvComment = popupView.findViewById(R.id.tvComment);
         btnSendComment.setOnClickListener((View v) -> {
-            Market market =  (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+            Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
             prepareAddComment();
-            if(Objects.requireNonNull(market).getType().equals("Bar")) {
+            if (Objects.requireNonNull(market).getType().equals("Bar")) {
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                prepareEmpty();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addNoteToBar(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token),""));
                 popupWindow.dismiss();
-            }
-            else{
+            } else {
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                prepareEmpty();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addNoteToBrewery(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token),""));
                 popupWindow.dismiss();
             }
         });
     }
-    private void prepareAddComment(){
+
+    private void prepareAddComment() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -178,17 +245,15 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
                     if ((boolean) response.get("error")) {
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
             @Override
             public void onError(VolleyError error) {
-                if(error.networkResponse.statusCode == 500)
-                {
+                if (error.networkResponse.statusCode == 500) {
                     new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
                 }
             }
@@ -224,5 +289,55 @@ public class MarketProfilActivity extends AppCompatActivity  implements GoogleMa
         Intent next;
         next = new Intent(getApplicationContext(), MapActivity.class);
         startActivity(next);
+    }
+
+    private void prepareEmpty() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+            }
+            @Override
+            public void onError(VolleyError error) {
+                if (error.networkResponse.statusCode == 500) {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
+            }
+        };
+    }
+
+    private void prepareStar() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    double note = 0;
+                    JSONParser parser = new JSONParser();
+                    JSONArray resNote;
+                    if (market.getType().equals("Bar"))
+                        resNote = (JSONArray) parser.parse(response.get("notesBar").toString());
+                    else
+                        resNote = (JSONArray) parser.parse(response.get("notesBrewery").toString());
+                    JSONObject objres;
+                    if (!resNote.isEmpty()) {
+                        for (Object unres : resNote) {
+                            objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                            note = note + objres.getDouble("note");
+                        }
+                        note = note / resNote.size();
+                    }
+                    StarTools starTools = new StarTools(note, getApplicationContext(), linearLayoutStar);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                if (error.networkResponse.statusCode == 500) {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
+            }
+        };
     }
 }
