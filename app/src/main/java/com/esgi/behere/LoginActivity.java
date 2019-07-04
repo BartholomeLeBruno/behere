@@ -228,6 +228,7 @@ public class LoginActivity extends Activity {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         sharedPreferences.edit().putLong(getString(R.string.prefs_id), Long.parseLong(objres.get("id").toString())).apply();
                         sharedPreferences.edit().putString(PREFS_ACCESS_TOKEN, objres.get("token").toString()).apply();
+                        sharedPreferences.edit().putString("USERNAME", objres.getString("name")+ " " +objres.getString("surname")).apply();
                         startActivity(mapActivity);
                         prepareFun();
                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());

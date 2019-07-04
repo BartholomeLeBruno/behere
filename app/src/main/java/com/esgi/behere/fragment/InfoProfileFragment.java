@@ -20,15 +20,12 @@ import com.esgi.behere.utils.VolleyCallback;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.util.Objects;
-
 import static android.content.Context.MODE_PRIVATE;
 
 
 public class InfoProfileFragment extends Fragment {
 
     private static final String PREFS = "PREFS";
-    private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
     private TextView tvEmail, tvName, tvBirthdate;
@@ -44,15 +41,10 @@ public class InfoProfileFragment extends Fragment {
 
         sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         long entityId = (long) getActivity().getIntent().getExtras().get("entityID");
-        String entityType = (String) getActivity().getIntent().getExtras().get("entityType");
-        if(Objects.equals(entityType, "User")) {
-            prepareGetUser();
-            ApiUsage mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
-            mVolleyService.getUser(entityId);
-        }
-        else{
-            // TODO creer un prepare pour les groupes et recuperer les infos, ptis cons
-        }
+        prepareGetUser();
+        ApiUsage mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+        mVolleyService.getUser(entityId);
+
         return rootView;
     }
 

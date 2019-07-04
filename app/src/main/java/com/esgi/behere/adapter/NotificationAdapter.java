@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 
 import com.android.volley.VolleyError;
+import com.esgi.behere.DefaultProfileActivity;
 import com.esgi.behere.ProfilFriendGroupActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.Notification;
+import com.esgi.behere.fragment.NotificationFragment;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
@@ -68,8 +70,8 @@ public class NotificationAdapter extends BaseAdapter {
                 TextView denied = vi.findViewById(R.id.tvNo);
                 TextView profil = vi.findViewById(R.id.tvSeeProfil);
                 profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
-                agree.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id()));
-                denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId()));
+                agree.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
+                denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
                 break;
         }
         return vi;
@@ -81,17 +83,23 @@ public class NotificationAdapter extends BaseAdapter {
         v.getContext().startActivity(profil);
     }
 
-    private void addFriend(View v, long entityId) {
+    private void addFriend(View v, long entityId, long notifID, Notification notification) {
         prepareEmpty(v);
         mVolleyService = new ApiUsage(mResultCallback, v.getContext());
         mVolleyService.addFriend(sharedPreferences.getLong(v.getContext().getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
-
+        mVolleyService = new ApiUsage(mResultCallback, v.getContext());
+        mVolleyService.deleteNotification(notifID, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
+        NotificationFragment.removeNotification(notification);
+        NotificationFragment.refreshAdapter(v.getContext());
+        //DefaultProfileActivity.updateNbFriends();
     }
 
-    private void denyFriend(View v, long notifID) {
+    private void denyFriend(View v, long notifID, Notification notification) {
         prepareEmpty(v);
         mVolleyService = new ApiUsage(mResultCallback, v.getContext());
         mVolleyService.deleteNotification(notifID, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
+        NotificationFragment.removeNotification(notification);
+        NotificationFragment.refreshAdapter(v.getContext());
     }
 
 

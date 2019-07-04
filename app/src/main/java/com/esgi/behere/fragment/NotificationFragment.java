@@ -1,5 +1,6 @@
 package com.esgi.behere.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,9 +33,9 @@ public class NotificationFragment extends Fragment {
 
     private static final String PREFS = "PREFS";
     private SharedPreferences sharedPreferences;
-    private ListView listNotification;
+    private static ListView listNotification;
     private VolleyCallback mResultCallback = null;
-    private ArrayList<Notification> notifications = new ArrayList<>();
+    private static ArrayList<Notification> notifications = new ArrayList<>();
     ApiUsage mVolleyService;
 
     @Nullable
@@ -64,6 +65,7 @@ public class NotificationFragment extends Fragment {
                             for (Object unres : resNotification) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 Notification notification = new Notification();
+                                notification.setId(objres.getLong("id"));
                                 notification.setText(objres.getString("texte"));
                                 notification.setType(objres.getString("type"));
                                 notification.setUser_id(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
@@ -88,5 +90,16 @@ public class NotificationFragment extends Fragment {
                 }
             }
         };
+    }
+
+    public static void removeNotification(Notification notification)
+    {
+        notifications.remove(notification);
+    }
+
+    public static void refreshAdapter(Context v)
+    {
+        NotificationAdapter adapter = new NotificationAdapter(v, notifications);
+        listNotification.setAdapter(adapter);
     }
 }

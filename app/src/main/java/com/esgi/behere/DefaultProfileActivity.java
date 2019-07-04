@@ -21,6 +21,8 @@ import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import static java.lang.Long.parseLong;
+
 
 public class DefaultProfileActivity extends AppCompatActivity {
 
@@ -29,7 +31,8 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
     private static final String PREFS_ID = "USER_ID";
-    private TextView tvFriends, tvGroups;
+    private TextView tvGroups;
+    private static TextView tvNbFriends;
 
 
     @Override
@@ -37,7 +40,8 @@ public class DefaultProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default_profile);
 
-        tvFriends = findViewById(R.id.tvFriends);
+        TextView tvFriends = findViewById(R.id.tvFriends);
+        tvNbFriends = findViewById(R.id.tvNbFriends);
         tvGroups = findViewById(R.id.tvGroups);
         tvNamePerson = findViewById(R.id.tvNamePerson);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
@@ -113,7 +117,6 @@ public class DefaultProfileActivity extends AppCompatActivity {
                         name = objres.getString("name");
                         surname = objres.getString("surname");
                         tvNamePerson.setText(String.format("%s %s", name, surname));
-
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -146,7 +149,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
-                        tvFriends.setText(resFriend.size() + " Friends");
+                        tvNbFriends.setText(String.format("%d", resFriend.size()));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -176,5 +179,10 @@ public class DefaultProfileActivity extends AppCompatActivity {
             @Override
             public void onError(VolleyError error) { }
         };
+    }
+
+    public static void updateNbFriends()
+    {
+        tvNbFriends.setText(String.format("%s%d", String.format("%d", parseLong(tvNbFriends.getText().toString()) +  1)));
     }
 }

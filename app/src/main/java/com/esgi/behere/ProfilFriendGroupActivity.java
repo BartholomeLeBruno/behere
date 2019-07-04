@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,7 +21,6 @@ import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
@@ -36,8 +36,9 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
     private ApiUsage mVolleyService;
     private long entityId;
     private TextView tvNameEntity;
-    private Button btnJoinORAdd;
+    private Button btnJoinORAdd, btnDenied;
     private TextView tvFriendsOrMembers;
+    private long notifID;
 
 
 
@@ -50,6 +51,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
         tvFriendsOrMembers = findViewById(R.id.tvFriendsOrMembers);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         btnJoinORAdd = findViewById(R.id.btnJoinOrAdd);
+        btnDenied = findViewById(R.id.btnDenied);
         FriendOrGroupAdapterProfile mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -76,22 +78,16 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             prepareGetNotification();
             mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
             mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id),0), sharedPreferences.getString(getString(R.string.access_token),""));
+            prepareGetOtherNotification();
+            mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+            mVolleyService.getNotification(entityId, sharedPreferences.getString(getString(R.string.access_token),""));
             if(btnJoinORAdd.getText().toString().equals(getString(R.string.add_upercase)))
             {
-                Log.d("entityID", entityId + "");
                 btnJoinORAdd.setEnabled(true);
                 btnJoinORAdd.setOnClickListener(v -> {
-                    //prepareEmpty();
-                    //mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                    //mVolleyService.addFriend(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
-                    //prepareGetAllFriends();
-                    //mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                    //mVolleyService.getAllFriends(entityId);
-                    //finish();
-                    //startActivity(getIntent());
                     prepareSendNotification();
                     mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                    mVolleyService.createNotification(new Notification("Demande ami", "Friends", entityId,
+                    mVolleyService.createNotification(new Notification("Demande ami de "+ sharedPreferences.getString("USERNAME", ""), "Friends", entityId,
                             sharedPreferences.getLong(getString(R.string.prefs_id),0), 0),
                             sharedPreferences.getString(getString(R.string.access_token),""));
                 });
@@ -155,16 +151,6 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         surname = objres.getString("surname");
                         tvNameEntity = findViewById(R.id.tvNamePersonOrGroup);
                         tvNameEntity.setText(String.format("%s %s", name, surname));
-                        Button btnChat = findViewById(R.id.btnTestChat);
-                        btnChat.setOnClickListener(v -> {
-                            try {
-                                Intent chatroul = new Intent(getApplicationContext(), Chat.class);
-                                chatroul.putExtra("reponsderID",objres.getLong("id"));
-                                startActivity(chatroul);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        });
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -246,7 +232,6 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                       //todo handle error response
                         InformationMessage.createToastInformation(ProfilFriendGroupActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                                 "Added to Friend");
                         btnJoinORAdd.setText(getString(R.string.delete_upercase));
@@ -257,12 +242,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                 }
             }
             @Override
-            public void onError(VolleyError error) {
-                if(error.networkResponse.statusCode == 500)
-                {
-                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
-                }
-            }
+            public void onError(VolleyError error) { }
         };
     }
 
@@ -300,6 +280,7 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                 try {
                     if (!(boolean) response.get("error")) {
                         btnJoinORAdd.setText(getString(R.string.waiting_uppercase));
+                        btnJoinORAdd.setOnClickListener(v -> { });
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -325,17 +306,105 @@ public class ProfilFriendGroupActivity  extends AppCompatActivity {
                         JSONParser parser = new JSONParser();
                         JSONArray resNotification = (JSONArray) parser.parse(response.get("notification").toString());
                         JSONObject objres;
+                        Log.d("notifi", response.toString());
                         if (!resNotification.isEmpty()) {
                             for (Object unres : resNotification) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 if(objres.getString("type").equals("Friends") && entityId == objres.getLong("other_user_id"))
                                 {
-                                    btnJoinORAdd.setText(getString(R.string.waiting_uppercase));
-                                    btnJoinORAdd.setEnabled(false);
+                                    btnJoinORAdd.setText("ACCEPT");
+                                    btnDenied.setVisibility(View.VISIBLE);
+                                    notifID = objres.getLong("id");
+                                    //btnJoinORAdd.setEnabled(false);
                                     break;
                                 }
                             }
                         }
+                        if(btnJoinORAdd.getText().toString().equals("ACCEPT")) {
+                            btnJoinORAdd.setOnClickListener(v -> {
+                                prepareEmpty();
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                mVolleyService.addFriend(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
+                                prepareGetAllFriends();
+                                prepareDeleteNotification();
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                mVolleyService.deleteNotification(notifID, sharedPreferences.getString(getString(R.string.access_token),""));
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                mVolleyService.getAllFriends(entityId);
+                            });
+                        }
+                        if(btnDenied.getVisibility() == View.VISIBLE)
+                        {
+                            btnDenied.setOnClickListener(v -> {
+                                prepareDeleteNotification();
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                mVolleyService.deleteNotification(notifID, sharedPreferences.getString(getString(R.string.access_token),""));
+                            });
+
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                if(error.networkResponse.statusCode == 500)
+                {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
+            }
+        };
+    }
+
+    private void prepareGetOtherNotification()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONArray resNotification = (JSONArray) parser.parse(response.get("notification").toString());
+                        JSONObject objres;
+                        if (!resNotification.isEmpty()) {
+                            for (Object unres : resNotification) {
+                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                if(objres.getString("type").equals("Friends") && sharedPreferences.getLong(getString(R.string.prefs_id),0) == objres.getLong("other_user_id"))
+                                {
+                                    btnJoinORAdd.setText(getString(R.string.waiting_uppercase));
+                                    btnJoinORAdd.setOnClickListener(v -> { });
+                                    //btnJoinORAdd.setEnabled(false);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                if(error.networkResponse.statusCode == 500)
+                {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
+            }
+        };
+    }
+
+    private void prepareDeleteNotification()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        Intent refresh = new Intent(getApplicationContext(), ProfilFriendGroupActivity.class);
+                        refresh.putExtra("entityID", entityId);
+                        startActivity(refresh);
+                        finish();
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);

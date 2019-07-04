@@ -6,19 +6,6 @@
     android:background="#2A2E43">
 
     <Button
-        android:id="@+id/btnTestChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="testChat"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNamePersonOrGroup" />
-
-    <Button
             android:id="@+id/btnCommentWall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,6 +27,19 @@
             app:layout_constraintEnd_toStartOf="@+id/tvGroupsOrPosts"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvFriendsOrMembers" />
+
+    <Button
+        android:id="@+id/btnDenied"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/btnJoinOrAdd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvFriendsOrMembers"
+        android:text="Deny" />
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/footerpub"
