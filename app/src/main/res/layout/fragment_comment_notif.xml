@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:drawable/dialog_holo_light_frame"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/imgGreen"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@drawable/ic_free_breakfast_green_24dp"
+        android:contentDescription="empty"/>
+
+    <TextView
+        android:id="@+id/tvNotificationComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imgGreen"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="13dp"
+        android:layout_toEndOf="@+id/imgGreen"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+</RelativeLayout>

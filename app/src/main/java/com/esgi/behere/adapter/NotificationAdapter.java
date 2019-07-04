@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 
 import com.android.volley.VolleyError;
-import com.esgi.behere.DefaultProfileActivity;
 import com.esgi.behere.ProfilFriendGroupActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.Notification;
@@ -33,7 +32,6 @@ public class NotificationAdapter extends BaseAdapter {
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
-    private static final String PREFS = "PREFS";
 
     public NotificationAdapter(Context context, List<Notification> data) {
         this.data = data;
@@ -58,12 +56,12 @@ public class NotificationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        sharedPreferences = parent.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = parent.getContext().getSharedPreferences(parent.getContext().getString(R.string.prefs), MODE_PRIVATE);
         View vi = convertView;
         switch (data.get(position).getType()) {
             case "Friends":
-                if (vi == null)
-                    vi = inflater.inflate(R.layout.fragment_add_friend, null);
+
+                vi = inflater.inflate(R.layout.fragment_add_friend, parent, false);
                 TextView textMessage = vi.findViewById(R.id.tvDemand);
                 textMessage.setText(data.get(position).getText());
                 TextView agree = vi.findViewById(R.id.tvAdd);
@@ -72,6 +70,11 @@ public class NotificationAdapter extends BaseAdapter {
                 profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
                 agree.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
                 denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
+                break;
+            case "Comments":
+                vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
+                TextView textMessageComment = vi.findViewById(R.id.tvNotificationComment);
+                textMessageComment.setText(data.get(position).getText());
                 break;
         }
         return vi;

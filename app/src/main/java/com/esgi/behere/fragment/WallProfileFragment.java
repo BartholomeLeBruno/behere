@@ -37,9 +37,6 @@ public class WallProfileFragment extends Fragment {
 
     private ArrayList<Publication> publications =new ArrayList<>();
     private ListView recyclerView;
-
-    private static final String PREFS = "PREFS";
-    private static final String PREFS_ID = "USER_ID";
     private VolleyCallback mResultCallback = null;
     ApiUsage mVolleyService;
 
@@ -51,17 +48,17 @@ public class WallProfileFragment extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.listPublication);
         // Initialize contacts
-        SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         prepareGetAllComments();
         if(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID") != null
-            && sharedPreferences.getLong(PREFS_ID, 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"))
+            && sharedPreferences.getLong(getString(R.string.prefs_id), 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"))
         {
             mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
             mVolleyService.getAllComments((long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"));
         }
         else {
             mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
-            mVolleyService.getAllComments(sharedPreferences.getLong(PREFS_ID, 0));
+            mVolleyService.getAllComments(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
         }
         // Create adapter passing in the sample user data
         PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
@@ -109,6 +106,15 @@ public class WallProfileFragment extends Fragment {
                                 String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
                                 Date created_at= formatter.parse(resDate);
                                 publications.add(new Publication("", objres.getString("text"),created_at, objres.getLong("beer_id"),"beer"));
+                            }
+                        }
+                        JSONArray resCommentUser = (JSONArray) parser.parse(response.get("commentsUsers").toString());
+                        if (!resCommentUser.isEmpty()) {
+                            for (Object unres : resCommentUser) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
+                                Date created_at= formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"),created_at, objres.getLong("user_comment_id"),"user"));
                             }
                         }
                         Collections.sort(publications);

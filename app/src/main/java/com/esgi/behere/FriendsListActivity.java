@@ -28,7 +28,9 @@ public class FriendsListActivity extends AppCompatActivity {
     private ApiUsage mVolleyService;
     private ListView listFriends;
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,19 +40,14 @@ public class FriendsListActivity extends AppCompatActivity {
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         CacheContainer.getInstance().getFriends().clear();
-        if(getIntent().getExtras() != null) {
-            if (sharedPreferences.getLong(getString(R.string.prefs_id), 0) == (long) getIntent().getExtras().get("entityID")) {
-                prepareGetAllFriends();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
-            } else {
-                prepareGetAllFriends();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
-            }
+        if (getIntent().getExtras() != null) {
+            prepareGetAllFriends();
+            mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+            mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
 
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -90,8 +87,7 @@ public class FriendsListActivity extends AppCompatActivity {
         finish();
     }
 
-    private void prepareGetAllFriends()
-    {
+    private void prepareGetAllFriends() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -103,16 +99,20 @@ public class FriendsListActivity extends AppCompatActivity {
                         if (!resFriend.isEmpty()) {
                             for (Object unres : resFriend) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                if(getIntent().getExtras() != null) {
-                                    if (sharedPreferences.getLong(getString(R.string.prefs_id), 0) == (long) getIntent().getExtras().get("entityID")) {
+                                if (getIntent().getExtras() != null) {
+                                    if(sharedPreferences.getLong(getString(R.string.prefs_id),0) == getIntent().getExtras().getLong("entityID")) {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                         mVolleyService.getUser(objres.getInt("user_friend_id"));
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                         mVolleyService.getUser(objres.getInt("user_id"));
                                     }
+
+
                                 }
                             }
                         }
@@ -121,8 +121,10 @@ public class FriendsListActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 
@@ -152,8 +154,10 @@ public class FriendsListActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 }

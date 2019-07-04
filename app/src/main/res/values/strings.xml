@@ -48,4 +48,5 @@
     <string name="default_piece">default</string>
     <string name="join_upercase">JOIN</string>
     <string name="waiting_uppercase">WAITING</string>
+    <string name="accept_uppercase">ACCEPT</string>
 </resources>

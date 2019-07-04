@@ -76,6 +76,11 @@ public class PublicationAdapter extends BaseAdapter {
                 mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
                 mVolleyService.getBrewery(data.get(position).getFrom_id());
                 break;
+            case "user":
+                prepareGetUser(vi);
+                mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+                mVolleyService.getUser(data.get(position).getFrom_id());
+                break;
         }
         return vi;
     }
@@ -129,6 +134,28 @@ public class PublicationAdapter extends BaseAdapter {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("beer").toString()).nextValue();
                         TextView textPseudo = vi.findViewById(R.id.pseudoPubPro);
                         textPseudo.setText(objres.getString("name"));
+
+                        //todo get image
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) { }
+        };
+    }
+
+    private void prepareGetUser(View vi) {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
+                        TextView textPseudo = vi.findViewById(R.id.pseudoPubPro);
+                        textPseudo.setText(String.format("%s %s", objres.getString("name"), objres.getString("surname")));
 
                         //todo get image
 
