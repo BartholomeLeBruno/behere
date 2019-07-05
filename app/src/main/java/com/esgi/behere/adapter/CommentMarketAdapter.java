@@ -54,13 +54,14 @@ public class CommentMarketAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         View vi = convertView;
-        if (vi == null)
-            vi = inflater.inflate(R.layout.fragment_publication, parent,false);
-        TextView text =  vi.findViewById(R.id.PublicationText);
-        text.setText(data.get(position).getContent());
-        prepareGetUser(vi);
-        ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
-        mVolleyService.getUser(data.get(position).getFrom_id());
+        if (vi == null) {
+            vi = inflater.inflate(R.layout.fragment_publication, parent, false);
+            TextView text = vi.findViewById(R.id.PublicationText);
+            text.setText(data.get(position).getContent());
+            prepareGetUser(vi);
+            ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+            mVolleyService.getUser(data.get(position).getFrom_id());
+        }
         return vi;
     }
     private void prepareGetUser(View vi) {

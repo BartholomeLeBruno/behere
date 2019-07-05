@@ -384,6 +384,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 next = new Intent(getApplicationContext(), MyGroupActivity.class);
                 startActivity(next);
                 return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
+                startActivity(next);
         }
         return false;
     }

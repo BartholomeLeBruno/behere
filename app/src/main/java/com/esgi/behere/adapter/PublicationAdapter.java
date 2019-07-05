@@ -1,6 +1,7 @@
 package com.esgi.behere.adapter;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,15 @@ public class PublicationAdapter extends BaseAdapter {
     private List<Publication> data;
     private static LayoutInflater inflater = null;
     private VolleyCallback mResultCallback = null;
+    private TextView textPseudo;
+    SparseBooleanArray expanded;
 
     public PublicationAdapter(Context context, List<Publication> data) {
         // TODO Auto-generated constructor stub
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        expanded = new SparseBooleanArray();
     }
 
     @Override
@@ -54,36 +58,37 @@ public class PublicationAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         View vi = convertView;
-        if (vi == null)
-            vi = inflater.inflate(R.layout.fragment_publication, parent,false);
-        TextView text =  vi.findViewById(R.id.PublicationText);
-        text.setText(data.get(position).getContent());
-        switch (data.get((int)getItemId(position)).getType())
-        {
-            case "bar":
-                prepareGetBar(vi);
-                ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
-                mVolleyService.getBar(data.get(position).getFrom_id());
-                break;
-            case "beer":
-                prepareGetBeer(vi);
-                mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
-                mVolleyService.getBeer(data.get(position).getFrom_id());
-
-                break;
-            case "brewery":
-                prepareGetBrewery(vi);
-                mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
-                mVolleyService.getBrewery(data.get(position).getFrom_id());
-                break;
-            case "user":
-                prepareGetUser(vi);
-                mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
-                mVolleyService.getUser(data.get(position).getFrom_id());
-                break;
+        if (vi == null) {
+            vi = inflater.inflate(R.layout.fragment_publication, parent, false);
+            TextView text = vi.findViewById(R.id.PublicationText);
+            text.setText(data.get(position).getContent());
+            textPseudo = vi.findViewById(R.id.pseudoPubPro);
+            switch (data.get(position).getType()) {
+                case "bar":
+                    prepareGetBar(vi);
+                    ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+                    mVolleyService.getBar(data.get(position).getFrom_id());
+                    break;
+                case "beer":
+                    prepareGetBeer(vi);
+                    mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+                    mVolleyService.getBeer(data.get(position).getFrom_id());
+                    break;
+                case "brewery":
+                    prepareGetBrewery(vi);
+                    mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+                    mVolleyService.getBrewery(data.get(position).getFrom_id());
+                    break;
+                case "user":
+                    prepareGetUser(vi);
+                    mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+                    mVolleyService.getUser(data.get(position).getFrom_id());
+                    break;
+            }
         }
-        return vi;
+            return vi;
     }
+
     private void prepareGetBar(View vi) {
         mResultCallback = new VolleyCallback() {
             @Override
@@ -91,19 +96,20 @@ public class PublicationAdapter extends BaseAdapter {
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("bar").toString()).nextValue();
-                        TextView textPseudo = vi.findViewById(R.id.pseudoPubPro);
+                        textPseudo = vi.findViewById(R.id.pseudoPubPro);
                         textPseudo.setText(objres.getString("name"));
-                        //todo get image
-
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
+
     private void prepareGetBrewery(View vi) {
         mResultCallback = new VolleyCallback() {
             @Override
@@ -111,20 +117,21 @@ public class PublicationAdapter extends BaseAdapter {
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("brewery").toString()).nextValue();
-                        TextView textPseudo = vi.findViewById(R.id.pseudoPubPro);
+                        textPseudo = vi.findViewById(R.id.pseudoPubPro);
                         textPseudo.setText(objres.getString("name"));
-
-                        //todo get image
 
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
+
     private void prepareGetBeer(View vi) {
         mResultCallback = new VolleyCallback() {
             @Override
@@ -132,18 +139,18 @@ public class PublicationAdapter extends BaseAdapter {
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("beer").toString()).nextValue();
-                        TextView textPseudo = vi.findViewById(R.id.pseudoPubPro);
+                        textPseudo = vi.findViewById(R.id.pseudoPubPro);
                         textPseudo.setText(objres.getString("name"));
-
-                        //todo get image
 
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 
@@ -154,18 +161,18 @@ public class PublicationAdapter extends BaseAdapter {
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
-                        TextView textPseudo = vi.findViewById(R.id.pseudoPubPro);
+                        textPseudo = vi.findViewById(R.id.pseudoPubPro);
                         textPseudo.setText(String.format("%s %s", objres.getString("name"), objres.getString("surname")));
-
-                        //todo get image
 
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 

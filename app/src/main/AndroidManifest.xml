@@ -110,6 +110,7 @@
             android:name=".ReservationActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".CommentaryListActivity" />
+        <activity android:name=".LexiconActivity" />
     </application>
 
 </manifest>

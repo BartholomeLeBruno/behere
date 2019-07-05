@@ -58,24 +58,26 @@ public class NotificationAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         sharedPreferences = parent.getContext().getSharedPreferences(parent.getContext().getString(R.string.prefs), MODE_PRIVATE);
         View vi = convertView;
-        switch (data.get(position).getType()) {
-            case "Friends":
+        if (vi == null) {
+            switch (data.get(position).getType()) {
+                case "Friends":
 
-                vi = inflater.inflate(R.layout.fragment_add_friend, parent, false);
-                TextView textMessage = vi.findViewById(R.id.tvDemand);
-                textMessage.setText(data.get(position).getText());
-                TextView agree = vi.findViewById(R.id.tvAdd);
-                TextView denied = vi.findViewById(R.id.tvNo);
-                TextView profil = vi.findViewById(R.id.tvSeeProfil);
-                profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
-                agree.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
-                denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
-                break;
-            case "Comments":
-                vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
-                TextView textMessageComment = vi.findViewById(R.id.tvNotificationComment);
-                textMessageComment.setText(data.get(position).getText());
-                break;
+                    vi = inflater.inflate(R.layout.fragment_add_friend, parent, false);
+                    TextView textMessage = vi.findViewById(R.id.tvDemand);
+                    textMessage.setText(data.get(position).getText());
+                    TextView agree = vi.findViewById(R.id.tvAdd);
+                    TextView denied = vi.findViewById(R.id.tvNo);
+                    TextView profil = vi.findViewById(R.id.tvSeeProfil);
+                    profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
+                    agree.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
+                    denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
+                    break;
+                case "Comments":
+                    vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
+                    TextView textMessageComment = vi.findViewById(R.id.tvNotificationComment);
+                    textMessageComment.setText(data.get(position).getText());
+                    break;
+            }
         }
         return vi;
     }

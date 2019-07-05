@@ -56,23 +56,23 @@ public class FriendAdpater extends BaseAdapter {
         // TODO Auto-generated method stub
         sharedPreferences = parent.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         View vi = convertView;
-        if (vi == null)
+        if (vi == null) {
             vi = inflater.inflate(R.layout.fragment_friend, null);
-        TextView text =  vi.findViewById(R.id.pseudoPubPro);
-        text.setText(String.format("%s %s", data.get(position).getName(), data.get(position).getSurname()));
-        vi.setOnClickListener(v -> {
-            Intent next;
-            if (sharedPreferences.getLong(PREFS_ID, 0) != data.get(position).getId()) {
-                next = new Intent(parent.getContext(), ProfilFriendGroupActivity.class);
-                next.putExtra("entityID", data.get(position).getId());
-                next.putExtra("entityType", "User");
-                parent.getContext().startActivity(next);
-            }
-        else {
-                next = new Intent(parent.getContext(), DefaultProfileActivity.class);
-                parent.getContext().startActivity(next);
-            }
-        });
+            TextView text = vi.findViewById(R.id.pseudoPubPro);
+            text.setText(String.format("%s %s", data.get(position).getName(), data.get(position).getSurname()));
+            vi.setOnClickListener(v -> {
+                Intent next;
+                if (sharedPreferences.getLong(PREFS_ID, 0) != data.get(position).getId()) {
+                    next = new Intent(parent.getContext(), ProfilFriendGroupActivity.class);
+                    next.putExtra("entityID", data.get(position).getId());
+                    next.putExtra("entityType", "User");
+                    parent.getContext().startActivity(next);
+                } else {
+                    next = new Intent(parent.getContext(), DefaultProfileActivity.class);
+                    parent.getContext().startActivity(next);
+                }
+            });
+        }
         return vi;
     }
 }

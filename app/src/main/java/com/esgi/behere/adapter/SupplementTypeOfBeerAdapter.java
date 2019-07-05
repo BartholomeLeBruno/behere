@@ -1,25 +1,24 @@
 package com.esgi.behere.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.esgi.behere.GroupActivity;
+import com.esgi.behere.LexiconActivity;
 import com.esgi.behere.R;
-import com.esgi.behere.actor.Group;
+import com.esgi.behere.actor.BeerType;
 
 import java.util.List;
 
-public class GroupAdapter extends BaseAdapter {
+public class SupplementTypeOfBeerAdapter extends BaseAdapter {
 
-    private List<Group> data;
+    private List<BeerType> data;
     private static LayoutInflater inflater = null;
 
-    public GroupAdapter(Context context, List<Group> data) {
+    public SupplementTypeOfBeerAdapter(Context context, List<BeerType> data) {
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -44,16 +43,11 @@ public class GroupAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_group, parent, false);
-            TextView tvNameGroup = vi.findViewById(R.id.tvNameGroup);
-            tvNameGroup.setText(data.get(position).getName());
-            vi.setOnClickListener(v -> {
-                Intent theGroup = new Intent(v.getContext(), GroupActivity.class);
-                theGroup.putExtra("entityID", data.get(position).getId());
-                parent.getContext().startActivity(theGroup);
-            });
+            vi = inflater.inflate(R.layout.fragment_supplement_typeofbeer, parent, false);
+            TextView text = vi.findViewById(R.id.beerTypeName);
+            text.setText(data.get(position).getName());
+            vi.setOnClickListener(v -> LexiconActivity.listView_result.setVisibility(View.INVISIBLE));
         }
         return vi;
     }
-
 }

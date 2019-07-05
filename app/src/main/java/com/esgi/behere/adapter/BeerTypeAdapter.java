@@ -44,29 +44,28 @@ public class BeerTypeAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
-        if (vi == null)
-            vi = inflater.inflate(R.layout.fragment_beertype, parent,false);
-        TextView text =  vi.findViewById(R.id.beerTypeName);
-        Button button = vi.findViewById(R.id.btnAddTypeOfBeer);
-        text.setText(data.get(position).getName());
+        if (vi == null) {
+            vi = inflater.inflate(R.layout.fragment_beertype, parent, false);
+            TextView text = vi.findViewById(R.id.beerTypeName);
+            Button button = vi.findViewById(R.id.btnAddTypeOfBeer);
+            text.setText(data.get(position).getName());
 
-        button.setOnClickListener(v -> {
-            try {
-                if (button.getText().toString().equals("REMOVE")) {
-                    RegisterSecondStep.finallistBeerType.remove(position);
-                    button.setText("ADD");
-                    return;
+            button.setOnClickListener(v -> {
+                try {
+                    if (button.getText().toString().equals("REMOVE")) {
+                        RegisterSecondStep.finallistBeerType.remove(position);
+                        button.setText("ADD");
+                        return;
+                    }
+                    if (button.getText().toString().equals("ADD")) {
+                        RegisterSecondStep.finallistBeerType.add(data.get(position).getId());
+                        button.setText("REMOVE");
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(parent.getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
-                if (button.getText().toString().equals("ADD")) {
-                    RegisterSecondStep.finallistBeerType.add(data.get(position).getId());
-                    button.setText("REMOVE");
-                }
-            }
-            catch (Exception e)
-            {
-                Toast.makeText(parent.getContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
-            }
-        });
+            });
+        }
         return vi;
     }
 }

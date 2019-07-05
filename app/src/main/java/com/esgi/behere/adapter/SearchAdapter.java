@@ -48,40 +48,41 @@ public class SearchAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         View vi = convertView;
-        if (vi == null)
+        if (vi == null) {
             vi = inflater.inflate(R.layout.fragment_result_search, parent, false);
-        TextView textpseudo = vi.findViewById(R.id.pseudoRes);
-        TextView texttype = vi.findViewById(R.id.typeRes);
-        textpseudo.setText(data.get(position).getName());
-        texttype.setText(data.get(position).getType());
-        vi.setOnClickListener(v -> {
-            Intent nextStep;
-            switch (data.get(position).getType()) {
-                case "User":
-                    nextStep = new Intent(v.getContext(), ProfilFriendGroupActivity.class);
-                    nextStep.putExtra("entityID", data.get(position).getId());
-                    nextStep.putExtra("entityType", data.get(position).getType());
-                    parent.getContext().startActivity(nextStep);
-                    break;
-                case "Bar":
-                    Market bar = CacheContainer.getInstance().getMarketHashMap().get(data.get(position).getName());
-                    nextStep = new Intent(v.getContext(), MarketProfilActivity.class);
-                    nextStep.putExtra("market", bar);
-                    parent.getContext().startActivity(nextStep);
-                    break;
-                case "Brewery":
-                    Market brewery = CacheContainer.getInstance().getMarketHashMap().get(data.get(position).getName());
-                    nextStep = new Intent(v.getContext(), MarketProfilActivity.class);
-                    nextStep.putExtra("market", brewery);
-                    parent.getContext().startActivity(nextStep);
-                    break;
-                case "Group":
-                    nextStep = new Intent(v.getContext(), GroupActivity.class);
-                    nextStep.putExtra("entityID", data.get(position).getId());
-                    parent.getContext().startActivity(nextStep);
-                    break;
-            }
-        });
+            TextView textpseudo = vi.findViewById(R.id.pseudoRes);
+            TextView texttype = vi.findViewById(R.id.typeRes);
+            textpseudo.setText(data.get(position).getName());
+            texttype.setText(data.get(position).getType());
+            vi.setOnClickListener(v -> {
+                Intent nextStep;
+                switch (data.get(position).getType()) {
+                    case "User":
+                        nextStep = new Intent(v.getContext(), ProfilFriendGroupActivity.class);
+                        nextStep.putExtra("entityID", data.get(position).getId());
+                        nextStep.putExtra("entityType", data.get(position).getType());
+                        parent.getContext().startActivity(nextStep);
+                        break;
+                    case "Bar":
+                        Market bar = CacheContainer.getInstance().getMarketHashMap().get(data.get(position).getName());
+                        nextStep = new Intent(v.getContext(), MarketProfilActivity.class);
+                        nextStep.putExtra("market", bar);
+                        parent.getContext().startActivity(nextStep);
+                        break;
+                    case "Brewery":
+                        Market brewery = CacheContainer.getInstance().getMarketHashMap().get(data.get(position).getName());
+                        nextStep = new Intent(v.getContext(), MarketProfilActivity.class);
+                        nextStep.putExtra("market", brewery);
+                        parent.getContext().startActivity(nextStep);
+                        break;
+                    case "Group":
+                        nextStep = new Intent(v.getContext(), GroupActivity.class);
+                        nextStep.putExtra("entityID", data.get(position).getId());
+                        parent.getContext().startActivity(nextStep);
+                        break;
+                }
+            });
+        }
         return vi;
     }
 }

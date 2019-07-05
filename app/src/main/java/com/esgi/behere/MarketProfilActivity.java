@@ -3,9 +3,9 @@ package com.esgi.behere;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -53,6 +53,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
     private SharedPreferences sharedPreferences;
     private LinearLayout linearLayoutStar;
     private Market market;
+    private Button btnSubsrciption;
 
 
     @Override
@@ -61,12 +62,14 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         setContentView(R.layout.activity_market_profile);
 
         Button btnSeeComment = findViewById(R.id.btnSeeComment);
+        btnSubsrciption = findViewById(R.id.btnSubscription);
         linearLayoutStar = findViewById(R.id.linearLayoutStar);
         TextView tvNameBar = findViewById(R.id.tvNameBar);
         TextView contentDesc = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         Button btnWebsite = findViewById(R.id.btnWebsite);
         market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+        linearLayoutStar.removeAllViews();
         prepareStar();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         if (market.getType().equals("Bar"))
@@ -221,7 +224,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 prepareEmpty();
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addNoteToBar(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token),""));
+                mVolleyService.addNoteToBar(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 popupWindow.dismiss();
             } else {
                 sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
@@ -229,7 +232,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                 mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 prepareEmpty();
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addNoteToBrewery(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token),""));
+                mVolleyService.addNoteToBrewery(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 popupWindow.dismiss();
             }
         });
@@ -296,6 +299,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             @Override
             public void onSuccess(JSONObject response) {
             }
+
             @Override
             public void onError(VolleyError error) {
                 if (error.networkResponse.statusCode == 500) {
@@ -310,28 +314,28 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    double note = 0;
-                    JSONParser parser = new JSONParser();
-                    JSONArray resNote;
-                    if (market.getType().equals("Bar"))
-                        resNote = (JSONArray) parser.parse(response.get("notesBar").toString());
-                    else
-                        resNote = (JSONArray) parser.parse(response.get("notesBrewery").toString());
-                    JSONObject objres;
-                    if (!resNote.isEmpty()) {
-                        for (Object unres : resNote) {
-                            objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                            note = note + objres.getDouble("note");
+                    if (!(boolean) response.get("error")) {
+                        double note = 0;
+                        JSONParser parser = new JSONParser();
+                        JSONArray resNote;
+                        if (market.getType().equals("Bar"))
+                            resNote = (JSONArray) parser.parse(response.get("notesBar").toString());
+                        else
+                            resNote = (JSONArray) parser.parse(response.get("notesBrewery").toString());
+                        JSONObject objres;
+                        if (!resNote.isEmpty()) {
+                            for (Object unres : resNote) {
+                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                note = note + objres.getDouble("note");
+                            }
+                            note = note / resNote.size();
                         }
-                        note = note / resNote.size();
+                        StarTools starTools = new StarTools(note, getApplicationContext(), linearLayoutStar);
                     }
-                    StarTools starTools = new StarTools(note, getApplicationContext(), linearLayoutStar);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-
             }
-
             @Override
             public void onError(VolleyError error) {
                 if (error.networkResponse.statusCode == 500) {

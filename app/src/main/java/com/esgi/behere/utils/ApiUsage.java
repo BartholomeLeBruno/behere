@@ -25,27 +25,24 @@ public class ApiUsage {
 
     private Context mContext;
 
-    public ApiUsage(VolleyCallback resultCallback, Context context){
+    public ApiUsage(VolleyCallback resultCallback, Context context) {
         mResultCallback = resultCallback;
         mContext = context;
     }
 
-    public void authentificate(String email, String password)
-    {
+    public void authentificate(String email, String password) {
         try {
             JSONObject params = new JSONObject();
             params.put("email", email);
             params.put("password", password);
-            postData(params,PATH_API+"authentificate");
-        }catch (Exception e)
-        {
+            postData(params, PATH_API + "authentificate");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    public void createAccount(User user)
-    {
+    public void createAccount(User user) {
         try {
             JSONObject params = new JSONObject();
             params.put("email", user.getEmail());
@@ -55,28 +52,24 @@ public class ApiUsage {
             params.put("checkPassword", user.getCheckPassword());
             params.put("birthDate", user.getBirthDate());
             params.put("id_phone", user.getPhone_id());
-            postData(params,PATH_API+"users/create");
-        }catch (Exception e)
-        {
+            postData(params, PATH_API + "users/create");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void createMessage(Message message, String access_token)
-    {
+    public void createMessage(Message message, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("text", message.getTextMessage());
             params.put("user_receiver_id", message.getUser_receiver_id());
-            postDataWithAccessToken(params,PATH_API+"messages/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "messages/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void createNotification(Notification notification, String access_token)
-    {
+    public void createNotification(Notification notification, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("texte", notification.getText());
@@ -85,297 +78,240 @@ public class ApiUsage {
             params.put("other_user_id", notification.getOther_user_id());
             params.put("group_id", JSONObject.NULL);
             Log.d("Notification", params.toString() + access_token);
-            postDataWithAccessToken(params,PATH_API+"notifications/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "notifications/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    public void getNotification(long user_id, String access_token)
-    {
+    public void getNotification(long user_id, String access_token) {
         try {
-            getDataWithAcessToken(PATH_API+"notifications/?user_id=" + user_id, access_token);
-        }catch (Exception e)
-        {
+            getDataWithAcessToken(PATH_API + "notifications/?user_id=" + user_id, access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteNotification(long notif_id, String access_token)
-    {
+    public void deleteNotification(long notif_id, String access_token) {
         try {
-            deleteDataWithAccessToken(PATH_API+"notifications/delete/" + notif_id, access_token);
-        }catch (Exception e)
-        {
+            deleteDataWithAccessToken(PATH_API + "notifications/delete/" + notif_id, access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String access_token)
-    {
+    public void addLinkBetweenBeerAndUser(long user_ID, int typeBeer_ID, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("typeOfBeer_id", typeBeer_ID);
-            putDataWithAccessToken(params, PATH_API+"users/" + user_ID + "/addTypeOfBeer", access_token);
-        }catch (Exception e)
-        {
+            putDataWithAccessToken(params, PATH_API + "users/" + user_ID + "/addTypeOfBeer", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void addCommentsToBar(String text, int bar_id, String access_token)
-    {
+    public void addCommentsToBar(String text, int bar_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("text", text);
             params.put("bar_id", bar_id);
-            postDataWithAccessToken(params, PATH_API+"commentsBars/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "commentsBars/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    public void addCommentsToUser(String text, long user_comment_id, String access_token)
-    {
+
+    public void addCommentsToUser(String text, long user_comment_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("text", text);
             params.put("user_comment_id", user_comment_id);
-            postDataWithAccessToken(params, PATH_API+"commentsUsers/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "commentsUsers/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public  void addNoteToBar(long note, long bar_id, String access_token)
-    {
+    public void addNoteToBar(long note, long bar_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("note", note);
             params.put("bar_id", bar_id);
-            postDataWithAccessToken(params, PATH_API+"notesBars/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "notesBars/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public  void addNoteToBrewery(long note, long bar_id, String access_token)
-    {
+    public void addNoteToBrewery(long note, long bar_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("note", note);
             params.put("brewery_id", bar_id);
-            postDataWithAccessToken(params, PATH_API+"notesBrewerys/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "notesBrewerys/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void addCommentsToBrewery(String text, int brewery_id, String access_token)
-    {
+    public void addCommentsToBrewery(String text, int brewery_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("text", text);
             params.put("brewery_id", brewery_id);
-            postDataWithAccessToken(params, PATH_API+"commentsBrewerys/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "commentsBrewerys/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getUser(long idUser)
-    {
+    public void getUser(long idUser) {
         try {
-            getData(PATH_API+"users/" + idUser);
-        }catch (Exception e)
-        {
+            getData(PATH_API + "users/" + idUser);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getNotesBar(long idBar)
-    {
+    public void getNotesBar(long idBar) {
         try {
-            JSONObject params = new JSONObject();
-            params.put("bar_id", idBar);
-            getDataWithParam(params,PATH_API+"notesBars");
-        }catch (Exception e)
-        {
+            getData(PATH_API + "notesBars?bar_id=" + idBar);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getNotesBrewery(long idBrewery)
-    {
+    public void getNotesBrewery(long idBrewery) {
         try {
-            JSONObject params = new JSONObject();
-            params.put("brewery_id", idBrewery);
-            getDataWithParam(params,PATH_API+"notesBrewerys");
-        }catch (Exception e)
-        {
+            getData(PATH_API + "notesBrewerys?brewery_id=" + idBrewery);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllFriends(long idUser)
-    {
+    public void getAllFriends(long idUser) {
         try {
-            getData(PATH_API+"friends?id="+idUser);
-        }catch (Exception e)
-        {
+            getData(PATH_API + "friends?id=" + idUser);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getBar(long idBar)
-    {
+    public void getBar(long idBar) {
         try {
-            getData(PATH_API+"bars/" + idBar);
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-    public void getBeer(long idBeer)
-    {
-        try {
-            getData(PATH_API+"beers/" + idBeer);
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-    public void getBrewery(long idBrewery)
-    {
-        try {
-            getData(PATH_API+"brewerys/" + idBrewery);
-        }catch (Exception e)
-        {
+            getData(PATH_API + "bars/" + idBar);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getGroup(long idGroup)
-    {
+    public void getBeer(long idBeer) {
         try {
-            getData(PATH_API+"groups/" + idGroup);
-        }catch (Exception e)
-        {
+            getData(PATH_API + "beers/" + idBeer);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllUsers()
-    {
+    public void getBrewery(long idBrewery) {
         try {
-            getData(PATH_API+"users");
-        }catch (Exception e)
-        {
+            getData(PATH_API + "brewerys/" + idBrewery);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllComments(long idUser)
-    {
+    public void getGroup(long idGroup) {
         try {
-            getData(PATH_API+"generals/commentsUser/" + idUser);
-        }catch (Exception e)
-        {
+            getData(PATH_API + "groups/" + idGroup);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllGroups(long idUser)
-    {
+    public void getAllUsers() {
         try {
-            getData(PATH_API+"groups/?user_id=" + idUser);
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-    public void getAllCommentsBar(long idBar)
-    {
-        try {
-            getData(PATH_API+"commentsBars/?bar_id=" + idBar);
-        }catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-    public void getAllCommentsBrewerys(long idBrewery)
-    {
-        try {
-            getData(PATH_API+"commentsBrewerys/?brewery_id=" + idBrewery);
-        }catch (Exception e)
-        {
+            getData(PATH_API + "users");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllTypeOfBeer()
-    {
+    public void getAllComments(long idUser) {
         try {
-            getData(PATH_API+"typeOfBeers");
-        }catch (Exception e)
-        {
+            getData(PATH_API + "generals/commentsUser/" + idUser);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllBar()
-    {
+    public void getAllGroups(long idUser) {
         try {
-            getData(PATH_API+"bars");
-        }catch (Exception e)
-        {
+            getData(PATH_API + "groups/?user_id=" + idUser);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllBrewery()
-    {
+    public void getAllCommentsBar(long idBar) {
         try {
-            getData(PATH_API+"brewerys");
-        }catch (Exception e)
-        {
+            getData(PATH_API + "commentsBars/?bar_id=" + idBar);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getAllEntities()
-    {
+    public void getAllCommentsBrewerys(long idBrewery) {
         try {
-            getData(PATH_API+"generals/getallusergroupbarbrewery");
-        }catch (Exception e)
-        {
+            getData(PATH_API + "commentsBrewerys/?brewery_id=" + idBrewery);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void getFun()
-    {
+    public void getAllTypeOfBeer() {
+        try {
+            getData(PATH_API + "typeOfBeers");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllBar() {
+        try {
+            getData(PATH_API + "bars");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllBrewery() {
+        try {
+            getData(PATH_API + "brewerys");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllEntities() {
+        try {
+            getData(PATH_API + "generals/getallusergroupbarbrewery");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getFun() {
 
         try {
             getData("https://api.chucknorris.io/jokes/random");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
-
-
-
-    public void updateUser(long id,String email, String name, String surname,String birthDate, String access_token)
-    {
+    public void updateUser(long id, String email, String name, String surname, String birthDate, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("email", email);
@@ -383,59 +319,51 @@ public class ApiUsage {
             params.put("surname", surname);
             params.put("birthdate", birthDate);
             Log.d("params", params.toString());
-            putDataWithAccessToken(params,PATH_API+"users/update/"+id, access_token);
-        }catch (Exception e)
-        {
+            putDataWithAccessToken(params, PATH_API + "users/update/" + id, access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    public void uploadPictureUser(File photo, long id, String access_token)
-    {
+
+    public void uploadPictureUser(File photo, long id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("file", photo);
             Log.d("params", params.toString());
-            putDataWithAccessToken(params,PATH_API+"users/upload/" + id, access_token);
-        }catch (Exception e)
-        {
+            putDataWithAccessToken(params, PATH_API + "users/upload/" + id, access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void createGroup(String nameGroup, String access_token)
-    {
+    public void createGroup(String nameGroup, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("name", nameGroup);
-            postDataWithAccessToken(params, PATH_API+"groups/create", access_token);
-        }catch (Exception e)
-        {
+            postDataWithAccessToken(params, PATH_API + "groups/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void addFriend(long id, int friend_id ,String access_token)
-    {
+    public void addFriend(long id, int friend_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("user_id", id);
             params.put("user_friend_id", friend_id);
-            Log.d("param",access_token + "truc");
-            postDataWithAccessToken(params, PATH_API+"friends/create", access_token);
-        }catch (Exception e)
-        {
+            Log.d("param", access_token + "truc");
+            postDataWithAccessToken(params, PATH_API + "friends/create", access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteFriend(long id, int friend_id, String access_token)
-    {
+    public void deleteFriend(long id, int friend_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("user_id", id);
-            deleteDataWithAccessToken(params,PATH_API+"friends/delete/" + friend_id, access_token);
-        }catch (Exception e)
-        {
+            deleteDataWithAccessToken(params, PATH_API + "friends/delete/" + friend_id, access_token);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -444,14 +372,14 @@ public class ApiUsage {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 (JSONObject response) -> {
                     // response
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
                     // error
                     Log.d("Error.Response", " " + error.getMessage());
                     error.printStackTrace();
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onError(error);
 
                 }) {
@@ -469,14 +397,14 @@ public class ApiUsage {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, params,
                 (JSONObject response) -> {
                     // response
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
                     // error
                     Log.d("Error.Response", " " + error.getMessage());
                     error.printStackTrace();
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onError(error);
 
                 }) {
@@ -489,18 +417,19 @@ public class ApiUsage {
         };
         CacheContainer.getQueue().add(jsonObjectRequest);
     }
+
     private void getDataWithAcessToken(String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 (JSONObject response) -> {
                     // response
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
                     // error
                     Log.d("Error.Response", " " + error.getMessage());
                     error.printStackTrace();
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onError(error);
 
                 }) {
@@ -518,15 +447,15 @@ public class ApiUsage {
     private void postData(JSONObject params, String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
                 (JSONObject response) -> {
-                        // response
-                        if(mResultCallback != null)
-                            mResultCallback.onSuccess(response);
+                    // response
+                    if (mResultCallback != null)
+                        mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
-                        // error
-                        Log.d("Error.Response", error.getMessage() +" ");
-                        if(mResultCallback != null)
-                            mResultCallback.onError(error);
+                    // error
+                    Log.d("Error.Response", error.getMessage() + " ");
+                    if (mResultCallback != null)
+                        mResultCallback.onError(error);
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -541,15 +470,15 @@ public class ApiUsage {
     private void postDataWithAccessToken(JSONObject params, String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
                 (JSONObject response) -> {
-                        // success
-                        if(mResultCallback != null)
-                            mResultCallback.onSuccess(response);
+                    // success
+                    if (mResultCallback != null)
+                        mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
-                        // error
-                        Log.d("Error.Response", error.getLocalizedMessage() +" ");
-                        if(mResultCallback != null)
-                            mResultCallback.onError(error);
+                    // error
+                    Log.d("Error.Response", error.getLocalizedMessage() + " ");
+                    if (mResultCallback != null)
+                        mResultCallback.onError(error);
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -565,15 +494,15 @@ public class ApiUsage {
     private void putDataWithAccessToken(JSONObject params, String url, String acces_token) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
                 (JSONObject response) -> {
-                        // response
-                        if(mResultCallback != null)
-                            mResultCallback.onSuccess(response);
+                    // response
+                    if (mResultCallback != null)
+                        mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
-                        // error
-                        Log.d("Error.Response", error.getLocalizedMessage() +" ");
-                        if(mResultCallback != null)
-                            mResultCallback.onError(error);
+                    // error
+                    Log.d("Error.Response", error.getLocalizedMessage() + " ");
+                    if (mResultCallback != null)
+                        mResultCallback.onError(error);
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -590,13 +519,13 @@ public class ApiUsage {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, params,
                 (JSONObject response) -> {
                     // response
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
                     // error
-                    Log.d("Error.Response", error.getMessage() +" ");
-                    if(mResultCallback != null)
+                    Log.d("Error.Response", error.getMessage() + " ");
+                    if (mResultCallback != null)
                         mResultCallback.onError(error);
                 }) {
             @Override
@@ -614,13 +543,13 @@ public class ApiUsage {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 (JSONObject response) -> {
                     // response
-                    if(mResultCallback != null)
+                    if (mResultCallback != null)
                         mResultCallback.onSuccess(response);
                 },
                 (VolleyError error) -> {
                     // error
-                    Log.d("Error.Response", error.getMessage() +" ");
-                    if(mResultCallback != null)
+                    Log.d("Error.Response", error.getMessage() + " ");
+                    if (mResultCallback != null)
                         mResultCallback.onError(error);
                 }) {
             @Override
