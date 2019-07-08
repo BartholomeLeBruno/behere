@@ -198,6 +198,13 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
+    public void getAllFriendsuser_friend_id(long idUser) {
+        try {
+            getData(PATH_API + "friends?user_friend_id=" + idUser);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void getBar(long idBar) {
         try {

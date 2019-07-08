@@ -45,7 +45,7 @@ public class BeerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_beer, parent, false);
+            vi = inflater.inflate(R.layout.fragment_beer, null);
             TextView text = vi.findViewById(R.id.tvNameBeer);
             text.setText(data.get(position).getName());
             vi.setOnClickListener(v -> onButtonShowPopupWindowClick(v,position, parent));

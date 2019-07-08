@@ -45,7 +45,7 @@ public class BeerTypeAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_beertype, parent, false);
+            vi = inflater.inflate(R.layout.fragment_beertype, null);
             TextView text = vi.findViewById(R.id.beerTypeName);
             Button button = vi.findViewById(R.id.btnAddTypeOfBeer);
             text.setText(data.get(position).getName());

@@ -55,7 +55,7 @@ public class CommentMarketAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_publication, parent, false);
+            vi = inflater.inflate(R.layout.fragment_publication, null);
             TextView text = vi.findViewById(R.id.PublicationText);
             text.setText(data.get(position).getContent());
             prepareGetUser(vi);

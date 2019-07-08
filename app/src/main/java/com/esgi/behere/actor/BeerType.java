@@ -22,5 +22,7 @@ public class BeerType {
 
     private int id;
 
+    public BeerType() {}
+
 
 }

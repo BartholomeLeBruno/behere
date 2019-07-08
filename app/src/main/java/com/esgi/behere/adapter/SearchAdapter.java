@@ -49,7 +49,7 @@ public class SearchAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_result_search, parent, false);
+            vi = inflater.inflate(R.layout.fragment_result_search, null);
             TextView textpseudo = vi.findViewById(R.id.pseudoRes);
             TextView texttype = vi.findViewById(R.id.typeRes);
             textpseudo.setText(data.get(position).getName());

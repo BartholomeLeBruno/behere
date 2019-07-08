@@ -41,7 +41,7 @@ public class MyReservationAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null)
-            vi = inflater.inflate(R.layout.fragment_reservation, parent,false);
+            vi = inflater.inflate(R.layout.fragment_reservation, null);
         return vi;
     }
 }

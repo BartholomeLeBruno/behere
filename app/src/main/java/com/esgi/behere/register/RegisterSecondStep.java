@@ -86,13 +86,16 @@ public class RegisterSecondStep extends Activity {
             public void onSuccess(JSONObject response) {
                 try {
                     if(!(boolean) response.get("error")) {
+                        Log.d("pas adapter", response.toString());
                         beerTypeList = new ArrayList<>();
                         JSONParser parser = new JSONParser();
                         JSONArray res = (JSONArray) parser.parse(response.get("typeOfBeer").toString());
+                        BeerType beerType;
                         for (Object unres : res) {
                             JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                            BeerType beerType = new BeerType((String) objres.get("name"));
-                            beerType.setId((int) objres.get("id"));
+                            beerType = new BeerType();
+                            beerType.setName(objres.getString("name"));
+                            beerType.setId(objres.getInt("id"));
                             beerTypeList.add(beerType);
                         }
                         BeerTypeAdapter beerTypeAdapter = new BeerTypeAdapter(getApplicationContext(), beerTypeList);

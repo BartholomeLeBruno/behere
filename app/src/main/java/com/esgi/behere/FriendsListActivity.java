@@ -51,7 +51,6 @@ public class FriendsListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        CacheContainer.initializeQueue();
         CacheContainer.getInstance().getFriends().clear();
     }
 
@@ -103,13 +102,13 @@ public class FriendsListActivity extends AppCompatActivity {
                                     if(sharedPreferences.getLong(getString(R.string.prefs_id),0) == getIntent().getExtras().getLong("entityID")) {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                        mVolleyService.getUser(objres.getInt("user_friend_id"));
+                                        mVolleyService.getUser(objres.getLong("user_id"));
                                     }
                                     else
                                     {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                        mVolleyService.getUser(objres.getInt("user_id"));
+                                        mVolleyService.getUser(objres.getLong("user_friend_id"));
                                     }
 
 

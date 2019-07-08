@@ -59,7 +59,7 @@ public class SupplementTypeOfBeerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_supplement_typeofbeer, parent, false);
+            vi = inflater.inflate(R.layout.fragment_supplement_typeofbeer, null);
             TextView text = vi.findViewById(R.id.beerTypeName);
             text.setText(data.get(position).getName());
             long idTypeBeer = data.get(position).getId();
