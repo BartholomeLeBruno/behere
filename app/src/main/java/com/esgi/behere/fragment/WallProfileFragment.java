@@ -35,7 +35,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class WallProfileFragment extends Fragment {
 
-    private ArrayList<Publication> publications =new ArrayList<>();
+    private ArrayList<Publication> publications = new ArrayList<>();
     private ListView recyclerView;
     private VolleyCallback mResultCallback = null;
     ApiUsage mVolleyService;
@@ -49,16 +49,21 @@ public class WallProfileFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.listPublication);
         // Initialize contacts
         SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        prepareGetAllComments();
-        if(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID") != null
-            && sharedPreferences.getLong(getString(R.string.prefs_id), 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"))
-        {
+        if (getActivity().getIntent().getExtras().containsKey("groupe")) {
+            prepareGetGroupComments();
             mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
-            mVolleyService.getAllComments((long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"));
-        }
-        else {
-            mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
-            mVolleyService.getAllComments(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
+            mVolleyService.getAllCommentsGroups(getActivity().getIntent().getExtras().getLong("entityID"));
+
+        } else {
+            prepareGetAllComments();
+            if (Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID") != null
+                    && sharedPreferences.getLong(getString(R.string.prefs_id), 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID")) {
+                mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+                mVolleyService.getAllComments((long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"));
+            } else {
+                mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+                mVolleyService.getAllComments(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
+            }
         }
         // Create adapter passing in the sample user data
         PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
@@ -71,13 +76,12 @@ public class WallProfileFragment extends Fragment {
     }
 
 
-
-    private void prepareGetAllComments(){
+    private void prepareGetAllComments() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
                         publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
@@ -85,48 +89,84 @@ public class WallProfileFragment extends Fragment {
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
-                                Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("brewery_id"),"brewery"));
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("brewery_id"), "brewery"));
                             }
                         }
                         JSONArray resCommentBar = (JSONArray) parser.parse(response.get("commentsBars").toString());
                         if (!resCommentBar.isEmpty()) {
                             for (Object unres : resCommentBar) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
-                                 Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("bar_id"),"bar"));
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("bar_id"), "bar"));
                             }
                         }
                         JSONArray resCommentBeer = (JSONArray) parser.parse(response.get("commentsBeers").toString());
                         if (!resCommentBeer.isEmpty()) {
                             for (Object unres : resCommentBeer) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
-                                Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"),created_at, objres.getLong("beer_id"),"beer"));
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("beer_id"), "beer"));
                             }
                         }
                         JSONArray resCommentUser = (JSONArray) parser.parse(response.get("commentsUsers").toString());
                         if (!resCommentUser.isEmpty()) {
                             for (Object unres : resCommentUser) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
-                                Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"),created_at, objres.getLong("user_comment_id"),"user"));
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("user_comment_id"), "user"));
                             }
                         }
                         Collections.sort(publications);
-                        PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()),publications);
+                        PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
                         recyclerView.setAdapter(adapter);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
+            @Override
+            public void onError(VolleyError error) {
+                Intent loginActivity = new Intent(getContext(), LoginActivity.class);
+                startActivity(loginActivity);
+
+            }
+        };
+    }
+
+    private void prepareGetGroupComments() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    if (!(boolean) response.get("error")) {
+                        publications = new ArrayList<>();
+                        JSONParser parser = new JSONParser();
+                        JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsGroup").toString());
+                        if (!resCommentBrewery.isEmpty()) {
+                            for (Object unres : resCommentBrewery) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("group_id"), "group"));
+                            }
+                        }
+                        PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
+                        recyclerView.setAdapter(adapter);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
             @Override
             public void onError(VolleyError error) {
                 Intent loginActivity = new Intent(getContext(), LoginActivity.class);

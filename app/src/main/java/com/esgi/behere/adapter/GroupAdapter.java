@@ -50,6 +50,7 @@ public class GroupAdapter extends BaseAdapter {
             vi.setOnClickListener(v -> {
                 Intent theGroup = new Intent(v.getContext(), GroupActivity.class);
                 theGroup.putExtra("entityID", data.get(position).getId());
+                theGroup.putExtra("group", "group");
                 parent.getContext().startActivity(theGroup);
             });
         }

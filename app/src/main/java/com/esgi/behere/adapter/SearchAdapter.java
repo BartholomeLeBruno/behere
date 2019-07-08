@@ -78,6 +78,7 @@ public class SearchAdapter extends BaseAdapter {
                     case "Group":
                         nextStep = new Intent(v.getContext(), GroupActivity.class);
                         nextStep.putExtra("entityID", data.get(position).getId());
+                        nextStep.putExtra("group", "group");
                         parent.getContext().startActivity(nextStep);
                         break;
                 }

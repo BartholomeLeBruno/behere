@@ -79,7 +79,7 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
         mVolleyService.getUser(entityId);
         btnJoinORAdd.setText(getString(R.string.add_upercase));
 
-        // get all fri
+        // get all friends
         prepareGetAllPersonnalFriends();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllFriends(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
@@ -354,10 +354,10 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                                 prepareEmpty();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                 mVolleyService.addFriend(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
-                                prepareGetAllFriends();
                                 prepareDeleteNotification();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                 mVolleyService.deleteNotification(notifID, sharedPreferences.getString(getString(R.string.access_token), ""));
+                                prepareGetAllFriends();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                 mVolleyService.getAllFriends(entityId);
                             });

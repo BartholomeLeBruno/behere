@@ -134,6 +134,17 @@ public class ApiUsage {
         }
     }
 
+    public void addCommentsToGroup(String text, long group_id, String access_token) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("text", text);
+            params.put("group_id", group_id);
+            postDataWithAccessToken(params, PATH_API + "commentsGroups/create", access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void addNoteToBar(long note, long bar_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
@@ -230,6 +241,25 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
+    public void deleteUserInGroup(long idUser, long idGroup, String access_token)
+    {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("user_id", idUser);
+            putDataWithAccessToken(params,PATH_API + "/groups/" + idGroup + "/addUser",access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void addUserInGroup(long idUser, long idGroup, String access_token)
+    {
+        try {
+            deleteDataWithAccessToken(PATH_API + "groups/" + idGroup + "/deleteUser/" + idUser ,access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public void getAllUsers() {
         try {
@@ -270,6 +300,15 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
+
+    public void getAllCommentsGroups(long idGroup) {
+        try {
+            getData(PATH_API + "commentsGroups/?group_id=" + idGroup);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public void getAllTypeOfBeer() {
         try {
@@ -573,21 +612,35 @@ public class ApiUsage {
         CacheContainer.getQueue().add(jsonObjectRequest);
     }
 
-    /*private void postMultiPartData(String url,  String imagePath, String access_token)
+   /* private void putMultiPartData(String url,  String imagePath, String access_token)
     {
-        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.PUT, url,
-                response -> {
-                    Log.d("Response", response);
-                    try {
-                        JSONObject jObj = new JSONObject(response);
-                        String message = jObj.getString("message");
-                    } catch (JSONException e) {
-                        // JSON error
-                        e.printStackTrace();
-                    }
-                }, error -> { });
-        smr.addFile("image", imagePath);
-        CacheContainer.getQueue().add(smr);
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.PUT, url, response -> {
+            String resultResponse = new String(response.data);
+            // parse success output
+        }, Throwable::printStackTrace) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("api_token", "gh659gjhvdyudo973823tt9gvjf7i6ric75r76");
+                params.put("name", "Angga");
+                params.put("location", "Indonesia");
+                params.put("about", "UI/UX Designer");
+                params.put("contact", "angga@email.com");
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                // file name could found file base or direct access from real path
+                // for now just get bitmap data from ImageView
+                params.put("avatar", new DataPart("file_avatar.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), mAvatarImage.getDrawable()), "image/jpeg"));
+                //params.put("cover", new DataPart("file_cover.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), mCoverImage.getDrawable()), "image/jpeg"));
+
+                return params;
+            }
+        };
+        CacheContainer.getQueue().add(multipartRequest);
     }*/
 
     public Context getmContext() {
