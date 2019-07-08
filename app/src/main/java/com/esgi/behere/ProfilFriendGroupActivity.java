@@ -110,6 +110,11 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
         });
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+        if(btnJoinORAdd.getText().toString().equals(getString(R.string.delete_upercase)))
+            btnCommentWall.setVisibility(View.VISIBLE);
+        else
+            btnCommentWall.setVisibility(View.INVISIBLE);
+
 
     }
 
@@ -190,8 +195,9 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                             }
                         }
                         if (btnJoinORAdd.getText().toString().equals("DELETE")) {
-                            btnCommentWall.setVisibility(View.INVISIBLE);
+                            btnCommentWall.setVisibility(View.VISIBLE);
                             btnJoinORAdd.setOnClickListener(v -> {
+                                btnCommentWall.setVisibility(View.INVISIBLE);
                                 prepareDeleteFriend();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                 mVolleyService.deleteFriend(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
@@ -223,7 +229,7 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                         JSONParser parser = new JSONParser();
                         JSONArray resFriend = (JSONArray) parser.parse(response.get("friend").toString());
                         Log.d("voila", resFriend.size() + "");
-                        tvFriendsOrMembers.setText(MessageFormat.format("{0}{1}", resFriend.size(), getString(R.string.friends)));
+                        tvFriendsOrMembers.setText(MessageFormat.format("{0} {1}", resFriend.size(), getString(R.string.friends)));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
