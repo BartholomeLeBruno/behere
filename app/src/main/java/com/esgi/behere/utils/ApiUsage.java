@@ -12,7 +12,6 @@ import com.esgi.behere.actor.User;
 
 import org.json.JSONObject;
 
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +27,8 @@ public class ApiUsage {
     public ApiUsage(VolleyCallback resultCallback, Context context) {
         mResultCallback = resultCallback;
         mContext = context;
+        if(CacheContainer.getQueue() != null)
+            CacheContainer.initializeQueue();
     }
 
     public void authentificate(String email, String password) {
@@ -273,6 +274,15 @@ public class ApiUsage {
     public void getAllTypeOfBeer() {
         try {
             getData(PATH_API + "typeOfBeers");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllBeerWithTypeOfBeer(long idTypofBeer)
+    {
+        try {
+            getData(PATH_API + "beers?type_of_beer_id=" + idTypofBeer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -562,6 +572,23 @@ public class ApiUsage {
         };
         CacheContainer.getQueue().add(jsonObjectRequest);
     }
+
+    /*private void postMultiPartData(String url,  String imagePath, String access_token)
+    {
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.PUT, url,
+                response -> {
+                    Log.d("Response", response);
+                    try {
+                        JSONObject jObj = new JSONObject(response);
+                        String message = jObj.getString("message");
+                    } catch (JSONException e) {
+                        // JSON error
+                        e.printStackTrace();
+                    }
+                }, error -> { });
+        smr.addFile("image", imagePath);
+        CacheContainer.getQueue().add(smr);
+    }*/
 
     public Context getmContext() {
         return mContext;

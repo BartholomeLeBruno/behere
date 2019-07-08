@@ -19,32 +19,37 @@
         app:tabSelectedTextColor="#3ACCE1"
         app:tabTextColor="@android:color/white" />
 
-    <ListView
-        android:id="@+id/listView_result"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
-        android:layout_height="199dp"
-        android:layout_below="@id/tabTypeOfBeer"
+        android:layout_height="0dp"
+        android:elevation="10dp"
         android:layout_alignParentEnd="true"
-        android:divider="#FFFFFF"
-        android:dividerHeight="1dp"
-        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabTypeOfBeer" />
+        app:layout_constraintTop_toBottomOf="@+id/tabTypeOfBeer">
+
+        <ListView
+            android:id="@+id/listView_result"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:divider="#FFFFFF"
+            android:dividerHeight="1dp"
+            android:visibility="invisible" />
+    </LinearLayout>
 
     <GridView
         android:id="@+id/gridViewBeers"
-        android:layout_width="398dp"
-        android:layout_height="558dp"
-        android:layout_below="@id/tabTypeOfBeer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:numColumns="3"
         android:layout_marginBottom="8dp"
+        android:numColumns="auto_fit"
         app:layout_constraintBottom_toTopOf="@+id/footerpub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/listView_result" />
+        app:layout_constraintTop_toTopOf="@+id/linearLayout2" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/footerpub"

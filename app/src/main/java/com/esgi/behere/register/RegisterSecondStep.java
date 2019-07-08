@@ -1,6 +1,7 @@
 package com.esgi.behere.register;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,9 +21,9 @@ import com.esgi.behere.adapter.BeerTypeAdapter;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.VolleyCallback;
 
+import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
-import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
@@ -112,7 +113,8 @@ public class RegisterSecondStep extends Activity {
     }
 
     private String getIdPhone() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("PREFS", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+                //getApplicationContext().getSharedPreferences("PREFS", MODE_PRIVATE);
         Log.d("voila", sharedPreferences.getString("FCM_ID","0"));
         if(Objects.equals(sharedPreferences.getString("FCM_ID", "0"), "0"))
         {

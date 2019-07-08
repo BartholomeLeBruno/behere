@@ -21,8 +21,6 @@ import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
-import static java.lang.Long.parseLong;
-
 
 public class DefaultProfileActivity extends AppCompatActivity {
 
@@ -179,10 +177,5 @@ public class DefaultProfileActivity extends AppCompatActivity {
             @Override
             public void onError(VolleyError error) { }
         };
-    }
-
-    public static void updateNbFriends()
-    {
-        tvNbFriends.setText(String.format("%s%d", String.format("%d", parseLong(tvNbFriends.getText().toString()) +  1)));
     }
 }
