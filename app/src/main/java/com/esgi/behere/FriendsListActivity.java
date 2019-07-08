@@ -27,6 +27,7 @@ public class FriendsListActivity extends AppCompatActivity {
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private ListView listFriends;
+    private long entityID;
 
     /**
      * Called when the activity is first created.
@@ -41,10 +42,10 @@ public class FriendsListActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         CacheContainer.getInstance().getFriends().clear();
         if (getIntent().getExtras() != null) {
+            entityID = getIntent().getExtras().getLong("entityID");
             prepareGetAllFriends();
             mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
             mVolleyService.getAllFriends(getIntent().getExtras().getLong("entityID"));
-
         }
     }
 
@@ -99,13 +100,11 @@ public class FriendsListActivity extends AppCompatActivity {
                             for (Object unres : resFriend) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 if (getIntent().getExtras() != null) {
-                                    if(sharedPreferences.getLong(getString(R.string.prefs_id),0) == getIntent().getExtras().getLong("entityID")) {
+                                    if (entityID == objres.getLong("user_friend_id")) {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                         mVolleyService.getUser(objres.getLong("user_id"));
-                                    }
-                                    else
-                                    {
+                                    } if(entityID == objres.getLong("user_id")) {
                                         prepareGetUser();
                                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                         mVolleyService.getUser(objres.getLong("user_friend_id"));

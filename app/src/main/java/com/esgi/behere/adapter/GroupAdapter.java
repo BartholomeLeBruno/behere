@@ -44,7 +44,7 @@ public class GroupAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_group, null);
+            vi = inflater.inflate(R.layout.fragment_group, parent, false);
             TextView tvNameGroup = vi.findViewById(R.id.tvNameGroup);
             tvNameGroup.setText(data.get(position).getName());
             vi.setOnClickListener(v -> {

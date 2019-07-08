@@ -73,10 +73,13 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
             Intent goback = new Intent(getApplicationContext(), MapActivity.class);
             startActivity(goback);
         }
+        // get information about actual user
         prepareGetUser();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getUser(entityId);
         btnJoinORAdd.setText(getString(R.string.add_upercase));
+
+        // get all fri
         prepareGetAllPersonnalFriends();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllFriends(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
@@ -85,7 +88,6 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
         mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
         prepareGetOtherNotification();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        if(!btnJoinORAdd.getText().toString().equals(R.string.delete_upercase))  btnCommentWall.setVisibility(View.VISIBLE);
         mVolleyService.getNotification(entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
         if (btnJoinORAdd.getText().toString().equals(getString(R.string.add_upercase))) {
             btnJoinORAdd.setEnabled(true);
@@ -97,6 +99,7 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                         sharedPreferences.getString(getString(R.string.access_token), ""));
             });
         }
+        // get All friends of user you are on to update number of friends he has
         prepareGetAllFriends();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllFriends(entityId);
@@ -180,16 +183,15 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                         if (!resFriends.isEmpty()) {
                             for (Object unres : resFriends) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                if (Long.parseLong(objres.get("user_friend_id").toString()) == entityId) {
+                                if (Long.parseLong(objres.get("user_friend_id").toString()) == entityId || Long.parseLong(objres.get("user_id").toString()) == entityId) {
                                     btnJoinORAdd.setText(getString(R.string.delete_upercase));
                                     break;
                                 }
                             }
                         }
                         if (btnJoinORAdd.getText().toString().equals("DELETE")) {
-                            btnCommentWall.setVisibility(View.VISIBLE);
+                            btnCommentWall.setVisibility(View.INVISIBLE);
                             btnJoinORAdd.setOnClickListener(v -> {
-                                btnCommentWall.setVisibility(View.INVISIBLE);
                                 prepareDeleteFriend();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                 mVolleyService.deleteFriend(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
@@ -197,7 +199,7 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                 mVolleyService.getAllFriends(entityId);
                                 finish();
-                                startActivity(getIntent());
+                                startActivity(new Intent(getApplicationContext(), ProfilFriendGroupActivity.class));
                             });
                         }
                     }
@@ -289,7 +291,8 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                 try {
                     if (!(boolean) response.get("error")) {
                         btnJoinORAdd.setText(getString(R.string.waiting_uppercase));
-                        btnJoinORAdd.setOnClickListener(v -> { });
+                        btnJoinORAdd.setOnClickListener(v -> {
+                        });
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
