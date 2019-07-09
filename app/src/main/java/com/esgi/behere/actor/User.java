@@ -24,6 +24,16 @@ public class User implements Serializable {
 
     private String pathPicture;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String description;
+
     public long getId() {
         return id;
     }

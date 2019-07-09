@@ -48,7 +48,7 @@ public class EditProfileFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
-    private TextView tvEmail, tvName, tvSurname, tvNamePerson;
+    private TextView tvEmail, tvName, tvSurname, tvNamePerson, tvDescription;
     private Button btnBirthDate, btnUploadPhoto;
     private   static final int PICK_IMAGE =1;
     ImageView imageView;
@@ -62,6 +62,7 @@ public class EditProfileFragment extends Fragment {
         tvSurname = rootView.findViewById(R.id.tvSurname);
         btnUploadPhoto = rootView.findViewById(R.id.btnUploadPhoto);
         imageView = rootView.findViewById(R.id.imageViewtest);
+        tvDescription = rootView.findViewById(R.id.tvDescription);
         btnUploadPhoto.setOnClickListener(v -> {
             Intent intent=new Intent(Intent.ACTION_PICK);
             // Sets the type as image/*. This ensures only components of type image are selected
@@ -88,7 +89,7 @@ public class EditProfileFragment extends Fragment {
                 mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
                 mVolleyService.updateUser(sharedPreferences.getLong(getString(R.string.prefs_id),0),
                         tvEmail.getText().toString(), tvName.getText().toString(),
-                        tvSurname.getText().toString(), btnBirthDate.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
+                        tvSurname.getText().toString(), btnBirthDate.getText().toString(), tvDescription.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
         });
 
 
@@ -142,6 +143,7 @@ public class EditProfileFragment extends Fragment {
                         tvName.setText(name);
                         tvSurname.setText(surname);
                         tvEmail.setText(email);
+                        tvDescription.setText(objres.getString("description"));
 
                         tvNamePerson.setText(String.format("%s %s", name, surname));
                         btnBirthDate.setText(objres.getString("birthDate").substring(0,10));

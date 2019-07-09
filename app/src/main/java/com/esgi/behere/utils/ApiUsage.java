@@ -360,13 +360,14 @@ public class ApiUsage {
         }
     }
 
-    public void updateUser(long id, String email, String name, String surname, String birthDate, String access_token) {
+    public void updateUser(long id, String email, String name, String surname, String birthDate, String description, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("email", email);
             params.put("name", name);
             params.put("surname", surname);
             params.put("birthdate", birthDate);
+            params.put("description", description);
             Log.d("params", params.toString());
             putDataWithAccessToken(params, PATH_API + "users/update/" + id, access_token);
         } catch (Exception e) {
@@ -385,10 +386,11 @@ public class ApiUsage {
         }
     }
 
-    public void createGroup(String nameGroup, String access_token) {
+    public void createGroup(String nameGroup, String description, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("name", nameGroup);
+            params.put("description", description);
             postDataWithAccessToken(params, PATH_API + "groups/create", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);

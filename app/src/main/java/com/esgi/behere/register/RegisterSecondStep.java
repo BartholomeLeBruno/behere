@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class RegisterSecondStep extends Activity {
     private ApiUsage mVolleyService;
     private int idUser;
     private List<BeerType> beerTypeList;
+    private EditText etDescription;
 
 
     @Override
@@ -47,45 +49,42 @@ public class RegisterSecondStep extends Activity {
         finallistBeerType = new ArrayList<>();
         setContentView(R.layout.activity_register_second_step);
         lvBeerType = findViewById(R.id.lvBeerType);
+        etDescription = findViewById(R.id.etDescription);
         Button btnRegister = findViewById(R.id.btnRegisterLastStep);
         implementList();
-        btnRegister.setOnClickListener((View v) ->{
+        btnRegister.setOnClickListener((View v) -> {
             try {
                 User newUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("User");
+                if (newUser != null) newUser.setDescription(etDescription.getText().toString());
                 prepareCreateAccount();
                 Objects.requireNonNull(newUser).setPhone_id(getIdPhone());
                 newUser.setEmail(newUser.getEmail().trim());
-                mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.createAccount(newUser);
-            }
-            catch (Exception e)
-            {
-                Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
 
         });
     }
 
-    private void implementList()
-    {
+    private void implementList() {
         try {
             prepareGetAllTypeOfBeer();
-            mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+            mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
             mVolleyService.getAllTypeOfBeer();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    private void prepareGetAllTypeOfBeer(){
+    private void prepareGetAllTypeOfBeer() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    if(!(boolean) response.get("error")) {
+                    if (!(boolean) response.get("error")) {
                         Log.d("pas adapter", response.toString());
                         beerTypeList = new ArrayList<>();
                         JSONParser parser = new JSONParser();
@@ -101,33 +100,30 @@ public class RegisterSecondStep extends Activity {
                         BeerTypeAdapter beerTypeAdapter = new BeerTypeAdapter(getApplicationContext(), beerTypeList);
                         lvBeerType.setAdapter(beerTypeAdapter);
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"error GetAllTypeOfBeer",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "error GetAllTypeOfBeer", Toast.LENGTH_LONG).show();
             }
         };
     }
 
     private String getIdPhone() {
         SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-                //getApplicationContext().getSharedPreferences("PREFS", MODE_PRIVATE);
-        Log.d("voila", sharedPreferences.getString("FCM_ID","0"));
-        if(Objects.equals(sharedPreferences.getString("FCM_ID", "0"), "0"))
-        {
+        //getApplicationContext().getSharedPreferences("PREFS", MODE_PRIVATE);
+        Log.d("voila", sharedPreferences.getString("FCM_ID", "0"));
+        if (Objects.equals(sharedPreferences.getString("FCM_ID", "0"), "0")) {
             return "empty";
-        }
-        else
-        return sharedPreferences.getString("FCM_ID","0");
+        } else
+            return sharedPreferences.getString("FCM_ID", "0");
     }
 
-    private void prepareCreateAccount(){
+    private void prepareCreateAccount() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -139,24 +135,24 @@ public class RegisterSecondStep extends Activity {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         idUser = objres.getInt("id");
                         prepareAuthentification();
-                        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                        mVolleyService.authentificate(newUser.getEmail(),newUser.getPassword());
+                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                        mVolleyService.authentificate(newUser.getEmail(), newUser.getPassword());
                     } else {
 
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
             @Override
             public void onError(VolleyError error) {
             }
         };
     }
+
     private void prepareAuthentification() {
         mResultCallback = new VolleyCallback() {
             @Override
@@ -166,7 +162,7 @@ public class RegisterSecondStep extends Activity {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         String token = objres.getString("token");
                         prepareEmpty();
-                        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                         for (int item : finallistBeerType) {
                             mVolleyService.addLinkBetweenBeerAndUser(idUser, item, token);
                         }
@@ -176,23 +172,25 @@ public class RegisterSecondStep extends Activity {
                         //mail.send(newUser.getEmail(), newUser.getName());
                         startActivity(nextStep);
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"error Authentificate",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "error Authentificate", Toast.LENGTH_LONG).show();
             }
         };
     }
-    private void prepareEmpty(){
+
+    private void prepareEmpty() {
         mResultCallback = new VolleyCallback() {
             @Override
-            public void onSuccess(JSONObject response) { }
+            public void onSuccess(JSONObject response) {
+            }
+
             @Override
             public void onError(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();

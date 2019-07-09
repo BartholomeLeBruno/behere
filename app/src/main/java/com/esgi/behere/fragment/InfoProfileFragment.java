@@ -25,21 +25,20 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class InfoProfileFragment extends Fragment {
 
-    private static final String PREFS = "PREFS";
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
-    private TextView tvEmail, tvName, tvBirthdate;
+    private TextView tvDescription, tvName, tvBirthdate;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_info, container, false);
 
-        tvEmail = rootView.findViewById(R.id.tvEmailEntity);
+        tvDescription = rootView.findViewById(R.id.tvDescription);
         tvName = rootView.findViewById(R.id.tvNameEntity);
         tvBirthdate = rootView.findViewById(R.id.tvBirthDateUser);
 
-        sharedPreferences = rootView.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         long entityId = (long) getActivity().getIntent().getExtras().get("entityID");
         prepareGetUser();
         ApiUsage mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
@@ -57,15 +56,15 @@ public class InfoProfileFragment extends Fragment {
                 try {
                     String name;
                     String surname;
-                    String email;
+                    String description;
                     if (!(boolean) response.get("error")) {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         name = objres.getString("name");
                         surname = objres.getString("surname");
-                        email = objres.getString("email");
+                        description = objres.getString("description");
                         tvName.setText(String.format("%s %s", name, surname));
                         tvBirthdate.setText(objres.getString("birthDate").substring(0,10));
-                        tvEmail.setText(email);
+                        tvDescription.setText(description);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);

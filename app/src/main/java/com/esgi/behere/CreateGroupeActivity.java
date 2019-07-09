@@ -29,6 +29,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_group);
         Button btnCreateGroup = findViewById(R.id.btnCreateGroup);
         EditText tvNameGroup = findViewById(R.id.tvNameGroup);
+        EditText tvDescription = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
@@ -36,7 +37,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
             if(!tvNameGroup.getText().toString().equals("")) {
                 prepareCreateGroup();
                 ApiUsage volleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                volleyService.createGroup(tvNameGroup.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
+                volleyService.createGroup(tvNameGroup.getText().toString(), tvDescription.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
             }
         });
     }
