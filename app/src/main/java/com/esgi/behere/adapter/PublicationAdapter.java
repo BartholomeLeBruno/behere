@@ -87,7 +87,7 @@ public class PublicationAdapter extends BaseAdapter {
                 case "group":
                     prepareGetGroup(vi);
                     mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
-                    mVolleyService.getGroup(data.get(position).getFrom_id());
+                    mVolleyService.getUser(data.get(position).getFrom_id());
                     break;
             }
         }
@@ -187,9 +187,9 @@ public class PublicationAdapter extends BaseAdapter {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        JSONObject objres = (JSONObject) new JSONTokener(response.get("group").toString()).nextValue();
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         textPseudo = vi.findViewById(R.id.pseudoPubPro);
-                        textPseudo.setText(String.format("%s", objres.getString("name")));
+                        textPseudo.setText(String.format("%s %s", objres.getString("name"), objres.getString("surname")));
 
                     }
                 } catch (Exception e) {

@@ -49,7 +49,7 @@ public class WallProfileFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.listPublication);
         // Initialize contacts
         SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        if (getActivity().getIntent().getExtras().containsKey("groupe")) {
+        if (getActivity().getIntent().getExtras().containsKey("group")) {
             prepareGetGroupComments();
             mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
             mVolleyService.getAllCommentsGroups(getActivity().getIntent().getExtras().getLong("entityID"));
@@ -149,13 +149,13 @@ public class WallProfileFragment extends Fragment {
                     if (!(boolean) response.get("error")) {
                         publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
-                        JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsGroup").toString());
-                        if (!resCommentBrewery.isEmpty()) {
-                            for (Object unres : resCommentBrewery) {
+                        JSONArray resCommentGroup = (JSONArray) parser.parse(response.get("commentsGroup").toString());
+                        if (!resCommentGroup.isEmpty()) {
+                            for (Object unres : resCommentGroup) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
                                 Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("group_id"), "group"));
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("user_id"), "group"));
                             }
                         }
                         PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
@@ -168,11 +168,7 @@ public class WallProfileFragment extends Fragment {
             }
 
             @Override
-            public void onError(VolleyError error) {
-                Intent loginActivity = new Intent(getContext(), LoginActivity.class);
-                startActivity(loginActivity);
-
-            }
+            public void onError(VolleyError error) { }
         };
     }
 

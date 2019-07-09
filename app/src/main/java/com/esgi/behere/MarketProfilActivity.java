@@ -158,7 +158,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.activity_comment, null);
+        View popupView = inflater.inflate(R.layout.activity_comment_star, null);
         AtomicLong note = new AtomicLong();
         note.set(0);
         // create the popup window

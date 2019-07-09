@@ -183,12 +183,18 @@ public class GroupActivity extends AppCompatActivity {
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
-                        JSONObject members = (JSONObject) response.get("group");
-                        adminID = members.getLong("admin_id");
-                        JSONArray resGroups = (JSONArray) parser.parse(members.get("user").toString());
                         JSONObject objres;
-                        if (!resGroups.isEmpty()) {
-                            for (Object unres : resGroups) {
+                        JSONArray group = (JSONArray) parser.parse(response.get("group").toString());
+                        JSONArray resmembres = new JSONArray();
+                        for (Object unmembre : group)
+                        {
+                            objres = (JSONObject) new JSONTokener(unmembre.toString()).nextValue();
+                            adminID = objres.getLong("admin_id");
+                            resmembres = (JSONArray) parser.parse(objres.get("user").toString());
+
+                        }
+                        if (!resmembres.isEmpty()) {
+                            for (Object unres : resmembres) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 if (objres.getLong("id") == entityID) {
                                     btnAdd.setText(getString(R.string.leave_uppercase));
@@ -253,12 +259,21 @@ public class GroupActivity extends AppCompatActivity {
                     if (!(boolean) response.get("error")) {
                         memberList = new ArrayList<>();
                         JSONParser parser = new JSONParser();
-                        JSONObject jsonObject = (JSONObject) response.get("group");
-                        JSONArray resMemebers = (JSONArray) parser.parse(jsonObject.get("user").toString());
-                        tvMembers.setText(MessageFormat.format("{0} {1}", resMemebers.size(), getString(R.string.members)));
+                        JSONArray group = (JSONArray) parser.parse(response.get("group").toString());
+                        JSONArray resmembres = new JSONArray();
                         JSONObject objres;
-                        if (!resMemebers.isEmpty()) {
-                            for (Object unres : resMemebers) {
+                        long soze = 0;
+                        for (Object unmembre : group)
+                        {
+                            objres = (JSONObject) new JSONTokener(unmembre.toString()).nextValue();
+                            resmembres = (JSONArray) parser.parse(objres.get("user").toString());
+
+                        }
+                        //JSONObject jsonObject = (JSONObject) response.get("group");
+                        //JSONArray resMemebers = (JSONArray) parser.parse(jsonObject.get("user").toString());
+                        tvMembers.setText(MessageFormat.format("{0} {1}", resmembres.size(), getString(R.string.members)));
+                        if (!resmembres.isEmpty()) {
+                            for (Object unres : resmembres) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 memberList.add(objres.getLong("id"));
                             }
