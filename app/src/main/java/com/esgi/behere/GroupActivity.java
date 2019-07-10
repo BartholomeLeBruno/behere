@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -39,7 +40,8 @@ public class GroupActivity extends AppCompatActivity {
     private TextView tvNameGroup, tvMembers;
     private ApiUsage mVolleyService;
     private long entityID;
-    private Button btnAdd, btnDenied, btnCommentWall;
+    private Button btnAdd;
+    private Button btnCommentWall;
     private long notifID, adminID;
     private ArrayList<Long> memberList;
 
@@ -49,7 +51,6 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         btnAdd = findViewById(R.id.btnJoin);
-        btnDenied = findViewById(R.id.btnDenied);
         tvNameGroup = findViewById(R.id.tvNameGroup);
         btnCommentWall = findViewById(R.id.btnCommentWall);
         tvMembers = findViewById(R.id.tvMembers);
@@ -65,7 +66,7 @@ public class GroupActivity extends AppCompatActivity {
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         btnAdd.setText(getString(R.string.join_upercase));
-        if(getIntent().getExtras() != null) {
+        if (getIntent().getExtras() != null) {
             entityID = getIntent().getExtras().getLong("entityID");
             prepareGetGroup();
             ApiUsage mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
@@ -86,8 +87,7 @@ public class GroupActivity extends AppCompatActivity {
                 prepareSendNotification();
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.createNotification(new Notification("Demande acceptation pour rejoindre le groupe " + tvNameGroup.getText().toString(), "Groups", adminID,
-                                0, entityID),
-                        sharedPreferences.getString(getString(R.string.access_token), ""));
+                        sharedPreferences.getLong(getString(R.string.prefs_id), 0), entityID), sharedPreferences.getString(getString(R.string.access_token), ""));
             });
         }
         // get All friends of user you are on to update number of friends he has
@@ -97,9 +97,10 @@ public class GroupActivity extends AppCompatActivity {
         tvMembers.setOnClickListener(v -> {
             Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
             listFriend.putExtra("entityID", entityID);
+            listFriend.putExtra("group", "");
             startActivity(listFriend);
         });
-        if(btnAdd.getText().toString().equals(getString(R.string.leave_uppercase)))
+        if (btnAdd.getText().toString().equals(getString(R.string.leave_uppercase)))
             btnCommentWall.setVisibility(View.VISIBLE);
         else
             btnCommentWall.setVisibility(View.INVISIBLE);
@@ -139,17 +140,24 @@ public class GroupActivity extends AppCompatActivity {
                 try {
                     String name;
                     if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("group").toString()).nextValue();
                         name = objres.getString("name");
                         tvNameGroup.setText(name);
+                        adminID = objres.getLong("admin_id");
+                        JSONArray sizeOF = (JSONArray) parser.parse(response.getJSONObject("group").getJSONArray("user").toString());
+                        tvMembers.setText(MessageFormat.format("{0} {1}", sizeOF.size(), getString(R.string.members)));
+
 
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 
@@ -160,7 +168,8 @@ public class GroupActivity extends AppCompatActivity {
                 try {
                     if (!(boolean) response.get("error")) {
                         btnAdd.setText(getString(R.string.waiting_uppercase));
-                        btnAdd.setOnClickListener(v -> { });
+                        btnAdd.setOnClickListener(v -> {
+                        });
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -182,25 +191,18 @@ public class GroupActivity extends AppCompatActivity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
+                        Log.d("response", response.toString());
                         JSONParser parser = new JSONParser();
                         JSONObject objres;
                         JSONArray group = (JSONArray) parser.parse(response.get("group").toString());
-                        JSONArray resmembres = new JSONArray();
-                        for (Object unmembre : group)
-                        {
+                        for (Object unmembre : group) {
                             objres = (JSONObject) new JSONTokener(unmembre.toString()).nextValue();
                             adminID = objres.getLong("admin_id");
-                            resmembres = (JSONArray) parser.parse(objres.get("user").toString());
-
-                        }
-                        if (!resmembres.isEmpty()) {
-                            for (Object unres : resmembres) {
-                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                if (objres.getLong("id") == entityID) {
-                                    btnAdd.setText(getString(R.string.leave_uppercase));
-                                    break;
-                                }
+                            if (objres.getLong("id") == entityID) {
+                                btnAdd.setText(getString(R.string.leave_uppercase));
+                                break;
                             }
+
                         }
                         if (btnAdd.getText().toString().equals(getString(R.string.leave_uppercase))) {
                             btnCommentWall.setVisibility(View.VISIBLE);
@@ -262,16 +264,11 @@ public class GroupActivity extends AppCompatActivity {
                         JSONArray group = (JSONArray) parser.parse(response.get("group").toString());
                         JSONArray resmembres = new JSONArray();
                         JSONObject objres;
-                        long soze = 0;
-                        for (Object unmembre : group)
-                        {
+                        for (Object unmembre : group) {
                             objres = (JSONObject) new JSONTokener(unmembre.toString()).nextValue();
                             resmembres = (JSONArray) parser.parse(objres.get("user").toString());
 
                         }
-                        //JSONObject jsonObject = (JSONObject) response.get("group");
-                        //JSONArray resMemebers = (JSONArray) parser.parse(jsonObject.get("user").toString());
-                        tvMembers.setText(MessageFormat.format("{0} {1}", resmembres.size(), getString(R.string.members)));
                         if (!resmembres.isEmpty()) {
                             for (Object unres : resmembres) {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
@@ -297,40 +294,9 @@ public class GroupActivity extends AppCompatActivity {
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
-                        JSONArray resNotification = (JSONArray) parser.parse(response.get("notification").toString());
-                        JSONObject objres;
+                        JSONArray resNotification = (JSONArray) parser.parse(response.getJSONArray("notification").toString());
                         if (!resNotification.isEmpty()) {
-                            for (Object unres : resNotification) {
-                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                // pas sûr
-                                if (objres.getString("type").equals("Groups") && entityID == objres.getLong("group_id")) {
-                                    btnAdd.setText(getString(R.string.accept_uppercase));
-                                    btnDenied.setVisibility(View.VISIBLE);
-                                    notifID = objres.getLong("id");
-                                    break;
-                                }
-                            }
-                        }
-                        if (btnAdd.getText().toString().equals(getString(R.string.accept_uppercase))) {
-                            btnAdd.setOnClickListener(v -> {
-                                prepareEmpty();
-                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                mVolleyService.addUserInGroup(sharedPreferences.getLong(getString(R.string.prefs_id), 0), (int) entityID, sharedPreferences.getString(getString(R.string.access_token), ""));
-                                prepareDeleteNotification();
-                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                mVolleyService.deleteNotification(notifID, sharedPreferences.getString(getString(R.string.access_token), ""));
-                                prepareGetAllMembers();
-                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                mVolleyService.getAllGroups(entityID);
-                            });
-                        }
-                        if (btnDenied.getVisibility() == View.VISIBLE) {
-                            btnDenied.setOnClickListener(v -> {
-                                prepareDeleteNotification();
-                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                                mVolleyService.deleteNotification(notifID, sharedPreferences.getString(getString(R.string.access_token), ""));
-                            });
-
+                            notifID = (long) resNotification.get(1);
                         }
                     }
                 } catch (Exception e) {
@@ -405,7 +371,8 @@ public class GroupActivity extends AppCompatActivity {
                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
                                 if (objres.getString("type").equals("Groups") && sharedPreferences.getLong(getString(R.string.prefs_id), 0) == objres.getLong("other_user_id")) {
                                     btnAdd.setText(getString(R.string.waiting_uppercase));
-                                    btnAdd.setOnClickListener(v -> { });
+                                    btnAdd.setOnClickListener(v -> {
+                                    });
                                     break;
                                 }
                             }
@@ -458,7 +425,7 @@ public class GroupActivity extends AppCompatActivity {
             prepareSendEmpty();
             mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
             for (Long memberID : memberList) {
-                if(memberID != sharedPreferences.getLong(getString(R.string.prefs_id),0)) {
+                if (memberID != sharedPreferences.getLong(getString(R.string.prefs_id), 0)) {
                     mVolleyService.createNotification(new Notification("Commentaire de " + sharedPreferences.getString("USERNAME", ""), "Comments", memberID,
                                     0, entityID),
                             sharedPreferences.getString(getString(R.string.access_token), ""));
@@ -474,6 +441,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onSuccess(JSONObject response) {
             }
+
             @Override
             public void onError(VolleyError error) {
                 if (error.networkResponse.statusCode == 500) {
@@ -486,7 +454,9 @@ public class GroupActivity extends AppCompatActivity {
     private void prepareSendEmpty() {
         mResultCallback = new VolleyCallback() {
             @Override
-            public void onSuccess(JSONObject response) {}
+            public void onSuccess(JSONObject response) {
+            }
+
             @Override
             public void onError(VolleyError error) {
                 if (error.networkResponse.statusCode == 500) {

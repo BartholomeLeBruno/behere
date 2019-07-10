@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-
 import com.android.volley.VolleyError;
 import com.esgi.behere.ProfilFriendGroupActivity;
 import com.esgi.behere.R;
@@ -57,25 +56,41 @@ public class NotificationAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         sharedPreferences = parent.getContext().getSharedPreferences(parent.getContext().getString(R.string.prefs), MODE_PRIVATE);
+        TextView agree, denied, profil, textMessage;
         View vi = convertView;
         if (vi == null) {
             switch (data.get(position).getType()) {
                 case "Friends":
-
                     vi = inflater.inflate(R.layout.fragment_add_friend, parent, false);
-                    TextView textMessage = vi.findViewById(R.id.tvDemand);
+                    textMessage = vi.findViewById(R.id.tvDemand);
                     textMessage.setText(data.get(position).getText());
-                    TextView agree = vi.findViewById(R.id.tvAdd);
-                    TextView denied = vi.findViewById(R.id.tvNo);
-                    TextView profil = vi.findViewById(R.id.tvSeeProfil);
+                    agree = vi.findViewById(R.id.tvAdd);
+                    denied = vi.findViewById(R.id.tvNo);
+                    profil = vi.findViewById(R.id.tvSeeProfil);
                     profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
                     agree.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
+                    denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
+                    break;
+                case "Groups":
+                    vi = inflater.inflate(R.layout.fragment_add_friend, parent, false);
+                    textMessage = vi.findViewById(R.id.tvDemand);
+                    textMessage.setText(data.get(position).getText());
+                    agree = vi.findViewById(R.id.tvAdd);
+                    denied = vi.findViewById(R.id.tvNo);
+                    profil = vi.findViewById(R.id.tvSeeProfil);
+                    profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
+                    agree.setOnClickListener(v -> addToGroup(v, data.get(position).getGroup_id(), data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
                     denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
                     break;
                 case "Comments":
                     vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
                     TextView textMessageComment = vi.findViewById(R.id.tvNotificationComment);
                     textMessageComment.setText(data.get(position).getText());
+                    break;
+                case "MarketNotif":
+                    vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
+                    TextView textViewMarket = vi.findViewById(R.id.tvNotificationComment);
+                    textViewMarket.setText(data.get(position).getText());
                     break;
             }
         }
@@ -92,6 +107,17 @@ public class NotificationAdapter extends BaseAdapter {
         prepareEmpty(v);
         mVolleyService = new ApiUsage(mResultCallback, v.getContext());
         mVolleyService.addFriend(sharedPreferences.getLong(v.getContext().getString(R.string.prefs_id), 0), (int) entityId, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
+        mVolleyService = new ApiUsage(mResultCallback, v.getContext());
+        mVolleyService.deleteNotification(notifID, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
+        NotificationFragment.removeNotification(notification);
+        NotificationFragment.refreshAdapter(v.getContext());
+        //DefaultProfileActivity.updateNbFriends();
+    }
+
+    private void addToGroup(View v, long entityId, long user_id, long notifID, Notification notification) {
+        prepareEmpty(v);
+        mVolleyService = new ApiUsage(mResultCallback, v.getContext());
+        mVolleyService.addFriendToGroup(entityId, (int) user_id, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
         mVolleyService = new ApiUsage(mResultCallback, v.getContext());
         mVolleyService.deleteNotification(notifID, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
         NotificationFragment.removeNotification(notification);

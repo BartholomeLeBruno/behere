@@ -27,7 +27,7 @@ public class ApiUsage {
     public ApiUsage(VolleyCallback resultCallback, Context context) {
         mResultCallback = resultCallback;
         mContext = context;
-        if(CacheContainer.getQueue() != null)
+        if (CacheContainer.getQueue() != null)
             CacheContainer.initializeQueue();
     }
 
@@ -53,6 +53,7 @@ public class ApiUsage {
             params.put("checkPassword", user.getCheckPassword());
             params.put("birthDate", user.getBirthDate());
             params.put("id_phone", user.getPhone_id());
+            params.put("description", user.getDescription());
             postData(params, PATH_API + "users/create");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -76,8 +77,14 @@ public class ApiUsage {
             params.put("texte", notification.getText());
             params.put("type", notification.getType());
             params.put("user_id", notification.getUser_id());
-            params.put("other_user_id", notification.getOther_user_id());
-            params.put("group_id", JSONObject.NULL);
+            if (notification.getOther_user_id() == 0)
+                params.put("other_user_id", JSONObject.NULL);
+            else
+                params.put("other_user_id", notification.getOther_user_id());
+            if (notification.getGroup_id() == 0)
+                params.put("group_id", JSONObject.NULL);
+            else
+                params.put("group_id", notification.getGroup_id());
             Log.d("Notification", params.toString() + access_token);
             postDataWithAccessToken(params, PATH_API + "notifications/create", access_token);
         } catch (Exception e) {
@@ -241,20 +248,20 @@ public class ApiUsage {
             throw new RuntimeException(e);
         }
     }
-    public void deleteUserInGroup(long idUser, long idGroup, String access_token)
-    {
+
+    public void deleteUserInGroup(long idUser, long idGroup, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("user_id", idUser);
-            putDataWithAccessToken(params,PATH_API + "/groups/" + idGroup + "/addUser",access_token);
+            putDataWithAccessToken(params, PATH_API + "/groups/" + idGroup + "/addUser", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    public void addUserInGroup(long idUser, long idGroup, String access_token)
-    {
+
+    public void addUserInGroup(long idUser, long idGroup, String access_token) {
         try {
-            deleteDataWithAccessToken(PATH_API + "groups/" + idGroup + "/deleteUser/" + idUser ,access_token);
+            deleteDataWithAccessToken(PATH_API + "groups/" + idGroup + "/deleteUser/" + idUser, access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -318,8 +325,7 @@ public class ApiUsage {
         }
     }
 
-    public void getAllBeerWithTypeOfBeer(long idTypofBeer)
-    {
+    public void getAllBeerWithTypeOfBeer(long idTypofBeer) {
         try {
             getData(PATH_API + "beers?type_of_beer_id=" + idTypofBeer);
         } catch (Exception e) {
@@ -409,11 +415,61 @@ public class ApiUsage {
         }
     }
 
+    public void addFriendToGroup(long id, int user_id, String access_token) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("user_id", user_id);
+            putDataWithAccessToken(params, PATH_API + "groups/" + id + "/addUser", access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void deleteFriend(long id, int friend_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("user_id", id);
             deleteDataWithAccessToken(params, PATH_API + "friends/delete/" + friend_id, access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void suscibeBar(long user_id, long bar_id) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("bar_id", bar_id);
+            postData(params, PATH_API + "user/" + user_id + "/addSubscribeBar");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void unSuscibeBar(long user_id, long bar_id) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("bar_id", bar_id);
+            deleteData(params, PATH_API + "user/" + user_id + "/deleteSubscribeBar/" + bar_id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void suscibeBrewery(long user_id, long brewery_id) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("brewery_id", brewery_id);
+            postData(params, PATH_API + "user/" + user_id + "/addSubscribeBar");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void unSuscibeBrewery(long user_id, long brewery_id) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("brewery_id", brewery_id);
+            deleteData(params, PATH_API + "user/" + user_id + "/deleteSubscribeBrewery/" + brewery_id);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -608,6 +664,29 @@ public class ApiUsage {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
                 headers.put("x-access-token", acces_token);
+                return headers;
+            }
+        };
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
+
+    private void deleteData(JSONObject params, String url) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, params,
+                (JSONObject response) -> {
+                    // response
+                    if (mResultCallback != null)
+                        mResultCallback.onSuccess(response);
+                },
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", error.getMessage() + " ");
+                    if (mResultCallback != null)
+                        mResultCallback.onError(error);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
                 return headers;
             }
         };

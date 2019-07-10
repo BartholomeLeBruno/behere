@@ -1,6 +1,7 @@
 package com.esgi.behere.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class PublicationAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
+        Log.d("ici", "ici");
         View vi = convertView;
         if (vi == null) {
             vi = inflater.inflate(R.layout.fragment_publication, null);
