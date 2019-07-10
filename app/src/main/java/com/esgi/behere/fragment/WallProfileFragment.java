@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class WallProfileFragment extends Fragment {
     private ListView recyclerView;
     private VolleyCallback mResultCallback = null;
     ApiUsage mVolleyService;
+    private long entityID;
 
 
     @Nullable
@@ -49,17 +51,19 @@ public class WallProfileFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.listPublication);
         // Initialize contacts
         SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
+        if(getActivity().getIntent().getExtras().containsKey("entityID"))
+            entityID = getActivity().getIntent().getExtras().getLong("entityID");
         if (getActivity().getIntent().getExtras().containsKey("group")) {
             prepareGetGroupComments();
             mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
-            mVolleyService.getAllCommentsGroups(getActivity().getIntent().getExtras().getLong("entityID"));
+            mVolleyService.getAllCommentsGroups(entityID);
 
         } else {
             prepareGetAllComments();
-            if (Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID") != null
-                    && sharedPreferences.getLong(getString(R.string.prefs_id), 0) != (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID")) {
+            if (getActivity().getIntent().getExtras().containsKey("entityID")) {
+                Log.d("entityID",entityID +"");
                 mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
-                mVolleyService.getAllComments((long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID"));
+                mVolleyService.getAllComments(entityID);
             } else {
                 mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
                 mVolleyService.getAllComments(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
@@ -83,6 +87,7 @@ public class WallProfileFragment extends Fragment {
                 try {
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
+                        Log.d("reponseComment", response.toString());
                         publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBrewery").toString());
@@ -113,6 +118,7 @@ public class WallProfileFragment extends Fragment {
                             }
                         }
                         JSONArray resCommentUser = (JSONArray) parser.parse(response.get("commentsUsers").toString());
+                        Log.d("commentUser", resCommentUser.toJSONString());
                         if (!resCommentUser.isEmpty()) {
                             for (Object unres : resCommentUser) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();

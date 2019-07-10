@@ -69,7 +69,10 @@ public class NotificationFragment extends Fragment {
                                 notification.setText(objres.getString("texte"));
                                 notification.setType(objres.getString("type"));
                                 notification.setUser_id(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
-                                notification.setOther_user_id(objres.getLong("other_user_id"));
+                                if(JSONObject.NULL.equals(objres.get("other_user_id")))
+                                    notification.setOther_user_id(0);
+                                else
+                                    notification.setOther_user_id(objres.getLong("other_user_id"));
                                 if (!objres.isNull("group_id"))
                                     notification.setGroup_id(objres.getLong("group_id"));
                                 notifications.add(notification);

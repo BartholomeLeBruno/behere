@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,21 +23,20 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.actor.Bar;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.actor.ResultSearch;
+import com.esgi.behere.adapter.SearchAdapter;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.CacheContainer;
+import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.maps.GeoApiContext.Builder;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,19 +46,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext.Builder;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TravelMode;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.esgi.behere.adapter.SearchAdapter;
 
+import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
-import org.json.JSONObject;
-
 import org.json.simple.parser.JSONParser;
 
 import java.time.Instant;
@@ -233,7 +234,59 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             relativeLayout.setVisibility(View.INVISIBLE);
         });
         startTrackingLocation();
+        updateNotification();
     }
+
+    private void updateNotification() {
+        Handler handler = new Handler();
+        int delay = 7000;
+
+        handler.postDelayed(new Runnable(){
+            public void run(){
+                prepareGetNotification();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
+    }
+    private void prepareGetNotification() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        long notifnumber = 0;
+                        JSONParser parser = new JSONParser();
+                        JSONArray resNotification = (JSONArray) parser.parse(response.getJSONArray("notification").toString());
+                        if (!resNotification.isEmpty()) {
+                            notifnumber = resNotification.size();
+                        }
+                        if(sharedPreferences.contains("NOTIFICATIONSIZE")) {
+                            if (sharedPreferences.getLong("NOTIFICATIONSIZE", 0) != notifnumber) {
+                                Toast.makeText(getApplicationContext(), "Vous avez reçu une nouvelle notification", Toast.LENGTH_LONG).show();
+                                sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
+                            }
+                        }
+                        else {
+                            sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
+                        }
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                if (error.networkResponse.statusCode == 500) {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
+            }
+        };
+    }
+
 
     private void startTrackingLocation() {
         if (ActivityCompat.checkSelfPermission(this,
@@ -639,4 +692,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             }
         };
     }
+
+
 }

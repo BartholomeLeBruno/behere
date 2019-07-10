@@ -313,50 +313,6 @@ public class GroupActivity extends AppCompatActivity {
         };
     }
 
-    private void prepareEmpty() {
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        btnAdd.setText(getString(R.string.leave_uppercase));
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-            }
-        };
-    }
-
-    private void prepareDeleteNotification() {
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        Intent refresh = new Intent(getApplicationContext(), GroupActivity.class);
-                        refresh.putExtra("entityID", entityID);
-                        startActivity(refresh);
-                        finish();
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-                if (error.networkResponse.statusCode == 500) {
-                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
-                }
-            }
-        };
-    }
-
     private void prepareGetOtherNotification() {
         mResultCallback = new VolleyCallback() {
             @Override
