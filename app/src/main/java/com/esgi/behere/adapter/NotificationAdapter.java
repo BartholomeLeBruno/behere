@@ -57,6 +57,7 @@ public class NotificationAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         sharedPreferences = parent.getContext().getSharedPreferences(parent.getContext().getString(R.string.prefs), MODE_PRIVATE);
         TextView agree, denied, profil, textMessage;
+        TextView textMessageComment;
         View vi = convertView;
         if (vi == null) {
             switch (data.get(position).getType()) {
@@ -84,13 +85,18 @@ public class NotificationAdapter extends BaseAdapter {
                     break;
                 case "Comments":
                     vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
-                    TextView textMessageComment = vi.findViewById(R.id.tvNotificationComment);
+                    textMessageComment = vi.findViewById(R.id.tvNotificationComment);
                     textMessageComment.setText(data.get(position).getText());
                     break;
                 case "MarketNotif":
                     vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
-                    TextView textViewMarket = vi.findViewById(R.id.tvNotificationComment);
-                    textViewMarket.setText(data.get(position).getText());
+                    textMessageComment = vi.findViewById(R.id.tvNotificationComment);
+                    textMessageComment.setText(data.get(position).getText());
+                    break;
+                default:
+                    vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);
+                    textMessageComment = vi.findViewById(R.id.tvNotificationComment);
+                    textMessageComment.setText(data.get(position).getText());
                     break;
             }
         }
@@ -117,12 +123,11 @@ public class NotificationAdapter extends BaseAdapter {
     private void addToGroup(View v, long entityId, long user_id, long notifID, Notification notification) {
         prepareEmpty(v);
         mVolleyService = new ApiUsage(mResultCallback, v.getContext());
-        mVolleyService.addFriendToGroup(entityId, (int) user_id, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
+        mVolleyService.addUserInGroup(user_id, entityId, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
         mVolleyService = new ApiUsage(mResultCallback, v.getContext());
         mVolleyService.deleteNotification(notifID, sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
         NotificationFragment.removeNotification(notification);
         NotificationFragment.refreshAdapter(v.getContext());
-        //DefaultProfileActivity.updateNbFriends();
     }
 
     private void denyFriend(View v, long notifID, Notification notification) {

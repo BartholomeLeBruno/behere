@@ -543,9 +543,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 location.addOnCompleteListener((@NonNull Task task) -> {
                             if (task.isSuccessful()) {
                                 Location homeLocation = (Location) task.getResult();
-                                assert homeLocation != null;
-                                latLng = new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude());
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                                if (homeLocation != null) {
+                                    latLng = new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude());
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                                }
                             } else {
                                 Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                             }

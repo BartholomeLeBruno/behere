@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/relativeLayout"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:padding="10dp">
 
@@ -10,8 +10,8 @@
         android:id="@+id/imgBeerType"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:contentDescription="empty"
-        android:background="@drawable/default_image" />
+        android:background="@drawable/default_image"
+        android:contentDescription="empty" />
 
     <TextView
         android:id="@+id/beerName"
@@ -22,14 +22,43 @@
         android:textColor="@android:color/black"
         android:textStyle="bold" />
 
+    <LinearLayout
+        android:id="@+id/linearLayoutStar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/beerName"
+        android:layout_toEndOf="@+id/imgBeerType"
+        android:orientation="horizontal" />
 
     <TextView
         android:id="@+id/beerDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/beerName"
+        android:layout_below="@id/linearLayoutStar"
         android:layout_toEndOf="@+id/imgBeerType"
         android:textColor="@android:color/black" />
 
+    <Button
+        android:id="@+id/btnCommentBeer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/imgBeerType"
+        android:layout_below="@id/beerDescription"
+        android:background="#3ACCE1"
+        android:text="Comment"
+        android:textColor="#FFFFFF"
+        />
 
+    <Button
+        android:id="@+id/btnSeeCommentBeer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/imgBeerType"
+        android:layout_below="@id/btnCommentBeer"
+        android:background="#3ACCE1"
+        android:text="SEE Comment"
+        android:textColor="#FFFFFF"
+        />
 </RelativeLayout>
+

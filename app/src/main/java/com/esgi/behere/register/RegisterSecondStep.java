@@ -85,7 +85,6 @@ public class RegisterSecondStep extends Activity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        Log.d("pas adapter", response.toString());
                         beerTypeList = new ArrayList<>();
                         JSONParser parser = new JSONParser();
                         JSONArray res = (JSONArray) parser.parse(response.get("typeOfBeer").toString());
@@ -115,7 +114,6 @@ public class RegisterSecondStep extends Activity {
 
     private String getIdPhone() {
         SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        //getApplicationContext().getSharedPreferences("PREFS", MODE_PRIVATE);
         Log.d("voila", sharedPreferences.getString("FCM_ID", "0"));
         if (Objects.equals(sharedPreferences.getString("FCM_ID", "0"), "0")) {
             return "empty";

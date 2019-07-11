@@ -201,6 +201,14 @@ public class ApiUsage {
         }
     }
 
+    public void getNotesBeer(long idBeeer) {
+        try {
+            getData(PATH_API + "notesBeers?beer_id=" + idBeeer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void getNotesBrewery(long idBrewery) {
         try {
             getData(PATH_API + "notesBrewerys?brewery_id=" + idBrewery);
@@ -251,16 +259,6 @@ public class ApiUsage {
 
     public void deleteUserInGroup(long idUser, long idGroup, String access_token) {
         try {
-            JSONObject params = new JSONObject();
-            params.put("user_id", idUser);
-            putDataWithAccessToken(params, PATH_API + "/groups/" + idGroup + "/addUser", access_token);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void addUserInGroup(long idUser, long idGroup, String access_token) {
-        try {
             deleteDataWithAccessToken(PATH_API + "groups/" + idGroup + "/deleteUser/" + idUser, access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -303,6 +301,14 @@ public class ApiUsage {
     public void getAllCommentsBrewerys(long idBrewery) {
         try {
             getData(PATH_API + "commentsBrewerys/?brewery_id=" + idBrewery);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getAllCommentsBeers(long idBeer) {
+        try {
+            getData(PATH_API + "commentsBeers/?beer_id=" + idBeer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -415,11 +421,11 @@ public class ApiUsage {
         }
     }
 
-    public void addFriendToGroup(long id, int user_id, String access_token) {
+    public void addUserInGroup(long idUser, long idGroup, String access_token) {
         try {
             JSONObject params = new JSONObject();
-            params.put("user_id", user_id);
-            putDataWithAccessToken(params, PATH_API + "groups/" + id + "/addUser", access_token);
+            params.put("user_id", idUser);
+            putDataWithAccessToken(params, PATH_API + "groups/" + idGroup + "/addUser", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

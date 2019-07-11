@@ -75,12 +75,15 @@ public class GroupActivity extends AppCompatActivity {
         prepareGetMembers();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
-        prepareGetNotification();
+        /*prepareGetNotification();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
-        prepareGetOtherNotification();
+        prepareGetOtherNotification();*/
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getNotification(entityID, sharedPreferences.getString(getString(R.string.access_token), ""));
+        Log.d("entity", entityID + " ");
+        Log.d("adminID", adminID + " ");
+        Log.d("myne", sharedPreferences.getLong(getString(R.string.prefs_id), 0) + " ");
         if (btnAdd.getText().toString().equals(getString(R.string.join_upercase))) {
             btnAdd.setEnabled(true);
             btnAdd.setOnClickListener(v -> {
@@ -287,7 +290,7 @@ public class GroupActivity extends AppCompatActivity {
         };
     }
 
-    private void prepareGetNotification() {
+    /*private void prepareGetNotification() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -295,8 +298,10 @@ public class GroupActivity extends AppCompatActivity {
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         JSONArray resNotification = (JSONArray) parser.parse(response.getJSONArray("notification").toString());
+                        JSONObject objres;
                         if (!resNotification.isEmpty()) {
-                            notifID = (long) resNotification.get(1);
+                               objres = (JSONObject) new JSONTokener(resNotification.toString()).nextValue();
+                                notifID = objres.getLong("id");
                         }
                     }
                 } catch (Exception e) {
@@ -311,7 +316,7 @@ public class GroupActivity extends AppCompatActivity {
                 }
             }
         };
-    }
+    }*/
 
     private void prepareGetOtherNotification() {
         mResultCallback = new VolleyCallback() {

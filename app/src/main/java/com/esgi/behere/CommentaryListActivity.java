@@ -34,31 +34,42 @@ public class CommentaryListActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
     private ListView listComments;
-    private ArrayList<Publication> publications =new ArrayList<>();
+    private ArrayList<Publication> publications = new ArrayList<>();
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comments_market);
+        setContentView(R.layout.activity_comments_list);
         listComments = findViewById(R.id.listComments);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         CacheContainer.getInstance().getFriends().clear();
-        if(getIntent().getExtras() != null) {
+        if (getIntent().getExtras() != null) {
             ApiUsage mVolleyService;
-            if (getIntent().getExtras().getString("entityType").equals("Bar")) {
-                prepareGetAllCommentsBar();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.getAllCommentsBar(getIntent().getExtras().getLong("entityID"));
+            String reference = getIntent().getExtras().getString("entityType");
+            if (reference != null) {
+                switch (reference) {
+                    case "Bar":
+                        prepareGetAllCommentsBar();
+                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                        mVolleyService.getAllCommentsBar(getIntent().getExtras().getLong("entityID"));
+                        break;
+                    case "Brewery":
+                        prepareGetAllCommentsBrewery();
+                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                        mVolleyService.getAllCommentsBrewerys(getIntent().getExtras().getLong("entityID"));
+                        break;
+                    case "Beer":
+                        prepareGetAllCommentsBeer();
+                        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                        mVolleyService.getAllCommentsBeers(getIntent().getExtras().getLong("entityID"));
+                        break;
+                }
             }
-            if (getIntent().getExtras().getString("entityType").equals("Brewery")) {
-                prepareGetAllCommentsBrewery();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.getAllCommentsBrewerys(getIntent().getExtras().getLong("entityID"));
-            }
-
         }
     }
 
@@ -94,12 +105,12 @@ public class CommentaryListActivity extends AppCompatActivity {
         finish();
     }
 
-    private void prepareGetAllCommentsBar(){
+    private void prepareGetAllCommentsBar() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
                         publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
@@ -107,21 +118,21 @@ public class CommentaryListActivity extends AppCompatActivity {
                         if (!resCommentBar.isEmpty()) {
                             for (Object unres : resCommentBar) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
-                                Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("user_id"),"bar"));
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("user_id"), "bar"));
                             }
                         }
                         Collections.sort(publications);
-                        CommentMarketAdapter adapter = new CommentMarketAdapter(Objects.requireNonNull(getApplicationContext()),publications);
+                        CommentMarketAdapter adapter = new CommentMarketAdapter(Objects.requireNonNull(getApplicationContext()), publications);
                         listComments.setAdapter(adapter);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
             @Override
             public void onError(VolleyError error) {
                 TextView tvCommentsTitle = findViewById(R.id.tvCommentsTitle);
@@ -131,12 +142,12 @@ public class CommentaryListActivity extends AppCompatActivity {
     }
 
 
-    private void prepareGetAllCommentsBrewery(){
+    private void prepareGetAllCommentsBrewery() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
                         publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
@@ -144,21 +155,57 @@ public class CommentaryListActivity extends AppCompatActivity {
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
                                 JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T"," ").replace(".000Z", " ");
-                                Date created_at= formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"),created_at,objres.getLong("brewery_id"),"brewery"));
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("brewery_id"), "brewery"));
                             }
                         }
                         Collections.sort(publications);
-                        CommentMarketAdapter adapter = new CommentMarketAdapter(Objects.requireNonNull(getApplicationContext()),publications);
+                        CommentMarketAdapter adapter = new CommentMarketAdapter(Objects.requireNonNull(getApplicationContext()), publications);
                         listComments.setAdapter(adapter);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
+            @Override
+            public void onError(VolleyError error) {
+                TextView tvCommentsTitle = findViewById(R.id.tvCommentsTitle);
+                tvCommentsTitle.setText("NO COMMENTS");
+            }
+        };
+    }
+
+    private void prepareGetAllCommentsBeer() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    if (!(boolean) response.get("error")) {
+                        publications = new ArrayList<>();
+                        JSONParser parser = new JSONParser();
+                        JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBeer").toString());
+                        if (!resCommentBrewery.isEmpty()) {
+                            for (Object unres : resCommentBrewery) {
+                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                                Date created_at = formatter.parse(resDate);
+                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("beer_id"), "beer"));
+                            }
+                        }
+                        Collections.sort(publications);
+                        CommentMarketAdapter adapter = new CommentMarketAdapter(Objects.requireNonNull(getApplicationContext()), publications);
+                        listComments.setAdapter(adapter);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
             @Override
             public void onError(VolleyError error) {
                 TextView tvCommentsTitle = findViewById(R.id.tvCommentsTitle);
