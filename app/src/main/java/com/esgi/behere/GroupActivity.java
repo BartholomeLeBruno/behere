@@ -77,8 +77,8 @@ public class GroupActivity extends AppCompatActivity {
         mVolleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
         /*prepareGetNotification();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
-        prepareGetOtherNotification();*/
+        mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));*/
+        prepareGetOtherNotification();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getNotification(entityID, sharedPreferences.getString(getString(R.string.access_token), ""));
         Log.d("entity", entityID + " ");
@@ -194,18 +194,20 @@ public class GroupActivity extends AppCompatActivity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        Log.d("response", response.toString());
+                        Log.d("responseICI", response.toString());
                         JSONParser parser = new JSONParser();
                         JSONObject objres;
                         JSONArray group = (JSONArray) parser.parse(response.get("group").toString());
-                        for (Object unmembre : group) {
-                            objres = (JSONObject) new JSONTokener(unmembre.toString()).nextValue();
-                            adminID = objres.getLong("admin_id");
-                            if (objres.getLong("id") == entityID) {
-                                btnAdd.setText(getString(R.string.leave_uppercase));
-                                break;
-                            }
+                        if (!group.isEmpty()) {
+                            for (Object unmembre : group) {
+                                objres = (JSONObject) new JSONTokener(unmembre.toString()).nextValue();
+                                adminID = objres.getLong("admin_id");
+                                if (objres.getLong("id") == entityID) {
+                                    btnAdd.setText(getString(R.string.leave_uppercase));
+                                    break;
+                                }
 
+                            }
                         }
                         if (btnAdd.getText().toString().equals(getString(R.string.leave_uppercase))) {
                             btnCommentWall.setVisibility(View.VISIBLE);

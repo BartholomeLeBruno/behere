@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public abstract class Market implements Serializable {
 
-    private  long id;
+    private long id;
 
     private String name;
 
@@ -18,8 +18,10 @@ public abstract class Market implements Serializable {
 
     private String type;
 
+    private String facebookLink;
 
-     Market(long id, String name, Double latitude, Double longitutde, String description, String webSiteLink, String type) {
+
+    Market(long id, String name, Double latitude, Double longitutde, String description, String webSiteLink, String facebookLink, String type) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -27,11 +29,16 @@ public abstract class Market implements Serializable {
         this.description = description;
         this.webSiteLink = webSiteLink;
         this.type = type;
+        this.facebookLink = facebookLink;
     }
 
-    public String getType() { return type; }
+    public String getType() {
+        return type;
+    }
 
-    public void setType(String type) { this.type = type; }
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public long getId() {
         return id;
@@ -79,5 +86,13 @@ public abstract class Market implements Serializable {
 
     public void setWebSiteLink(String webSiteLink) {
         this.webSiteLink = webSiteLink;
+    }
+
+    public String getFacebookLink() {
+        return facebookLink;
+    }
+
+    public void setFacebookLink(String facebookLink) {
+        this.facebookLink = facebookLink;
     }
 }

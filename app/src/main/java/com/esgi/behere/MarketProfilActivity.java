@@ -49,11 +49,10 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
 
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
-    private final String PREFS = "PREFS";
     private SharedPreferences sharedPreferences;
     private LinearLayout linearLayoutStar;
     private Market market;
-    private Button btnSubsrciption;
+    private Button btnSubsrciption, btnFacebook;
 
 
     @Override
@@ -66,7 +65,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         linearLayoutStar = findViewById(R.id.linearLayoutStar);
         TextView tvNameBar = findViewById(R.id.tvNameBar);
         TextView contentDesc = findViewById(R.id.tvDescription);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         Button btnWebsite = findViewById(R.id.btnWebsite);
         market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         linearLayoutStar.removeAllViews();
@@ -85,6 +84,17 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         if (market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
+            if(!market.getFacebookLink().isEmpty()) {
+                btnWebsite.setOnClickListener(v -> {
+                    if (!market.getWebSiteLink().isEmpty()) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        intent.setData(Uri.parse(market.getWebSiteLink()));
+                        startActivity(intent);
+                    }
+                });
+            }
             if (!market.getWebSiteLink().isEmpty()) {
                 btnWebsite.setOnClickListener(v -> {
                     if (!market.getWebSiteLink().isEmpty()) {
@@ -219,7 +229,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
             prepareAddComment();
             if (Objects.requireNonNull(market).getType().equals("Bar")) {
-                sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 prepareEmpty();
@@ -227,7 +237,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                 mVolleyService.addNoteToBar(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 popupWindow.dismiss();
             } else {
-                sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 prepareEmpty();

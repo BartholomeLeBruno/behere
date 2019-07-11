@@ -74,7 +74,7 @@ public class PublicationAdapter extends BaseAdapter {
                 case "beer":
                     prepareGetBeer(vi);
                     mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
-                    mVolleyService.getUser(data.get(position).getFrom_id());
+                    mVolleyService.getBeer(data.get(position).getFrom_id());
                     break;
                 case "brewery":
                     prepareGetBrewery(vi);
@@ -87,7 +87,7 @@ public class PublicationAdapter extends BaseAdapter {
                     mVolleyService.getUser(data.get(position).getFrom_id());
                     break;
                 case "group":
-                    prepareGetGroup(vi);
+                    prepareGetUser(vi);
                     mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
                     mVolleyService.getUser(data.get(position).getFrom_id());
                     break;

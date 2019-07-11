@@ -130,6 +130,17 @@ public class ApiUsage {
         }
     }
 
+    public void addCommentsToBeer(String text, int beer_id, String access_token) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("text", text);
+            params.put("beer_id", beer_id);
+            postDataWithAccessToken(params, PATH_API + "commentsBeers/create", access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void addCommentsToUser(String text, long user_comment_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
@@ -158,6 +169,17 @@ public class ApiUsage {
             params.put("note", note);
             params.put("bar_id", bar_id);
             postDataWithAccessToken(params, PATH_API + "notesBars/create", access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addNoteToBeer(long note, long beer_id, String access_token) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("note", note);
+            params.put("beer_id", beer_id);
+            postDataWithAccessToken(params, PATH_API + "notesBeers/create", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -105,7 +105,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public void onTabSelected(TabLayout.Tab tab) {
                 selectedTab = Objects.requireNonNull(tab.getText()).toString();
                 List<ResultSearch> lsFound = new ArrayList<>();
-                if(!"All".equals(selectedTab)) {
+                if (!"All".equals(selectedTab)) {
                     for (ResultSearch item : resultSearches) {
                         if (item.getType().equals(selectedTab))
                             lsFound.add(item);
@@ -113,7 +113,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
                     listView.setAdapter(adapter);
-                }else {
+                } else {
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
                     listView.setAdapter(adapter);
                 }
@@ -151,14 +151,14 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.getAllEntities();
                 List<ResultSearch> lsFound = new ArrayList<>();
-                if(!"All".equals(selectedTab)) {
+                if (!"All".equals(selectedTab)) {
                     for (ResultSearch item : resultSearches) {
                         if (item.getType().equals(selectedTab))
                             lsFound.add(item);
                     }
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
                     listView.setAdapter(adapter);
-                }else {
+                } else {
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
                     listView.setAdapter(adapter);
                 }
@@ -183,7 +183,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public boolean onQueryTextChange(String newText) {
                 List<ResultSearch> lsFound = new ArrayList<>();
                 if (newText != null && !newText.trim().equals("")) {
-                    if(!"All".equals(selectedTab)) {
+                    if (!"All".equals(selectedTab)) {
                         for (ResultSearch item : resultSearches) {
                             if (item.getName().contains(newText) && item.getType().equals(selectedTab))
                                 lsFound.add(item);
@@ -191,7 +191,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
                         SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
                         listView.setAdapter(adapter);
-                    }else {
+                    } else {
                         SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
                         listView.setAdapter(adapter);
                     }
@@ -205,10 +205,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                if(home != null) {
+                if (home != null) {
                     home.remove();
                 }
-                if(polyline != null) {
+                if (polyline != null) {
                     polyline.remove();
                 }
                 home = mMap.addMarker(new MarkerOptions()
@@ -227,7 +227,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         };
         FloatingActionButton btnDelete = findViewById(R.id.btnDelete);
         btnDelete.setOnClickListener(v -> {
-            if(polyline != null) polyline.remove();
+            if (polyline != null) polyline.remove();
             sharedPreferences.edit().remove(getString(R.string.longitude)).apply();
             sharedPreferences.edit().remove(getString(R.string.latitude)).apply();
             RelativeLayout relativeLayout = findViewById(R.id.rlTimeResult);
@@ -241,8 +241,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         Handler handler = new Handler();
         int delay = 7000;
 
-        handler.postDelayed(new Runnable(){
-            public void run(){
+        handler.postDelayed(new Runnable() {
+            public void run() {
                 prepareGetNotification();
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
@@ -250,6 +250,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             }
         }, delay);
     }
+
     private void prepareGetNotification() {
         mResultCallback = new VolleyCallback() {
             @Override
@@ -262,13 +263,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         if (!resNotification.isEmpty()) {
                             notifnumber = resNotification.size();
                         }
-                        if(sharedPreferences.contains("NOTIFICATIONSIZE")) {
+                        if (sharedPreferences.contains("NOTIFICATIONSIZE")) {
                             if (sharedPreferences.getLong("NOTIFICATIONSIZE", 0) != notifnumber) {
                                 Toast.makeText(getApplicationContext(), "Vous avez reçu une nouvelle notification", Toast.LENGTH_LONG).show();
                                 sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
                             }
-                        }
-                        else {
+                        } else {
                             sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
                         }
 
@@ -293,8 +293,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]
-                            {Manifest.permission.ACCESS_FINE_LOCATION},1
-                    );
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, 1
+            );
         } else {
             mFusedLocationClient.requestLocationUpdates
                     (getLocationRequest(),
@@ -361,7 +361,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     .origin(new com.google.maps.model.LatLng(home.latitude, home.longitude))
                     .destination(new com.google.maps.model.LatLng(toMarket.latitude, toMarket.longitude)).departureTime(Instant.now()).await();
             List<LatLng> decodedPath = PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
-            String durationLegs =  result.routes[0].legs[0].duration.humanReadable;
+            String durationLegs = result.routes[0].legs[0].duration.humanReadable;
             RelativeLayout rlTime = findViewById(R.id.rlTimeResult);
             rlTime.setVisibility(View.VISIBLE);
             TextView tvLegsTime = findViewById(R.id.tvLegsTime);
@@ -397,11 +397,15 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     }
 
 
-    /** Called when the user clicks a marker. */
+    /**
+     * Called when the user clicks a marker.
+     */
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
-        if(marker.equals(home)) { return  true; }
+        if (marker.equals(home)) {
+            return true;
+        }
         // Retrieve the data from the marker.
         Integer clickCount = (Integer) marker.getTag();
 
@@ -456,6 +460,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     double longitutde;
                     String description;
                     String webSiteLink;
+                    String facebookLink;
                     JSONObject objres;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
@@ -470,7 +475,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 latitude = Double.parseDouble(objres.get("gpsLatitude").toString());
                                 longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
                                 webSiteLink = objres.get("webSiteLink").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, "Bar"));
+                                facebookLink = objres.get("facebokLink").toString();
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Bar"));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
@@ -501,6 +507,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     double longitutde;
                     String description;
                     String webSiteLink;
+                    String facebookLink;
                     JSONObject objres;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
@@ -515,7 +522,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 latitude = Double.parseDouble(objres.get("gpsLatitude").toString());
                                 longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
                                 webSiteLink = objres.get("webSiteLink").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, "Brewery"));
+                                facebookLink = objres.get("facebokLink").toString();
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Brewery"));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
@@ -621,7 +629,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 .readTimeout(1, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.SECONDS);
     }
 
-    private void prepareGetAllEntities(){
+    private void prepareGetAllEntities() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -634,12 +642,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         JSONArray resUsers = (JSONArray) parser.parse(response.get("users").toString());
                         if (!resUsers.isEmpty()) {
                             for (Object unres : resUsers) {
-                                 objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                 resultSearch = new ResultSearch();
-                                 resultSearch.setName(objres.getString("name") + " " +objres.getString("surname"));
-                                 resultSearch.setType("User");
-                                 resultSearch.setId(Long.parseLong(objres.getString("id")));
-                                 if(resultSearch.getId() != sharedPreferences.getLong(getString(R.string.prefs_id),0))
+                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                                resultSearch = new ResultSearch();
+                                resultSearch.setName(objres.getString("name") + " " + objres.getString("surname"));
+                                resultSearch.setType("User");
+                                resultSearch.setId(Long.parseLong(objres.getString("id")));
+                                if (resultSearch.getId() != sharedPreferences.getLong(getString(R.string.prefs_id), 0))
                                     resultSearches.add(resultSearch);
                             }
                         }
@@ -679,12 +687,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         //SearchAdapter adapter = new SearchAdapter(getApplicationContext(),resultSearches);
                         //listView.setAdapter(adapter);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
             }
+
             @Override
             public void onError(VolleyError error) {
                 Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
