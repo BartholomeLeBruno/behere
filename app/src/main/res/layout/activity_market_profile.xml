@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlAll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rlAll"
     android:background="#2A2E43"
     tools:context=".MarketProfilActivity">
 
@@ -51,8 +51,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rlTop"
-        android:layout_above="@+id/footerpub">
+        android:layout_above="@+id/footerpub"
+        android:layout_below="@id/rlTop">
 
         <RelativeLayout
             android:id="@+id/rlbot"
@@ -143,10 +143,22 @@
                 android:textColor="#FFFFFF" />
 
             <Button
-                android:id="@+id/btnFacebook"
+                android:id="@+id/btnCreateReservation"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@id/btnSubscription"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="24dp"
+                android:background="#3ACCE1"
+                android:text="RESERVATION"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnFacebook"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@id/btnCreateReservation"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"

@@ -1,121 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#F7F7FA"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F7F7FA">
 
-
-
-    <android.support.constraint.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:id="@+id/constraintLayout"
         android:layout_height="wrap_content">
 
-
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/footerpub"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:labelVisibilityMode="labeled"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu" />
-
-        <TextView
-            android:id="@+id/tvNumberOfPerson"
-            android:layout_width="wrap_content"
-            android:layout_height="19dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Number of Person"
-            app:layout_constraintBottom_toTopOf="@+id/numberPlace"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvReservation" />
-
-
-
-    <TextView
-        android:id="@+id/tvReservation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:shadowColor="#000000"
-        android:text="RESERVATION"
-        android:textAlignment="center"
-        android:textSize="56sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/arrivalTime"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Arrival Time"
-            app:layout_constraintBottom_toTopOf="@+id/timePicker"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/numberPlace" />
-
-        <NumberPicker
-            android:id="@+id/numberPlace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="16dp"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvReservation" />
-
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="16dp"
-        android:text="Upload Photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberPlace" />
-
-    <Button
-        android:id="@+id/btnCreateReservation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="16dp"
-        android:text="RESERVE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
-
-        <Spinner
-            android:id="@+id/spinner"
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnCreateReservation" />
+            android:layout_height="wrap_content">
 
-    </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvReservation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_centerHorizontal="true"
+                android:shadowColor="#000000"
+                android:text="RESERVATION"
+                android:textAlignment="center"
+                android:textSize="56sp" />
 
-</ScrollView>
+            <Button
+                android:id="@+id/btnDate"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_marginTop="50dp"
+                android:background="#3ACCE1"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tvReservation"
+                android:layout_toStartOf="@+id/middle"
+                android:hint="CHOOSE DAY" />
+
+            <TextView
+                android:id="@+id/middle"
+                android:layout_width="0dp"
+                android:layout_marginTop="50dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/tvReservation"
+                android:text=""/>
+
+            <Button
+                android:id="@+id/btnHour"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/middle"
+                android:background="#3ACCE1"
+                android:layout_below="@id/tvReservation"
+                android:hint="CHOOSE TIME" />
+
+            <EditText
+                android:id="@+id/etNumberOfPlace"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:ems="10"
+                android:textAlignment="center"
+                android:layout_below="@+id/btnDate"
+                android:layout_marginTop="50dp"
+                android:layout_centerHorizontal="true"
+                android:inputType="number"
+                android:hint="Number of people"/>
+
+            <Button
+                android:id="@+id/btnConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:background="#3ACCE1"
+                android:layout_below="@id/etNumberOfPlace"
+                android:text="VALIDATE" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/footerpub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/windowBackground"
+        android:elevation="15dp"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
+</RelativeLayout>

@@ -61,6 +61,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
 
         Button btnSeeComment = findViewById(R.id.btnSeeComment);
         Button btnSubsrciption = findViewById(R.id.btnSubscription);
+        Button btnReservation = findViewById(R.id.btnCreateReservation);
         linearLayoutStar = findViewById(R.id.linearLayoutStar);
         TextView tvNameBar = findViewById(R.id.tvNameBar);
         TextView contentDesc = findViewById(R.id.tvDescription);
@@ -113,7 +114,12 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         mapFragment.getMapAsync(this);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+        btnReservation.setOnClickListener(v -> {
 
+            Intent intent = new Intent(getApplicationContext(), ReservationActivity.class);
+            intent.putExtra("marker",market);
+            startActivity(intent);
+        });
     }
 
     /**
