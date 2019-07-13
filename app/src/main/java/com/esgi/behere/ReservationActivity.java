@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,10 +20,7 @@ import com.esgi.behere.utils.VolleyCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
 
 public class ReservationActivity extends AppCompatActivity {
@@ -44,17 +42,14 @@ public class ReservationActivity extends AppCompatActivity {
         btnDay.setOnClickListener(v -> showDatePickerDialog());
         btnTime.setOnClickListener(v -> showTimePickerDialog());
         Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+        Log.d("voila", market.getDescription());
         btnConfirm.setOnClickListener(v -> {
             if (!btnDay.getText().toString().isEmpty() && !np.getText().toString().isEmpty() && !btnTime.getText().toString().isEmpty()) {
-                SimpleDateFormat formatterDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                try {
-                    Date date = formatterDate.parse(btnDay.getText().toString()+" "+btnTime.getText().toString());
-                    prepareEmpty(market);
-                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                    mVolleyService.addReservation(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), Integer.parseInt(np.getText().toString()), date, sharedPreferences.getString(getString(R.string.access_token), ""));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                String date = btnDay.getText().toString() + " " + btnTime.getText().toString();
+                //Date date = formatterDate.parse(btnDay.getText().toString()+" "+btnTime.getText().toString());
+                prepareEmpty(market);
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addReservation(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), Integer.parseInt(np.getText().toString()), date, sharedPreferences.getString(getString(R.string.access_token), ""));
             }
         });
     }
@@ -66,8 +61,8 @@ public class ReservationActivity extends AppCompatActivity {
 
         DatePickerDialog.OnDateSetListener onDateSetListener = (datePicker, year, month, dayOfMonth) -> {
             String strBuf = "";
-            if (month + 1 < 10) strBuf = dayOfMonth + "-0" + (month + 1) + "-" + year;
-            else strBuf = dayOfMonth + "-" + (month + 1) + "-" + year;
+            if (month + 1 < 10) strBuf = year + "-0" + (month + 1) + "-" + dayOfMonth;
+            else strBuf = year + "-" + (month + 1) + "-" + dayOfMonth;
             btnDay.setText(strBuf);
         };
 

@@ -13,7 +13,6 @@ import com.esgi.behere.actor.User;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -452,13 +451,14 @@ public class ApiUsage {
         }
     }
 
-    public void addReservation(long user_id, long bar_id, int numberOfPerson, Date dateOfReservation, String access_token) {
+    public void addReservation(long user_id, long bar_id, int numberOfPerson, String dateOfReservation, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("numberOfPeople", numberOfPerson);
             params.put("arrivalTime", dateOfReservation);
-            params.put("bar_id", bar_id);
-            params.put("user_id", user_id);
+            params.put("bar_id",  (int) bar_id);
+            params.put("user_id", (int) user_id);
+            Log.d("reser",params.toString()+access_token);
             postDataWithAccessToken(params, PATH_API + "reservations/create", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
