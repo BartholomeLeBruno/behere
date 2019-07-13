@@ -27,14 +27,13 @@ public class PublicationAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     private VolleyCallback mResultCallback = null;
     private TextView textPseudo;
-    private SparseBooleanArray expanded;
 
     public PublicationAdapter(Context context, List<Publication> data) {
         // TODO Auto-generated constructor stub
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        expanded = new SparseBooleanArray();
+        SparseBooleanArray expanded = new SparseBooleanArray();
     }
 
     @Override

@@ -60,6 +60,14 @@ public class ApiUsage {
         }
     }
 
+    public void deleteUser(long id, String access_token) {
+        try {
+            deleteDataWithAccessToken(PATH_API + "users/delete/" + id, access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void createMessage(Message message, String access_token) {
         try {
             JSONObject params = new JSONObject();
@@ -721,36 +729,29 @@ public class ApiUsage {
         CacheContainer.getQueue().add(jsonObjectRequest);
     }
 
-   /* private void putMultiPartData(String url,  String imagePath, String access_token)
-    {
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.PUT, url, response -> {
-            String resultResponse = new String(response.data);
-            // parse success output
-        }, Throwable::printStackTrace) {
+    private void putMultiPartData(String url, JSONObject params, String access_token) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
+                (JSONObject response) -> {
+                    // response
+                    if (mResultCallback != null)
+                        mResultCallback.onSuccess(response);
+                },
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", error.getMessage() + " ");
+                    if (mResultCallback != null)
+                        mResultCallback.onError(error);
+                }) {
             @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("api_token", "gh659gjhvdyudo973823tt9gvjf7i6ric75r76");
-                params.put("name", "Angga");
-                params.put("location", "Indonesia");
-                params.put("about", "UI/UX Designer");
-                params.put("contact", "angga@email.com");
-                return params;
-            }
-
-            @Override
-            protected Map<String, DataPart> getByteData() {
-                Map<String, DataPart> params = new HashMap<>();
-                // file name could found file base or direct access from real path
-                // for now just get bitmap data from ImageView
-                params.put("avatar", new DataPart("file_avatar.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), mAvatarImage.getDrawable()), "image/jpeg"));
-                //params.put("cover", new DataPart("file_cover.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), mCoverImage.getDrawable()), "image/jpeg"));
-
-                return params;
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("x-access-token", access_token);
+                return headers;
             }
         };
-        CacheContainer.getQueue().add(multipartRequest);
-    }*/
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
 
     public Context getmContext() {
         return mContext;

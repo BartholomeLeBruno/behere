@@ -26,9 +26,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
 
     private TextView tvNamePerson;
     private SharedPreferences sharedPreferences;
-    private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
-    private static final String PREFS_ID = "USER_ID";
     private TextView tvGroups;
     private static TextView tvNbFriends;
 
@@ -42,7 +40,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         tvNbFriends = findViewById(R.id.tvNbFriends);
         tvGroups = findViewById(R.id.tvGroups);
         tvNamePerson = findViewById(R.id.tvNamePerson);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
 
         SectionsAdapterProfile mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
 
@@ -56,15 +54,15 @@ public class DefaultProfileActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetUser();
         ApiUsage mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID,0));
+        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id),0));
         tvFriends.setOnClickListener(this::onFriendListCLick);
         tvGroups.setOnClickListener(this::onGroupListCLick);
         prepareGetAllFriends();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.getAllFriends(sharedPreferences.getLong(PREFS_ID,0));
+        mVolleyService.getAllFriends(sharedPreferences.getLong(getString(R.string.prefs_id),0));
         prepareGetAllGroups();
         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.getAllGroups(sharedPreferences.getLong(PREFS_ID,0));
+        mVolleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id),0));
 
     }
 
@@ -128,7 +126,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     public void onFriendListCLick(View view)
     {
         Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
-        listFriend.putExtra("entityID", sharedPreferences.getLong(PREFS_ID,0));
+        listFriend.putExtra("entityID", sharedPreferences.getLong(getString(R.string.prefs_id),0));
         startActivity(listFriend);
     }
     public void onGroupListCLick(View view)

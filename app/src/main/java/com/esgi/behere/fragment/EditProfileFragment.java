@@ -2,10 +2,10 @@ package com.esgi.behere.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,14 +14,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.esgi.behere.LoginActivity;
@@ -31,6 +33,7 @@ import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -40,6 +43,7 @@ import java.time.Period;
 import java.util.Calendar;
 import java.util.Objects;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -50,7 +54,8 @@ public class EditProfileFragment extends Fragment {
     private ApiUsage mVolleyService;
     private TextView tvEmail, tvName, tvSurname, tvNamePerson, tvDescription;
     private Button btnBirthDate, btnUploadPhoto;
-    private   static final int PICK_IMAGE =1;
+    private static final int PICK_IMAGE = 1;
+    private Button btnDeleteAccount;
     ImageView imageView;
 
     @Nullable
@@ -61,73 +66,78 @@ public class EditProfileFragment extends Fragment {
         tvName = rootView.findViewById(R.id.tvNameGroup);
         tvSurname = rootView.findViewById(R.id.tvSurname);
         btnUploadPhoto = rootView.findViewById(R.id.btnUploadPhoto);
-        imageView = rootView.findViewById(R.id.imageViewtest);
         tvDescription = rootView.findViewById(R.id.tvDescription);
-        btnUploadPhoto.setOnClickListener(v -> {
-            Intent intent=new Intent(Intent.ACTION_PICK);
-            // Sets the type as image/*. This ensures only components of type image are selected
-            intent.setType("image/*");
-            //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-            String[] mimeTypes = {"image/jpeg", "image/png"};
-            intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-            // Launching the Intent
-            startActivityForResult(intent,PICK_IMAGE);
-        });
+        btnDeleteAccount = rootView.findViewById(R.id.btnDeleteAccount);
         tvNamePerson = Objects.requireNonNull(getActivity()).findViewById(R.id.tvNamePerson);
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
         Button btnupdate = rootView.findViewById(R.id.btnUpdate);
-
         sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         prepareGetUser();
-        mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
-        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id),0));
+        mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
 
         btnBirthDate.setOnClickListener(this::showDatePickerDialog);
 
         btnupdate.setOnClickListener((View v) -> {
-                prepareUpdateUser();
-                mVolleyService = new ApiUsage(mResultCallback,rootView.getContext());
-                mVolleyService.updateUser(sharedPreferences.getLong(getString(R.string.prefs_id),0),
-                        tvEmail.getText().toString(), tvName.getText().toString(),
-                        tvSurname.getText().toString(), btnBirthDate.getText().toString(), tvDescription.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
+            prepareUpdateUser();
+            mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+            mVolleyService.updateUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0),
+                    tvEmail.getText().toString(), tvName.getText().toString(),
+                    tvSurname.getText().toString(), btnBirthDate.getText().toString(), tvDescription.getText().toString(), sharedPreferences.getString(getString(R.string.access_token), ""));
         });
-
-
+        //btnUploadPhoto.setOnClickListener(v -> showFileChooser());
+        btnDeleteAccount.setOnClickListener(this::onButtonShowPopupWindowClick);
         return rootView;
+    }
+
+    public void showFileChooser() {
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        // Sets the type as image/*. This ensures only components of type image are selected
+        intent.setType("image/*");
+        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent,PICK_IMAGE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == PICK_IMAGE)
-        {
-            Bitmap bitmap = null;
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            // Get the cursor
-            Cursor cursor =getContext().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            // Move to first row
-            cursor.moveToFirst();
-            //Get the column index of MediaStore.Images.Media.DATA
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            //Gets the String value in the column
-            String imgDecodableString = cursor.getString(columnIndex);
-            btnUploadPhoto.setText(imgDecodableString);
-            cursor.close();
+            Log.d("patjh", selectedImage.toString());
+            String imgDecodableString = getPath(getApplicationContext(),selectedImage);
+            File file = new File(imgDecodableString.replace("\\","/"));
+
+            //OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+            // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            //os.close();
+            // bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
             prepareEmty();
-            File file = new File(imgDecodableString);
-            if(file.exists())
-                Log.d("exist",file.getAbsolutePath());
-
-
-            mVolleyService = new ApiUsage(mResultCallback,getContext());
-            mVolleyService.uploadPictureUser(file, sharedPreferences.getLong(getString(R.string.prefs_id),0),sharedPreferences.getString(getString(R.string.access_token),""));
-            imageView.setImageBitmap(bitmap);
-
-            }
+            mVolleyService = new ApiUsage(mResultCallback, getContext());
+            mVolleyService.uploadPictureUser(file, sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
         }
+    }
 
+    public static String getPath(Context context, Uri uri) {
+        String result = null;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int column_index = cursor.getColumnIndexOrThrow(proj[0]);
+                result = cursor.getString(column_index);
+            }
+            cursor.close();
+        }
+        if (result == null) {
+            result = "Not found";
+        }
+        return result;
+    }
 
-    private void prepareGetUser(){
+    private void prepareGetUser() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -144,14 +154,14 @@ public class EditProfileFragment extends Fragment {
                         tvSurname.setText(surname);
                         tvEmail.setText(email);
                         tvDescription.setText(objres.getString("description"));
-
                         tvNamePerson.setText(String.format("%s %s", name, surname));
-                        btnBirthDate.setText(objres.getString("birthDate").substring(0,10));
+                        btnBirthDate.setText(objres.getString("birthDate").substring(0, 10));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
             public void onError(VolleyError error) {
                 Intent loginActivity = new Intent(getContext(), LoginActivity.class);
@@ -161,40 +171,92 @@ public class EditProfileFragment extends Fragment {
         };
     }
 
-    private void prepareUpdateUser(){
+    private void prepareUpdateUser() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                InformationMessage.createToastInformation(Objects.requireNonNull(getActivity()), getLayoutInflater(), getApplicationContext() ,R.drawable.ic_insert_emoticon_blue_24dp,
+                InformationMessage.createToastInformation(Objects.requireNonNull(getActivity()), getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                         "We love you my love");
                 prepareGetUser();
-                mVolleyService = new ApiUsage(mResultCallback,getContext());
-                mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id),0));
+                mVolleyService = new ApiUsage(mResultCallback, getContext());
+                mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
             }
+
             @Override
             public void onError(VolleyError error) {
-                if(error.networkResponse.statusCode == 500)
-                {
+                if (error.networkResponse.statusCode == 500) {
                     new PopupAchievement().popupAuthentification(getView());
                 }
             }
         };
     }
 
-    private void prepareEmty(){
+    private void prepareEmty() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
             }
+
             @Override
             public void onError(VolleyError error) {
-               Toast.makeText(getApplicationContext(),error.getLocalizedMessage()+"",Toast.LENGTH_LONG).show();
+                if (error.networkResponse.statusCode == 500) {
+                    new PopupAchievement().popupAuthentification(getView());
+                }
             }
         };
     }
+
+    public void onButtonShowPopupWindowClick(View view) {
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_confirmation_delete_account, null);
+        // create the popup window
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window token
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        Button btnConfirmDelete = popupView.findViewById(R.id.btnConfirm);
+        Button btnCancelDelete = popupView.findViewById(R.id.btnCancel);
+        btnCancelDelete.setOnClickListener(v -> popupWindow.dismiss());
+        btnConfirmDelete.setOnClickListener(v -> {
+            prepareDeleteUser();
+            mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
+            mVolleyService.deleteUser(sharedPreferences.getLong(getString(R.string.prefs_id),0),sharedPreferences.getString(getString(R.string.access_token),""));
+        });
+
+    }
+
+    private void prepareDeleteUser()
+    {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        Intent next = new Intent(getApplicationContext(), LoginActivity.class);
+                        sharedPreferences.edit().clear().apply();
+                        next.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(next);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                if (error.networkResponse.statusCode == 500) {
+                    new PopupAchievement().popupAuthentification(getView());
+                }
+            }
+        };
+    }
+
     private void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
-        if(getFragmentManager() != null)
+        if (getFragmentManager() != null)
             newFragment.show(getFragmentManager(), "datePicker");
     }
 
@@ -211,7 +273,7 @@ public class EditProfileFragment extends Fragment {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            if(getActivity() != null) {
+            if (getActivity() != null) {
                 return new DatePickerDialog(getActivity(),
                         R.style.CustomDatePickerDialogTheme, this, year, month, day);
             }
@@ -220,12 +282,13 @@ public class EditProfileFragment extends Fragment {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             month = month + 1;
-            if(calculateAge(year,month,day) < 18)
-                InformationMessage.createToastInformation(Objects.requireNonNull(getActivity()), getLayoutInflater(), Objects.requireNonNull(getContext()),R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
+            if (calculateAge(year, month, day) < 18)
+                InformationMessage.createToastInformation(Objects.requireNonNull(getActivity()), getLayoutInflater(), Objects.requireNonNull(getContext()), R.drawable.ic_child_friendly_blue_24dp, "We accept minor with pickaxe, no minor with baby bottle !");
             else
                 ((Button) Objects.requireNonNull(getActivity()).findViewById(R.id.btnEditBirthDate)).setText(year + "-" + month + "-" + day);
 
         }
+
         private int calculateAge(int year, int month, int day) {
             LocalDate birthDate = LocalDate.of(year, month, day);
             return Period.between(birthDate, LocalDate.now()).getYears();

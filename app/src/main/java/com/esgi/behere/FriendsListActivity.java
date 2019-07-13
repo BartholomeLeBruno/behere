@@ -29,7 +29,6 @@ public class FriendsListActivity extends AppCompatActivity {
     private ApiUsage mVolleyService;
     private ListView listFriends;
     private long entityID;
-    private TextView tvFriendsTitle;
 
     /**
      * Called when the activity is first created.
@@ -40,7 +39,7 @@ public class FriendsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_friends);
         listFriends = findViewById(R.id.listFriends);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        tvFriendsTitle = findViewById(R.id.tvFriendsTitle);
+        TextView tvFriendsTitle = findViewById(R.id.tvFriendsTitle);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         CacheContainer.getInstance().getFriends().clear();

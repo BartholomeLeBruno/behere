@@ -82,7 +82,7 @@ public class BeerAdapter extends BaseAdapter {
     private void onButtonShowPopupWindowClick(View view, int position, ViewGroup parent) {
 
         // inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);;
+        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_beer, parent, false);
         linearLayoutStar = popupView.findViewById(R.id.linearLayoutStar);
         AtomicLong note = new AtomicLong();

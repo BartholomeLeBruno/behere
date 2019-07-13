@@ -52,7 +52,6 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
     private SharedPreferences sharedPreferences;
     private LinearLayout linearLayoutStar;
     private Market market;
-    private Button btnSubsrciption, btnFacebook;
 
 
     @Override
@@ -61,12 +60,13 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         setContentView(R.layout.activity_market_profile);
 
         Button btnSeeComment = findViewById(R.id.btnSeeComment);
-        btnSubsrciption = findViewById(R.id.btnSubscription);
+        Button btnSubsrciption = findViewById(R.id.btnSubscription);
         linearLayoutStar = findViewById(R.id.linearLayoutStar);
         TextView tvNameBar = findViewById(R.id.tvNameBar);
         TextView contentDesc = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         Button btnWebsite = findViewById(R.id.btnWebsite);
+        Button btnFacebook = findViewById(R.id.btnFacebook);
         market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         linearLayoutStar.removeAllViews();
         prepareStar();
@@ -85,12 +85,12 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
             if(!market.getFacebookLink().isEmpty()) {
-                btnWebsite.setOnClickListener(v -> {
+                btnFacebook.setOnClickListener(v -> {
                     if (!market.getWebSiteLink().isEmpty()) {
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse(market.getWebSiteLink()));
+                        intent.setData(Uri.parse(market.getFacebookLink()));
                         startActivity(intent);
                     }
                 });
@@ -175,6 +175,36 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        prepareStar(popupView, note);
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window token
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
+        EditText tvComment = popupView.findViewById(R.id.tvComment);
+        btnSendComment.setOnClickListener((View v) -> {
+            Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
+            prepareAddComment();
+            if (Objects.requireNonNull(market).getType().equals("Bar")) {
+                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                prepareEmpty();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addNoteToBar(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                popupWindow.dismiss();
+            } else {
+                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                prepareEmpty();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addNoteToBrewery(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                popupWindow.dismiss();
+            }
+        });
+    }
+
+    private void prepareStar(View popupView, AtomicLong note) {
         ImageView firstStar = popupView.findViewById(R.id.firstStar);
         ImageView secondStar = popupView.findViewById(R.id.secondStar);
         ImageView thirdStar = popupView.findViewById(R.id.thirdStar);
@@ -219,32 +249,6 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             fourthStar.setImageResource(R.drawable.ic_star_yellow_24dp);
             fifthStar.setImageResource(R.drawable.ic_star_yellow_24dp);
             note.set(5);
-        });
-        // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window token
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-        Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
-        EditText tvComment = popupView.findViewById(R.id.tvComment);
-        btnSendComment.setOnClickListener((View v) -> {
-            Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
-            prepareAddComment();
-            if (Objects.requireNonNull(market).getType().equals("Bar")) {
-                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
-                prepareEmpty();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addNoteToBar(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
-                popupWindow.dismiss();
-            } else {
-                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
-                prepareEmpty();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addNoteToBrewery(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
-                popupWindow.dismiss();
-            }
         });
     }
 
