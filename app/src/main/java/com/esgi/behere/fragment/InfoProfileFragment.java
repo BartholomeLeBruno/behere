@@ -40,9 +40,19 @@ public class InfoProfileFragment extends Fragment {
 
         sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         long entityId = (long) getActivity().getIntent().getExtras().get("entityID");
-        prepareGetUser();
-        ApiUsage mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
-        mVolleyService.getUser(entityId);
+        String entityType = getActivity().getClass().getSimpleName();
+
+        if(entityType.equals("ProfilFriendGroupActivity")) {
+            prepareGetUser();
+            ApiUsage mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+            mVolleyService.getUser(entityId);
+        }
+        if(entityType.equals("GroupActivity"))
+        {
+            prepareGetGroup();
+            ApiUsage mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
+            mVolleyService.getGroup(entityId);
+        }
 
         return rootView;
     }
@@ -63,7 +73,36 @@ public class InfoProfileFragment extends Fragment {
                         surname = objres.getString("surname");
                         description = objres.getString("description");
                         tvName.setText(String.format("%s %s", name, surname));
+                        tvBirthdate.setVisibility(View.VISIBLE);
                         tvBirthdate.setText(objres.getString("birthDate").substring(0,10));
+                        tvDescription.setText(description);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onError(VolleyError error) {
+                Intent loginActivity = new Intent(getContext(), LoginActivity.class);
+                sharedPreferences.getAll().clear();
+                startActivity(loginActivity);
+            }
+        };
+    }
+
+    private void prepareGetGroup(){
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    String name;
+                    String description;
+                    if (!(boolean) response.get("error")) {
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("group").toString()).nextValue();
+                        name = objres.getString("name");
+                        description = objres.getString("description");
+                        tvName.setText(String.format("%s", name));
+                        tvBirthdate.setVisibility(View.INVISIBLE);
                         tvDescription.setText(description);
                     }
                 } catch (Exception e) {
