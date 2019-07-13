@@ -189,8 +189,7 @@
             android:id="@+id/tabBeer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Beer"
-            android:icon="@drawable/ic_star_yellow_24dp"
+            android:text="Group"
             android:textColor="@android:color/white" />
 
     </android.support.design.widget.TabLayout>
