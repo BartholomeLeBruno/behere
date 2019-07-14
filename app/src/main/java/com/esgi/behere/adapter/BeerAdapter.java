@@ -75,7 +75,8 @@ public class BeerAdapter extends BaseAdapter {
             text.setText(data.get(position).getName());
             sharedPreferences = vi.getContext().getSharedPreferences(vi.getContext().getString(R.string.prefs), MODE_PRIVATE);
             vi.setOnClickListener(v -> onButtonShowPopupWindowClick(v, position, parent));
-            prepareStar(vi);
+            linearLayoutStar = vi.findViewById(R.id.linearLayoutStar);
+            prepareStar(vi,linearLayoutStar);
             ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
             mVolleyService.getNotesBeer(data.get(position).getId());
 
@@ -173,7 +174,7 @@ public class BeerAdapter extends BaseAdapter {
         });
     }
 
-    private void prepareStar(View view) {
+    private void prepareStar(View view, LinearLayout linearLayout) {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -191,7 +192,7 @@ public class BeerAdapter extends BaseAdapter {
                             }
                             note = note / resNote.size();
                         }
-                        StarTools starTools = new StarTools(note, view.getContext(), linearLayoutStar);
+                        StarTools starTools = new StarTools(note, view.getContext(), linearLayout);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
