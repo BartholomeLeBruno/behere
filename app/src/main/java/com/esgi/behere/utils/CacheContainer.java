@@ -14,7 +14,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class CacheContainer {
 
-    static RequestQueue getQueue() {
+    public static RequestQueue getQueue() {
         return queue;
     }
 

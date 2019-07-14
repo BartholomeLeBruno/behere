@@ -19,7 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.Notification;
 import com.esgi.behere.fragment.FriendOrGroupAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;

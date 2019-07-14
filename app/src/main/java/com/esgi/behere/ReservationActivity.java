@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.PopupAchievement;

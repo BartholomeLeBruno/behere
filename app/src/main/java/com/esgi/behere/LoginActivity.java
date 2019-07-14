@@ -19,8 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.register.RegisterFirstStep;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.InformationMessage;
@@ -29,7 +28,6 @@ import com.facebook.CallbackManager;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
 
 import static com.esgi.behere.utils.CacheContainer.initializeQueue;
 

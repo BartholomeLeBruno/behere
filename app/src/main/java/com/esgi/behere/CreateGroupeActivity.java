@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.PopupAchievement;

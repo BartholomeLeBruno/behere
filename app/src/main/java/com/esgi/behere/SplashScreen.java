@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.VolleyCallback;
 

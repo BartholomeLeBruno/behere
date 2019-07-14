@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.User;
 import com.esgi.behere.adapter.FriendAdpater;
 import com.esgi.behere.utils.ApiUsage;

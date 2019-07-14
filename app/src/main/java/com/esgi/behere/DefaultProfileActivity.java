@@ -11,9 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.ui.NetworkImageView;
 import com.esgi.behere.fragment.SectionsAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.VolleyCallback;
 
 import org.json.JSONObject;
@@ -29,6 +32,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private VolleyCallback mResultCallback = null;
     private TextView tvGroups;
     private static TextView tvNbFriends;
+    private NetworkImageView imageView;
 
 
     @Override
@@ -40,6 +44,8 @@ public class DefaultProfileActivity extends AppCompatActivity {
         tvNbFriends = findViewById(R.id.tvNbFriends);
         tvGroups = findViewById(R.id.tvGroups);
         tvNamePerson = findViewById(R.id.tvNamePerson);
+        imageView = findViewById(R.id.ivProfile);
+
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
 
         SectionsAdapterProfile mSectionsPagerAdapter = new SectionsAdapterProfile(getSupportFragmentManager());
@@ -54,15 +60,15 @@ public class DefaultProfileActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetUser();
         ApiUsage mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id),0));
+        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
         tvFriends.setOnClickListener(this::onFriendListCLick);
         tvGroups.setOnClickListener(this::onGroupListCLick);
         prepareGetAllFriends();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.getAllFriends(sharedPreferences.getLong(getString(R.string.prefs_id),0));
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        mVolleyService.getAllFriends(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
         prepareGetAllGroups();
-        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-        mVolleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id),0));
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        mVolleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
 
     }
 
@@ -113,31 +119,34 @@ public class DefaultProfileActivity extends AppCompatActivity {
                         name = objres.getString("name");
                         surname = objres.getString("surname");
                         tvNamePerson.setText(String.format("%s %s", name, surname));
+                        if (JSONObject.NULL != objres.getString("pathPicture"))
+                            imageView.setImageUrl(objres.getString("pathPicture"), new ImageLoader(CacheContainer.getQueue()));
+
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 
-    public void onFriendListCLick(View view)
-    {
+    public void onFriendListCLick(View view) {
         Intent listFriend = new Intent(getApplicationContext(), FriendsListActivity.class);
-        listFriend.putExtra("entityID", sharedPreferences.getLong(getString(R.string.prefs_id),0));
+        listFriend.putExtra("entityID", sharedPreferences.getLong(getString(R.string.prefs_id), 0));
         startActivity(listFriend);
     }
-    public void onGroupListCLick(View view)
-    {
+
+    public void onGroupListCLick(View view) {
         Intent listGroup = new Intent(getApplicationContext(), MyGroupActivity.class);
         startActivity(listGroup);
     }
 
 
-    private void prepareGetAllFriends()
-    {
+    private void prepareGetAllFriends() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -151,14 +160,15 @@ public class DefaultProfileActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 
 
-    private void prepareGetAllGroups()
-    {
+    private void prepareGetAllGroups() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -172,8 +182,10 @@ public class DefaultProfileActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 }

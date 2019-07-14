@@ -3,14 +3,13 @@ package com.esgi.behere;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.Group;
 import com.esgi.behere.adapter.GroupAdapter;
 import com.esgi.behere.utils.ApiUsage;

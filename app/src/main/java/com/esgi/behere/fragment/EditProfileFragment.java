@@ -2,13 +2,12 @@ package com.esgi.behere.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -25,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.LoginActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.utils.ApiUsage;
@@ -38,17 +37,24 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Calendar;
 import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.facebook.FacebookSdk.getCacheDir;
 
 public class EditProfileFragment extends Fragment {
 
+    private static final String TAG = "voila";
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
@@ -68,6 +74,7 @@ public class EditProfileFragment extends Fragment {
         btnUploadPhoto = rootView.findViewById(R.id.btnUploadPhoto);
         tvDescription = rootView.findViewById(R.id.tvDescription);
         btnDeleteAccount = rootView.findViewById(R.id.btnDeleteAccount);
+        imageView = getActivity().findViewById(R.id.ivProfile);
         tvNamePerson = Objects.requireNonNull(getActivity()).findViewById(R.id.tvNamePerson);
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
         Button btnupdate = rootView.findViewById(R.id.btnUpdate);
@@ -85,54 +92,86 @@ public class EditProfileFragment extends Fragment {
                     tvEmail.getText().toString(), tvName.getText().toString(),
                     tvSurname.getText().toString(), btnBirthDate.getText().toString(), tvDescription.getText().toString(), sharedPreferences.getString(getString(R.string.access_token), ""));
         });
-        //btnUploadPhoto.setOnClickListener(v -> showFileChooser());
+        btnUploadPhoto.setOnClickListener(v -> showFileChooser());
         btnDeleteAccount.setOnClickListener(this::onButtonShowPopupWindowClick);
         return rootView;
     }
 
     public void showFileChooser() {
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
+        Intent intent = new Intent();
+        // Show only images, no videos or anything else
         intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        // Launching the Intent
-        startActivityForResult(intent,PICK_IMAGE);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        // Always show the chooser (if there are multiple options available)
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE) {
-            Uri selectedImage = data.getData();
-            Log.d("patjh", selectedImage.toString());
-            String imgDecodableString = getPath(getApplicationContext(),selectedImage);
-            File file = new File(imgDecodableString.replace("\\","/"));
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
 
-            //OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-            // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            //os.close();
-            // bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            assert uri != null;
+            String filename = getFileName(uri);
+
+            String extension = filename.substring(filename.indexOf(".") + 1);
+            String path_temp = getCacheDir() + filename;
+            File file = new File(path_temp);
+            FileOutputStream fos = null;
+            try {
+                byte[] buffer = new byte[1024];
+                fos = new FileOutputStream(file);
+                InputStream is = getContext().getContentResolver().openInputStream(uri);
+                assert is != null;
+                int len = is.read(buffer);
+                while (len != -1) {
+                    fos.write(buffer, 0, len);
+                    len = is.read(buffer);
+                }
+            } catch (FileNotFoundException e) {
+                Log.e(TAG, "Error while opening file", e);
+            } catch (IOException e) {
+                Log.e(TAG, "Error while opening file", e);
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error while closing output stream", e);
+                    }
+                }
+            }
+
+            /*Log.d("euuuuh", path_temp);
             prepareEmty();
             mVolleyService = new ApiUsage(mResultCallback, getContext());
-            mVolleyService.uploadPictureUser(file, sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
+            mVolleyService.uploadPictureUser(new File(path_temp), sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
+            */
         }
     }
 
-    public static String getPath(Context context, Uri uri) {
+    private String getFileName(Uri uri) {
         String result = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                int column_index = cursor.getColumnIndexOrThrow(proj[0]);
-                result = cursor.getString(column_index);
+        if ("content".equals(uri.getScheme())) {
+            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                try {
+                    if (cursor.moveToFirst()) {
+                        result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                } finally {
+                    cursor.close();
+                }
             }
-            cursor.close();
         }
         if (result == null) {
-            result = "Not found";
+            result = uri.getPath();
+            assert result != null;
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
         }
         return result;
     }
@@ -209,7 +248,7 @@ public class EditProfileFragment extends Fragment {
     public void onButtonShowPopupWindowClick(View view) {
 
         // inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_confirmation_delete_account, null);
         // create the popup window
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -223,14 +262,13 @@ public class EditProfileFragment extends Fragment {
         btnCancelDelete.setOnClickListener(v -> popupWindow.dismiss());
         btnConfirmDelete.setOnClickListener(v -> {
             prepareDeleteUser();
-            mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-            mVolleyService.deleteUser(sharedPreferences.getLong(getString(R.string.prefs_id),0),sharedPreferences.getString(getString(R.string.access_token),""));
+            mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+            mVolleyService.deleteUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
         });
 
     }
 
-    private void prepareDeleteUser()
-    {
+    private void prepareDeleteUser() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -245,6 +283,7 @@ public class EditProfileFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onError(VolleyError error) {
                 if (error.networkResponse.statusCode == 500) {

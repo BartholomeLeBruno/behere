@@ -4,15 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
 import com.esgi.behere.actor.Message;
 import com.esgi.behere.actor.Notification;
 import com.esgi.behere.actor.User;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -187,6 +186,7 @@ public class ApiUsage {
             JSONObject params = new JSONObject();
             params.put("note", note);
             params.put("beer_id", beer_id);
+            Log.d("voila", params.toString());
             postDataWithAccessToken(params, PATH_API + "notesBeers/create", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -417,16 +417,13 @@ public class ApiUsage {
         }
     }
 
-    public void uploadPictureUser(File photo, long id, String access_token) {
+   /* public void uploadPictureUser(File photo, long id, String access_token) {
         try {
-            JSONObject params = new JSONObject();
-            params.put("file", photo);
-            Log.d("params", params.toString());
-            putDataWithAccessToken(params, PATH_API + "users/upload/" + id, access_token);
+            putMultiPartData(PATH_API + "users/upload/" + id, access_token, photo.getPath());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
     public void createGroup(String nameGroup, String description, String access_token) {
         try {
@@ -456,9 +453,9 @@ public class ApiUsage {
             JSONObject params = new JSONObject();
             params.put("numberOfPeople", numberOfPerson);
             params.put("arrivalTime", dateOfReservation);
-            params.put("bar_id",  (int) bar_id);
+            params.put("bar_id", (int) bar_id);
             params.put("user_id", (int) user_id);
-            Log.d("reser",params.toString()+access_token);
+            Log.d("reser", params.toString() + access_token);
             postDataWithAccessToken(params, PATH_API + "reservations/create", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -743,29 +740,45 @@ public class ApiUsage {
         CacheContainer.getQueue().add(jsonObjectRequest);
     }
 
-    private void putMultiPartData(String url, JSONObject params, String access_token) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
-                (JSONObject response) -> {
-                    // response
-                    if (mResultCallback != null)
-                        mResultCallback.onSuccess(response);
+
+    /*private void putMultiPartData(String url, String access_token, String imagePath) {
+
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.PUT, url,
+                response -> {
+
                 },
-                (VolleyError error) -> {
-                    // error
-                    Log.d("Error.Response", error.getMessage() + " ");
-                    if (mResultCallback != null)
-                        mResultCallback.onError(error);
+                error -> {
+
+                })
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("file", imagePath);
+                return params;
+            }
+        }
+                /*SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.PUT, url,
+                (String response) -> {
+                    Log.d("Response", response);
+                },
+                error -> {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
                 headers.put("x-access-token", access_token);
                 return headers;
+
             }
         };
-        CacheContainer.getQueue().add(jsonObjectRequest);
-    }
+        //smr.addFile("file", imagePath);
+        //Log.d("requete",smr.toString());
+        RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        mRequestQueue.add(volleyMultipartRequest);
+    }*/
+
 
     public Context getmContext() {
         return mContext;

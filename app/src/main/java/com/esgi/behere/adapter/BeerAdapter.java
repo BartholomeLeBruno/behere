@@ -13,10 +13,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.CommentaryListActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.Beer;
@@ -74,6 +75,9 @@ public class BeerAdapter extends BaseAdapter {
             text.setText(data.get(position).getName());
             sharedPreferences = vi.getContext().getSharedPreferences(vi.getContext().getString(R.string.prefs), MODE_PRIVATE);
             vi.setOnClickListener(v -> onButtonShowPopupWindowClick(v, position, parent));
+            prepareStar(vi);
+            ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
+            mVolleyService.getNotesBeer(data.get(position).getId());
 
         }
         return vi;
@@ -103,11 +107,10 @@ public class BeerAdapter extends BaseAdapter {
             allComments.putExtra("entityType", "Beer");
             parent.getContext().startActivity(allComments);
         });
-        prepareStar(popupView);
-        ApiUsage mVolleyService = new ApiUsage(mResultCallback, popupView.getContext());
-        mVolleyService.getNotesBeer(data.get(position).getId());
         tvName.setText(String.format("%s Origine : %s", data.get(position).getName(), data.get(position).getOrigin()));
         tvDescription.setText(data.get(position).getDescription());
+        RelativeLayout relativeLayout = popupView.findViewById(R.id.relativeLayout);
+        relativeLayout.setVisibility(View.VISIBLE);
         ImageView firstStar = popupView.findViewById(R.id.firstStar);
         ImageView secondStar = popupView.findViewById(R.id.secondStar);
         ImageView thirdStar = popupView.findViewById(R.id.thirdStar);

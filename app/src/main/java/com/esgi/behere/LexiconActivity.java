@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ListView;
 
-import com.android.volley.VolleyError;
+import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.Beer;
 import com.esgi.behere.actor.BeerType;
 import com.esgi.behere.adapter.BeerAdapter;
