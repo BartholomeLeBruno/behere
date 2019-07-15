@@ -46,7 +46,7 @@ public class FriendsListActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             entityID = getIntent().getExtras().getLong("entityID");
             if (getIntent().getExtras().containsKey("group")) {
-                tvFriendsTitle.setText("Members List");
+                tvFriendsTitle.setText(getString(R.string.membersList));
                 prepareGetAllMembers();
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.getGroup(entityID);

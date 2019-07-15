@@ -51,4 +51,6 @@
     <string name="accept_uppercase">ACCEPT</string>
     <string name="leave_uppercase">LEAVE</string>
     <string name="members">Members</string>
+    <string name="nocomments_uppercase">NO COMMENTS</string>
+    <string name="membersList">Members List</string>
 </resources>

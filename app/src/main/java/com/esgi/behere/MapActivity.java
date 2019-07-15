@@ -56,6 +56,7 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TravelMode;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
@@ -100,35 +101,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         initializeQueue();
         btnRecenter = findViewById(R.id.btnCenter);
         tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                selectedTab = Objects.requireNonNull(tab.getText()).toString();
-                List<ResultSearch> lsFound = new ArrayList<>();
-                if (!"All".equals(selectedTab)) {
-                    for (ResultSearch item : resultSearches) {
-                        if (item.getType().equals(selectedTab))
-                            lsFound.add(item);
-                    }
-
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                    listView.setAdapter(adapter);
-                } else {
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
-                    listView.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        tabLayoutHandlerOnTabSelected();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
@@ -144,64 +117,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         setSupportActionBar(toolbar);
         searchView = findViewById(R.id.search_view);
         listView = findViewById(R.id.listView_result);
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-                prepareGetAllEntities();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.getAllEntities();
-                List<ResultSearch> lsFound = new ArrayList<>();
-                if (!"All".equals(selectedTab)) {
-                    for (ResultSearch item : resultSearches) {
-                        if (item.getType().equals(selectedTab))
-                            lsFound.add(item);
-                    }
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                    listView.setAdapter(adapter);
-                } else {
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
-                    listView.setAdapter(adapter);
-                }
-                listView.setVisibility(View.VISIBLE);
-                tabLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                listView.setVisibility(View.INVISIBLE);
-                tabLayout.setVisibility(View.INVISIBLE);
-
-            }
-        });
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                List<ResultSearch> lsFound = new ArrayList<>();
-                if (newText != null && !newText.trim().equals("")) {
-                    if (!"All".equals(selectedTab)) {
-                        for (ResultSearch item : resultSearches) {
-                            if (item.getName().contains(newText) && item.getType().equals(selectedTab))
-                                lsFound.add(item);
-                        }
-
-                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                        listView.setAdapter(adapter);
-                    } else {
-                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
-                        listView.setAdapter(adapter);
-                    }
-                }
-                return true;
-            }
-        });
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
+        searchViewHandlerOnSearch();
+        if (searchViewHandlerOnQuery()) return;
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -235,6 +152,103 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         });
         startTrackingLocation();
         updateNotification();
+    }
+
+    private void tabLayoutHandlerOnTabSelected() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                selectedTab = Objects.requireNonNull(tab.getText()).toString();
+                List<ResultSearch> lsFound = new ArrayList<>();
+                if (!"All".equals(selectedTab)) {
+                    for (ResultSearch item : resultSearches) {
+                        if (item.getType().equals(selectedTab))
+                            lsFound.add(item);
+                    }
+
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                    listView.setAdapter(adapter);
+                } else {
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
+                    listView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private boolean searchViewHandlerOnQuery() {
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<ResultSearch> lsFound = new ArrayList<>();
+                if (newText != null && !newText.trim().equals("")) {
+                    if (!"All".equals(selectedTab)) {
+                        for (ResultSearch item : resultSearches) {
+                            if (item.getName().contains(newText) && item.getType().equals(selectedTab))
+                                lsFound.add(item);
+                        }
+
+                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                        listView.setAdapter(adapter);
+                    } else {
+                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
+                        listView.setAdapter(adapter);
+                    }
+                }
+                return true;
+            }
+        });
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+    private void searchViewHandlerOnSearch() {
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                prepareGetAllEntities();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.getAllEntities();
+                List<ResultSearch> lsFound = new ArrayList<>();
+                if (!"All".equals(selectedTab)) {
+                    for (ResultSearch item : resultSearches) {
+                        if (item.getType().equals(selectedTab))
+                            lsFound.add(item);
+                    }
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
+                    listView.setAdapter(adapter);
+                } else {
+                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
+                    listView.setAdapter(adapter);
+                }
+                listView.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                listView.setVisibility(View.INVISIBLE);
+                tabLayout.setVisibility(View.INVISIBLE);
+
+            }
+        });
     }
 
     private void updateNotification() {
@@ -366,8 +380,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             rlTime.setVisibility(View.VISIBLE);
             TextView tvLegsTime = findViewById(R.id.tvLegsTime);
             tvLegsTime.setText(durationLegs);
-            // decodedPath.add(home);
-            // decodedPath.add(toMarket);
             polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
             polyline.remove();
             polyline = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
@@ -511,7 +523,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     JSONObject objres;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
-                        Log.d("voila", response.toString());
                         JSONArray res = (JSONArray) parser.parse(response.get("brewery").toString());
                         if (!res.isEmpty()) {
                             for (Object unres : res) {
@@ -652,40 +663,11 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             }
                         }
                         JSONArray resBars = (JSONArray) parser.parse(response.get("bars").toString());
-                        if (!resBars.isEmpty()) {
-                            for (Object unres : resBars) {
-                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                resultSearch = new ResultSearch();
-                                resultSearch.setName(objres.getString("name"));
-                                resultSearch.setType("Bar");
-                                resultSearch.setId(Long.parseLong(objres.getString("id")));
-                                resultSearches.add(resultSearch);
-                            }
-                        }
+                        loadEntity(resBars, "Bar");
                         JSONArray resbrewerys = (JSONArray) parser.parse(response.get("brewerys").toString());
-                        if (!resbrewerys.isEmpty()) {
-                            for (Object unres : resbrewerys) {
-                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                resultSearch = new ResultSearch();
-                                resultSearch.setName(objres.getString("name"));
-                                resultSearch.setType("Brewery");
-                                resultSearch.setId(Long.parseLong(objres.getString("id")));
-                                resultSearches.add(resultSearch);
-                            }
-                        }
+                        loadEntity(resbrewerys, "Brewery");
                         JSONArray resGroups = (JSONArray) parser.parse(response.get("groups").toString());
-                        if (!resGroups.isEmpty()) {
-                            for (Object unres : resGroups) {
-                                objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                resultSearch = new ResultSearch();
-                                resultSearch.setName(objres.getString("name"));
-                                resultSearch.setType("Group");
-                                resultSearch.setId(Long.parseLong(objres.getString("id")));
-                                resultSearches.add(resultSearch);
-                            }
-                        }
-                        //SearchAdapter adapter = new SearchAdapter(getApplicationContext(),resultSearches);
-                        //listView.setAdapter(adapter);
+                        loadEntity(resGroups, "Group");
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -700,6 +682,25 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
 
             }
         };
+    }
+
+    private void loadEntity(JSONArray resEntity, String entity) throws JSONException {
+        if (!resEntity.isEmpty()) {
+            for (Object unres : resEntity) {
+                fllResultSearches(unres, entity);
+            }
+        }
+    }
+
+    private void fllResultSearches(Object unres, String entity) throws JSONException {
+        JSONObject objres;
+        ResultSearch resultSearch;
+        objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+        resultSearch = new ResultSearch();
+        resultSearch.setName(objres.getString("name"));
+        resultSearch.setType(entity);
+        resultSearch.setId(Long.parseLong(objres.getString("id")));
+        resultSearches.add(resultSearch);
     }
 
 

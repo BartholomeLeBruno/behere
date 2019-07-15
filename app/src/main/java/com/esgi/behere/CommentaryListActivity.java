@@ -17,11 +17,13 @@ import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.VolleyCallback;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -121,10 +123,7 @@ public class CommentaryListActivity extends AppCompatActivity {
                         JSONArray resCommentBar = (JSONArray) parser.parse(response.get("commentsBar").toString());
                         if (!resCommentBar.isEmpty()) {
                             for (Object unres : resCommentBar) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
-                                Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("user_id"), "bar"));
+                                fillPublication(formatter, unres, "user_id", "bar");
                             }
                         }
                         Collections.sort(publications);
@@ -140,7 +139,7 @@ public class CommentaryListActivity extends AppCompatActivity {
             @Override
             public void onError(VolleyError error) {
                 TextView tvCommentsTitle = findViewById(R.id.tvCommentsTitle);
-                tvCommentsTitle.setText("NO COMMENTS");
+                tvCommentsTitle.setText(getString(R.string.nocomments_uppercase));
             }
         };
     }
@@ -158,10 +157,7 @@ public class CommentaryListActivity extends AppCompatActivity {
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBrewery").toString());
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
-                                Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("brewery_id"), "brewery"));
+                                fillPublication(formatter, unres, "brewery_id", "brewery");
                             }
                         }
                         Collections.sort(publications);
@@ -177,9 +173,16 @@ public class CommentaryListActivity extends AppCompatActivity {
             @Override
             public void onError(VolleyError error) {
                 TextView tvCommentsTitle = findViewById(R.id.tvCommentsTitle);
-                tvCommentsTitle.setText("NO COMMENTS");
+                tvCommentsTitle.setText(getString(R.string.nocomments_uppercase));
             }
         };
+    }
+
+    private void fillPublication(SimpleDateFormat formatter, Object unres, String entityID, String entity) throws JSONException, ParseException {
+        JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+        String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+        Date created_at = formatter.parse(resDate);
+        publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong(entityID), entity));
     }
 
     private void prepareGetAllCommentsBeer() {
@@ -194,10 +197,7 @@ public class CommentaryListActivity extends AppCompatActivity {
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBeer").toString());
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
-                                Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("beer_id"), "beer"));
+                                fillPublication(formatter, unres, "beer_id", "beer");
                             }
                         }
                         Collections.sort(publications);
@@ -213,7 +213,7 @@ public class CommentaryListActivity extends AppCompatActivity {
             @Override
             public void onError(VolleyError error) {
                 TextView tvCommentsTitle = findViewById(R.id.tvCommentsTitle);
-                tvCommentsTitle.setText("NO COMMENTS");
+                tvCommentsTitle.setText(getString(R.string.nocomments_uppercase));
             }
         };
     }

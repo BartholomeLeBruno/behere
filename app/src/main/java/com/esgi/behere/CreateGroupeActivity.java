@@ -20,7 +20,6 @@ import org.json.JSONObject;
 public class CreateGroupeActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
-    private static final String PREFS = "PREFS";
     private VolleyCallback mResultCallback = null;
 
     @Override
@@ -30,7 +29,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
         Button btnCreateGroup = findViewById(R.id.btnCreateGroup);
         EditText tvNameGroup = findViewById(R.id.tvNameGroup);
         EditText tvDescription = findViewById(R.id.tvDescription);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         btnCreateGroup.setOnClickListener(v -> {

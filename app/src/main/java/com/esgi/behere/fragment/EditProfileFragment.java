@@ -142,12 +142,6 @@ public class EditProfileFragment extends Fragment {
                     }
                 }
             }
-
-            /*Log.d("euuuuh", path_temp);
-            prepareEmty();
-            mVolleyService = new ApiUsage(mResultCallback, getContext());
-            mVolleyService.uploadPictureUser(new File(path_temp), sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));
-            */
         }
     }
 

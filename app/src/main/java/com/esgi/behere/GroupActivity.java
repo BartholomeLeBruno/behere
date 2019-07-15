@@ -42,7 +42,7 @@ public class GroupActivity extends AppCompatActivity {
     private long entityID;
     private Button btnAdd;
     private Button btnCommentWall;
-    private long notifID, adminID;
+    private long adminID;
     private ArrayList<Long> memberList;
 
 
@@ -75,15 +75,9 @@ public class GroupActivity extends AppCompatActivity {
         prepareGetMembers();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
-        /*prepareGetNotification();
-        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        mVolleyService.getNotification(sharedPreferences.getLong(getString(R.string.prefs_id), 0), sharedPreferences.getString(getString(R.string.access_token), ""));*/
         prepareGetOtherNotification();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getNotification(entityID, sharedPreferences.getString(getString(R.string.access_token), ""));
-        Log.d("entity", entityID + " ");
-        Log.d("adminID", adminID + " ");
-        Log.d("myne", sharedPreferences.getLong(getString(R.string.prefs_id), 0) + " ");
         if (btnAdd.getText().toString().equals(getString(R.string.join_upercase))) {
             btnAdd.setEnabled(true);
             btnAdd.setOnClickListener(v -> {
@@ -295,34 +289,6 @@ public class GroupActivity extends AppCompatActivity {
             }
         };
     }
-
-    /*private void prepareGetNotification() {
-        mResultCallback = new VolleyCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                try {
-                    if (!(boolean) response.get("error")) {
-                        JSONParser parser = new JSONParser();
-                        JSONArray resNotification = (JSONArray) parser.parse(response.getJSONArray("notification").toString());
-                        JSONObject objres;
-                        if (!resNotification.isEmpty()) {
-                               objres = (JSONObject) new JSONTokener(resNotification.toString()).nextValue();
-                                notifID = objres.getLong("id");
-                        }
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-                if (error.networkResponse.statusCode == 500) {
-                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
-                }
-            }
-        };
-    }*/
 
     private void prepareGetOtherNotification() {
         mResultCallback = new VolleyCallback() {

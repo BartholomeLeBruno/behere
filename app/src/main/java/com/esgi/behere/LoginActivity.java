@@ -47,10 +47,6 @@ public class LoginActivity extends Activity {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private TextView legalMention;
-
-
-
 
 
     /**
@@ -76,7 +72,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         sharedPreferences.edit().clear().apply();
-        legalMention = findViewById(R.id.tvMention);
+        TextView legalMention = findViewById(R.id.tvMention);
         legalMention.setOnClickListener(v -> {
             Intent i = new Intent(getApplicationContext(),LegalMentionActivity.class);
             startActivity(i);

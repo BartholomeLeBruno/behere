@@ -56,6 +56,10 @@ public class LexiconActivity extends AppCompatActivity {
         prepareTypeOfBeer();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllTypeOfBeer();
+        tabFunction();
+    }
+
+    private void tabFunction() {
         tabTypeOfBeer.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -87,6 +91,7 @@ public class LexiconActivity extends AppCompatActivity {
             }
         });
     }
+
     private void prepareTypeOfBeer() {
         mResultCallback = new VolleyCallback() {
             @Override

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -86,24 +85,15 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         if (market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
-            Log.d("trucx",market.getFacebookLink());
             if(!market.getFacebookLink().equals("null")) {
                 btnFacebook.setOnClickListener(v -> {
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse(market.getFacebookLink()));
-                        startActivity(intent);
+                    getIntoTheSite(market.getFacebookLink());
                 });
             }
             if (!market.getWebSiteLink().equals("null")) {
                 btnWebsite.setOnClickListener(v -> {
                     if (!market.getWebSiteLink().isEmpty()) {
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse(market.getWebSiteLink()));
-                        startActivity(intent);
+                        getIntoTheSite(market.getWebSiteLink());
                     }
                 });
             }
@@ -120,6 +110,14 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             intent.putExtra("market",market);
             startActivity(intent);
         });
+    }
+
+    private void getIntoTheSite(String webSiteLink) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse(webSiteLink));
+        startActivity(intent);
     }
 
     /**
@@ -157,10 +155,8 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         // Check if a click count was set, then display the click count.
         if (clickCount != null) {
             Intent destination = new Intent(getApplicationContext(), MapActivity.class);
-            String PREFS_LATITUDE = "LATITUDE";
-            sharedPreferences.edit().putString(PREFS_LATITUDE, marker.getPosition().latitude + "").apply();
-            String PREFS_LONGITUDE = "LONGITUDE";
-            sharedPreferences.edit().putString(PREFS_LONGITUDE, marker.getPosition().longitude + "").apply();
+            sharedPreferences.edit().putString(getString(R.string.latitude), marker.getPosition().latitude + "").apply();
+            sharedPreferences.edit().putString(getString(R.string.longitude), marker.getPosition().longitude + "").apply();
             startActivity(destination);
             InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(),
                     R.drawable.my_icon_bar, "Suivez le chemin de la bière mes amies !");

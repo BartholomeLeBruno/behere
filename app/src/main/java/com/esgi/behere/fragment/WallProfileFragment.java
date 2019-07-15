@@ -21,11 +21,13 @@ import com.esgi.behere.adapter.PublicationAdapter;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.VolleyCallback;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,6 +82,7 @@ public class WallProfileFragment extends Fragment {
     }
 
 
+
     private void prepareGetAllComments() {
         mResultCallback = new VolleyCallback() {
             @Override
@@ -90,41 +93,14 @@ public class WallProfileFragment extends Fragment {
                         Log.d("reponseComment", response.toString());
                         publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
-                        JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBrewery").toString());
-                        if (!resCommentBrewery.isEmpty()) {
-                            for (Object unres : resCommentBrewery) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
-                                Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("brewery_id"), "brewery"));
-                            }
-                        }
-                        JSONArray resCommentBar = (JSONArray) parser.parse(response.get("commentsBars").toString());
-                        if (!resCommentBar.isEmpty()) {
-                            for (Object unres : resCommentBar) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
-                                Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("bar_id"), "bar"));
-                            }
-                        }
-                        JSONArray resCommentBeer = (JSONArray) parser.parse(response.get("commentsBeers").toString());
-                        if (!resCommentBeer.isEmpty()) {
-                            for (Object unres : resCommentBeer) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
-                                Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("beer_id"), "beer"));
-                            }
-                        }
+                        loadComments(response, formatter, parser, "commentsBrewery", "brewery_id", "brewery");
+                        loadComments(response, formatter, parser, "commentsBars", "bar_id", "bar");
+                        loadComments(response, formatter, parser, "commentsBeers", "beer_id", "beer");
                         JSONArray resCommentUser = (JSONArray) parser.parse(response.get("commentsUsers").toString());
                         Log.d("commentUser", resCommentUser.toJSONString());
                         if (!resCommentUser.isEmpty()) {
                             for (Object unres : resCommentUser) {
-                                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
-                                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
-                                Date created_at = formatter.parse(resDate);
-                                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong("user_comment_id"), "user"));
+                                fillPublication(formatter, unres, "user_comment_id", "user");
                             }
                         }
                         Collections.sort(publications);
@@ -135,6 +111,22 @@ public class WallProfileFragment extends Fragment {
                     throw new RuntimeException(e);
                 }
 
+            }
+
+            private void loadComments(JSONObject response, SimpleDateFormat formatter, JSONParser parser, String commentsType, String entityID, String entity) throws org.json.simple.parser.ParseException, JSONException, ParseException {
+                JSONArray resComment = (JSONArray) parser.parse(response.get(commentsType).toString());
+                if (!resComment.isEmpty()) {
+                    for (Object unres : resComment) {
+                        fillPublication(formatter, unres, entityID, entity);
+                    }
+                }
+            }
+
+            private void fillPublication(SimpleDateFormat formatter, Object unres, String entityId, String entity) throws JSONException, ParseException {
+                JSONObject objres = (JSONObject) new JSONTokener(unres.toString()).nextValue();
+                String resDate = objres.getString("created_at").replace("T", " ").replace(".000Z", " ");
+                Date created_at = formatter.parse(resDate);
+                publications.add(new Publication("", objres.getString("text"), created_at, objres.getLong(entityId), entity));
             }
 
             @Override
