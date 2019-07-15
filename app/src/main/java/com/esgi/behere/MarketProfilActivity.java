@@ -19,9 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.error.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.ui.NetworkImageView;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.tools.StarTools;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.InformationMessage;
 import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
@@ -52,6 +55,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
     private SharedPreferences sharedPreferences;
     private LinearLayout linearLayoutStar;
     private Market market;
+    private NetworkImageView imageView;
 
 
     @Override
@@ -68,6 +72,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         Button btnWebsite = findViewById(R.id.btnWebsite);
         Button btnFacebook = findViewById(R.id.btnFacebook);
+        imageView = findViewById(R.id.ivMarket);
         market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
         linearLayoutStar.removeAllViews();
         prepareStar();
@@ -82,6 +87,11 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             comments.putExtra("entityType", market.getType());
             startActivity(comments);
         });
+        if (market.getPathPicture() != null)
+            imageView.setImageUrl(market.getPathPicture(), new ImageLoader(CacheContainer.getQueue()));
+        else
+            imageView.setBackground(getDrawable(R.drawable.default_image));
+
         if (market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());

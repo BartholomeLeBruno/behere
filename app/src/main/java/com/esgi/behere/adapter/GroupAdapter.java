@@ -8,9 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.ui.NetworkImageView;
 import com.esgi.behere.GroupActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.Group;
+import com.esgi.behere.utils.CacheContainer;
 
 import java.util.List;
 
@@ -44,9 +47,14 @@ public class GroupAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null) {
-            vi = inflater.inflate(R.layout.fragment_group, parent, false);
+            vi = inflater.inflate(R.layout.fragment_group, null);
             TextView tvNameGroup = vi.findViewById(R.id.tvNameGroup);
             tvNameGroup.setText(data.get(position).getName());
+            NetworkImageView imageView = vi.findViewById(R.id.groupImage);
+            if (!data.get(position).getPath().isEmpty())
+                imageView.setImageUrl(data.get(position).getPath(), new ImageLoader(CacheContainer.getQueue()));
+            else
+                imageView.setBackground(vi.getContext().getDrawable(R.drawable.default_image));
             vi.setOnClickListener(v -> {
                 Intent theGroup = new Intent(v.getContext(), GroupActivity.class);
                 theGroup.putExtra("entityID", data.get(position).getId());

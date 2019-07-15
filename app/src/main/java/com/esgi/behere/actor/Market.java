@@ -20,8 +20,10 @@ public abstract class Market implements Serializable {
 
     private String facebookLink;
 
+    private String pathPicture;
 
-    Market(long id, String name, Double latitude, Double longitutde, String description, String webSiteLink, String facebookLink, String type) {
+
+    Market(long id, String name, Double latitude, Double longitutde, String description, String webSiteLink, String facebookLink, String type,String pathPicture) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -30,6 +32,7 @@ public abstract class Market implements Serializable {
         this.webSiteLink = webSiteLink;
         this.type = type;
         this.facebookLink = facebookLink;
+        this.pathPicture = pathPicture;
     }
 
     public String getType() {
@@ -95,4 +98,8 @@ public abstract class Market implements Serializable {
     public void setFacebookLink(String facebookLink) {
         this.facebookLink = facebookLink;
     }
+
+    public String getPathPicture() { return pathPicture; }
+
+    public void setPathPicture(String pathPicture) { this.pathPicture = pathPicture; }
 }

@@ -10,7 +10,7 @@ public class HowItWorksActivity extends AppCompatActivity {
 
     CarouselView carouselView;
 
-    int[] sampleImages = {R.drawable.behereHome, R.drawable.behereSearch, R.drawable.behereMarket, R.drawable.behereGo, R.drawable.behereProfile};
+    int[] sampleImages = {R.drawable.beherehome, R.drawable.beheresearch, R.drawable.beheremarket, R.drawable.beherego, R.drawable.behereprofile};
 
 
     @Override

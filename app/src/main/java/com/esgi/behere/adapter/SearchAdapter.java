@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.ui.NetworkImageView;
 import com.esgi.behere.GroupActivity;
 import com.esgi.behere.MarketProfilActivity;
 import com.esgi.behere.ProfilFriendGroupActivity;
@@ -53,7 +55,13 @@ public class SearchAdapter extends BaseAdapter {
             TextView textpseudo = vi.findViewById(R.id.pseudoRes);
             TextView texttype = vi.findViewById(R.id.typeRes);
             textpseudo.setText(data.get(position).getName());
+            NetworkImageView imageView = vi.findViewById(R.id.imgRes);
             texttype.setText(data.get(position).getType());
+            if (!data.get(position).getPath().isEmpty())
+                imageView.setImageUrl(data.get(position).getPath(), new ImageLoader(CacheContainer.getQueue()));
+            else
+                imageView.setBackground(vi.getContext().getDrawable(R.drawable.default_image));
+            imageView.setImageUrl(data.get(position).getPath(),new ImageLoader(CacheContainer.getQueue()));
             vi.setOnClickListener(v -> {
                 Intent nextStep;
                 switch (data.get(position).getType()) {

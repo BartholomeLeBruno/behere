@@ -109,6 +109,8 @@ public class MyGroupActivity extends AppCompatActivity {
                             objGroup = (JSONObject) new JSONTokener(group.toString()).nextValue();
                             name = objGroup.getString("name");
                             id = objGroup.getLong("id");
+                            if (JSONObject.NULL != objGroup.getString("pathPicture"))
+                                onegroup.setPath(objGroup.get("pathPicture").toString());
                             onegroup.setId(id);
                             onegroup.setName(name);
                             groups.add(onegroup);

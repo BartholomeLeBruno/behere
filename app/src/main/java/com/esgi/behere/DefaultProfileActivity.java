@@ -125,6 +125,8 @@ public class DefaultProfileActivity extends AppCompatActivity {
                         tvNamePerson.setText(String.format("%s %s", name, surname));
                         if (JSONObject.NULL != objres.getString("pathPicture"))
                             imageView.setImageUrl(objres.getString("pathPicture"), new ImageLoader(CacheContainer.getQueue()));
+                        else
+                            imageView.setBackground(getDrawable(R.drawable.default_image));
 
                     }
                 } catch (Exception e) {

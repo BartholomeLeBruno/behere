@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:padding="10dp"
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
-    <ImageView
+    <com.android.volley.ui.NetworkImageView
         android:id="@+id/groupImage"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:background="@drawable/default_image"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
         android:contentDescription="TODO" />
 
     <TextView

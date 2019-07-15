@@ -19,9 +19,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.ui.NetworkImageView;
 import com.esgi.behere.actor.Notification;
 import com.esgi.behere.fragment.FriendOrGroupAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;
+import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
 
@@ -44,6 +47,7 @@ public class GroupActivity extends AppCompatActivity {
     private Button btnCommentWall;
     private long adminID;
     private ArrayList<Long> memberList;
+    private NetworkImageView imageView;
 
 
     @Override
@@ -54,6 +58,7 @@ public class GroupActivity extends AppCompatActivity {
         tvNameGroup = findViewById(R.id.tvNameGroup);
         btnCommentWall = findViewById(R.id.btnCommentWall);
         tvMembers = findViewById(R.id.tvMembers);
+        imageView = findViewById(R.id.ivGroup);
         FriendOrGroupAdapterProfile mSectionsPagerAdapter = new FriendOrGroupAdapterProfile(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -146,6 +151,10 @@ public class GroupActivity extends AppCompatActivity {
                         name = objres.getString("name");
                         tvNameGroup.setText(name);
                         adminID = objres.getLong("admin_id");
+                        if (JSONObject.NULL != objres.getString("pathPicture"))
+                            imageView.setImageUrl(objres.getString("pathPicture"), new ImageLoader(CacheContainer.getQueue()));
+                        else
+                            imageView.setBackground(getDrawable(R.drawable.default_image));
                         JSONArray sizeOF = (JSONArray) parser.parse(response.getJSONObject("group").getJSONArray("user").toString());
                         tvMembers.setText(MessageFormat.format("{0} {1}", sizeOF.size(), getString(R.string.members)));
 

@@ -473,6 +473,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     String webSiteLink;
                     String facebookLink;
                     JSONObject objres;
+                    String pathPicture;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         Log.d("voila", response.toString());
@@ -487,7 +488,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
                                 webSiteLink = objres.get("webSiteLink").toString();
                                 facebookLink = objres.get("facebokLink").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Bar"));
+                                pathPicture = objres.get("pathPicture").toString();
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Bar",pathPicture));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
@@ -520,6 +522,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     String webSiteLink;
                     String facebookLink;
                     JSONObject objres;
+                    String pathPicture;
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         JSONArray res = (JSONArray) parser.parse(response.get("brewery").toString());
@@ -533,7 +536,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 longitutde = Double.parseDouble(objres.get("gpsLongitude").toString());
                                 webSiteLink = objres.get("webSiteLink").toString();
                                 facebookLink = objres.get("facebokLink").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Brewery"));
+                                pathPicture = objres.get("pathPicture").toString();
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Brewery",pathPicture));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
@@ -656,6 +660,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 resultSearch = new ResultSearch();
                                 resultSearch.setName(objres.getString("name") + " " + objres.getString("surname"));
                                 resultSearch.setType("User");
+                                if (JSONObject.NULL != objres.getString("pathPicture"))
+                                    resultSearch.setPath(objres.get("pathPicture").toString());
+                                resultSearch.setPath(objres.get("pathPicture").toString());
                                 resultSearch.setId(Long.parseLong(objres.getString("id")));
                                 if (resultSearch.getId() != sharedPreferences.getLong(getString(R.string.prefs_id), 0))
                                     resultSearches.add(resultSearch);
@@ -699,6 +706,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         resultSearch.setName(objres.getString("name"));
         resultSearch.setType(entity);
         resultSearch.setId(Long.parseLong(objres.getString("id")));
+        resultSearch.setPath(objres.get("pathPicture").toString());
+        if (JSONObject.NULL != objres.getString("pathPicture"))
+            resultSearch.setPath(objres.get("pathPicture").toString());
         resultSearches.add(resultSearch);
     }
 
