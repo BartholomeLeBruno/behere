@@ -74,51 +74,57 @@ public class LoginActivity extends Activity {
         sharedPreferences.edit().clear().apply();
         TextView legalMention = findViewById(R.id.tvMention);
         legalMention.setOnClickListener(v -> {
-            Intent i = new Intent(getApplicationContext(),LegalMentionActivity.class);
+            Intent i = new Intent(getApplicationContext(), LegalMentionActivity.class);
             startActivity(i);
         });
+        TextView howitworks = findViewById(R.id.tvHowItWorks);
+        howitworks.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), HowItWorksActivity.class);
+            startActivity(i);
+        });
+
         // Set up the login form.
         initializeQueue();
         mLoginView = findViewById(R.id.login);
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener((TextView textView, int id, KeyEvent keyEvent) -> {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
+            }
+            return false;
         });
         Button register = findViewById(R.id.btnRegisterLastStep);
         register.setOnClickListener((View v) -> {
-                Intent firstStep = new Intent(LoginActivity.this, RegisterFirstStep.class);
-                startActivity(firstStep);
+            Intent firstStep = new Intent(LoginActivity.this, RegisterFirstStep.class);
+            startActivity(firstStep);
         });
-        Button btnSignIn =  findViewById(R.id.btnSignIn);
+        Button btnSignIn = findViewById(R.id.btnSignIn);
         btnSignIn.setOnClickListener((View view) -> {
-                if (!mLoginView.getText().toString().equals("") && !mPasswordView.getText().toString().equals("")) {
-                        prepareAuthentification();
-                        mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                        mVolleyService.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
+            if (!mLoginView.getText().toString().equals("") && !mPasswordView.getText().toString().equals("")) {
+                prepareAuthentification();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.authentificate(mLoginView.getText().toString(), mPasswordView.getText().toString());
 
-                }
+            }
         });
         getLocationPermission();
     }
 
 
-    private void getLocationPermission(){
+    private void getLocationPermission() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COURSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
-        }else{
+        } else {
             ActivityCompat.requestPermissions(this,
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -180,7 +186,7 @@ public class LoginActivity extends Activity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-     static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
@@ -210,6 +216,7 @@ public class LoginActivity extends Activity {
             return true;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -217,7 +224,7 @@ public class LoginActivity extends Activity {
 
     }
 
-    private void prepareAuthentification(){
+    private void prepareAuthentification() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -228,21 +235,20 @@ public class LoginActivity extends Activity {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         sharedPreferences.edit().putLong(getString(R.string.prefs_id), Long.parseLong(objres.get("id").toString())).apply();
                         sharedPreferences.edit().putString(PREFS_ACCESS_TOKEN, objres.get("token").toString()).apply();
-                        sharedPreferences.edit().putString("USERNAME", objres.getString("name")+ " " +objres.getString("surname")).apply();
+                        sharedPreferences.edit().putString("USERNAME", objres.getString("name") + " " + objres.getString("surname")).apply();
                         startActivity(mapActivity);
                         prepareFun();
                         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                         mVolleyService.getFun();
                     } else
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
-                        Intent loginActivity = new Intent(LoginActivity.this, MapActivity.class);
-                        startActivity(loginActivity);
-                }
-                catch (Exception e)
-                {
+                    Intent loginActivity = new Intent(LoginActivity.this, MapActivity.class);
+                    startActivity(loginActivity);
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
             public void onError(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();
@@ -250,18 +256,17 @@ public class LoginActivity extends Activity {
         };
     }
 
-    private void prepareFun(){
+    private void prepareFun() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                        InformationMessage.createToastInformation(LoginActivity.this,getLayoutInflater(),getApplicationContext(),R.drawable.ic_insert_emoticon_blue_24dp,response.getString("value"));
-                }
-                catch (Exception e)
-                {
+                    InformationMessage.createToastInformation(LoginActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp, response.getString("value"));
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
             public void onError(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "Erreur lors de l'authentification", Toast.LENGTH_SHORT).show();

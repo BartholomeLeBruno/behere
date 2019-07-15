@@ -104,6 +104,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         tabLayoutHandlerOnTabSelected();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
+        Log.d("user_id", sharedPreferences.getLong(getString(R.string.prefs_id), 0) +"");
+
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetAllBar();
@@ -213,10 +215,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 return true;
             }
         });
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
     }
 
     private void searchViewHandlerOnSearch() {

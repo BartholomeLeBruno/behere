@@ -86,9 +86,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
             if(!market.getFacebookLink().equals("null")) {
-                btnFacebook.setOnClickListener(v -> {
-                    getIntoTheSite(market.getFacebookLink());
-                });
+                btnFacebook.setOnClickListener(v -> getIntoTheSite(market.getFacebookLink()));
             }
             if (!market.getWebSiteLink().equals("null")) {
                 btnWebsite.setOnClickListener(v -> {

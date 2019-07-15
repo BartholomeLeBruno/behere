@@ -59,9 +59,8 @@ public class EditProfileFragment extends Fragment {
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private TextView tvEmail, tvName, tvSurname, tvNamePerson, tvDescription;
-    private Button btnBirthDate, btnUploadPhoto;
+    private Button btnBirthDate;
     private static final int PICK_IMAGE = 1;
-    private Button btnDeleteAccount;
     ImageView imageView;
 
     @Nullable
@@ -71,10 +70,10 @@ public class EditProfileFragment extends Fragment {
         tvEmail = rootView.findViewById(R.id.tvEmail);
         tvName = rootView.findViewById(R.id.tvNameGroup);
         tvSurname = rootView.findViewById(R.id.tvSurname);
-        btnUploadPhoto = rootView.findViewById(R.id.btnUploadPhoto);
+        Button btnUploadPhoto = rootView.findViewById(R.id.btnUploadPhoto);
         tvDescription = rootView.findViewById(R.id.tvDescription);
-        btnDeleteAccount = rootView.findViewById(R.id.btnDeleteAccount);
-        imageView = getActivity().findViewById(R.id.ivProfile);
+        Button btnDeleteAccount = rootView.findViewById(R.id.btnDeleteAccount);
+        imageView = Objects.requireNonNull(getActivity()).findViewById(R.id.ivProfile);
         tvNamePerson = Objects.requireNonNull(getActivity()).findViewById(R.id.tvNamePerson);
         btnBirthDate = rootView.findViewById(R.id.btnEditBirthDate);
         Button btnupdate = rootView.findViewById(R.id.btnUpdate);
@@ -122,7 +121,7 @@ public class EditProfileFragment extends Fragment {
             try {
                 byte[] buffer = new byte[1024];
                 fos = new FileOutputStream(file);
-                InputStream is = getContext().getContentResolver().openInputStream(uri);
+                InputStream is = Objects.requireNonNull(getContext()).getContentResolver().openInputStream(uri);
                 assert is != null;
                 int len = is.read(buffer);
                 while (len != -1) {
@@ -148,7 +147,7 @@ public class EditProfileFragment extends Fragment {
     private String getFileName(Uri uri) {
         String result = null;
         if ("content".equals(uri.getScheme())) {
-            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+            Cursor cursor = Objects.requireNonNull(getContext()).getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 try {
                     if (cursor.moveToFirst()) {

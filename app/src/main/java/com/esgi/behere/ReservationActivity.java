@@ -44,7 +44,7 @@ public class ReservationActivity extends AppCompatActivity {
         btnDay.setOnClickListener(v -> showDatePickerDialog());
         btnTime.setOnClickListener(v -> showTimePickerDialog());
         Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
-        Log.d("voila", market.getDescription());
+        Log.d("voila", Objects.requireNonNull(market).getDescription());
         btnConfirm.setOnClickListener(v -> {
             if (!btnDay.getText().toString().isEmpty() && !np.getText().toString().isEmpty() && !btnTime.getText().toString().isEmpty()) {
                 String date = btnDay.getText().toString() + " " + btnTime.getText().toString();
@@ -92,7 +92,7 @@ public class ReservationActivity extends AppCompatActivity {
         // Create a new OnDateSetListener instance. This listener will be invoked when user click ok button in DatePickerDialog.
 
         DatePickerDialog.OnDateSetListener onDateSetListener = (datePicker, year, month, dayOfMonth) -> {
-            String strBuf = "";
+            String strBuf;
             if (month + 1 < 10) strBuf = year + "-0" + (month + 1) + "-" + dayOfMonth;
             else strBuf = year + "-" + (month + 1) + "-" + dayOfMonth;
             btnDay.setText(strBuf);
@@ -121,7 +121,7 @@ public class ReservationActivity extends AppCompatActivity {
         // Get open TimePickerDialog button.
         // Create a new OnTimeSetListener instance. This listener will be invoked when user click ok button in TimePickerDialog.
         TimePickerDialog.OnTimeSetListener onTimeSetListener = (timePicker, hour, minute) -> {
-            String strBuf = "";
+            String strBuf;
             if (minute < 10) strBuf = hour + ":" + "0" + minute;
             else strBuf = hour + ":" + minute;
             btnTime.setText(strBuf);
@@ -133,9 +133,8 @@ public class ReservationActivity extends AppCompatActivity {
         int minute = now.get(java.util.Calendar.MINUTE);
 
         // Whether show time in 24 hour format or not.
-        boolean is24Hour = true;
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(ReservationActivity.this, onTimeSetListener, hour, minute, is24Hour);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(ReservationActivity.this, onTimeSetListener, hour, minute, true);
 
         timePickerDialog.setIcon(R.drawable.ic_settings_applications_blue_24dp);
         timePickerDialog.setTitle("Please select time.");

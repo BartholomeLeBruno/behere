@@ -53,9 +53,9 @@ public class WallProfileFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.listPublication);
         // Initialize contacts
         SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        if(getActivity().getIntent().getExtras().containsKey("entityID"))
-            entityID = getActivity().getIntent().getExtras().getLong("entityID");
-        if (getActivity().getIntent().getExtras().containsKey("group")) {
+        if(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).containsKey("entityID"))
+            entityID = Objects.requireNonNull(getActivity().getIntent().getExtras()).getLong("entityID");
+        if (Objects.requireNonNull(getActivity().getIntent().getExtras()).containsKey("group")) {
             prepareGetGroupComments();
             mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
             mVolleyService.getAllCommentsGroups(entityID);

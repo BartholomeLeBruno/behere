@@ -20,6 +20,8 @@ import com.esgi.behere.utils.VolleyCallback;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.Objects;
+
 import static android.content.Context.MODE_PRIVATE;
 
 
@@ -39,7 +41,7 @@ public class InfoProfileFragment extends Fragment {
         tvBirthdate = rootView.findViewById(R.id.tvBirthDateUser);
 
         sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        long entityId = (long) getActivity().getIntent().getExtras().get("entityID");
+        long entityId = (long) Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).get("entityID");
         String entityType = getActivity().getClass().getSimpleName();
 
         if(entityType.equals("ProfilFriendGroupActivity")) {

@@ -24,7 +24,7 @@ class Comment implements  Comparable<Comment>{
         this.id = id;
     }
 
-    public Date getCreated_at() {
+    private Date getCreated_at() {
         return created_at;
     }
 

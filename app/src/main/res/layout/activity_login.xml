@@ -134,14 +134,24 @@
             android:id="@+id/tvMention"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="20sp"
             android:text="Legal Mention"
             android:textColor="#A2A2A2"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnRegisterLastStep" />
+
+        <TextView
+            android:id="@+id/tvHowItWorks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:text="How It Works ?"
+            android:textColor="#A2A2A2"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnRegisterLastStep" />
 
 

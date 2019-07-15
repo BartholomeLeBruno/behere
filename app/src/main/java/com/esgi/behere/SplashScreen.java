@@ -17,10 +17,7 @@ import static com.esgi.behere.utils.CacheContainer.initializeQueue;
 
 public class SplashScreen extends Activity {
 
-    private static final String PREFS = "PREFS";
-    private static final String PREFS_ID = "USER_ID";
     private SharedPreferences sharedPreferences;
-    private String TAG = "SplashScreen";
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
 
@@ -28,16 +25,16 @@ public class SplashScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        sharedPreferences = getBaseContext().getSharedPreferences(PREFS, MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         initializeQueue();
         int SPLASH_TIME_OUT = 1000;
         new Handler().postDelayed(() ->
         {
                 try {
-                    if (sharedPreferences.contains(PREFS_ID)) {
+                    if (sharedPreferences.contains(getString(R.string.prefs_id))) {
                         prepareGetUser();
                         mVolleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                        mVolleyService.getUser(sharedPreferences.getLong(PREFS_ID, 0));
+                        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
                     } else {
                         Intent loginActivity = new Intent(SplashScreen.this, LoginActivity.class);
                         startActivity(loginActivity);
@@ -58,11 +55,10 @@ public class SplashScreen extends Activity {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    Log.d(TAG, response.toString());
                     if (!(boolean) response.get("error")) {
                         try {
                             Intent mapActivity = new Intent(SplashScreen.this, MapActivity.class);
-                            mapActivity.putExtra("userID", sharedPreferences.getLong(PREFS_ID, 0));
+                            mapActivity.putExtra("userID", sharedPreferences.getLong(getString(R.string.prefs_id), 0));
                             startActivity(mapActivity);
                         } catch (Exception e) {
                             throw new RuntimeException(e);

@@ -28,6 +28,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class LexiconActivity extends AppCompatActivity {
 
@@ -63,7 +64,7 @@ public class LexiconActivity extends AppCompatActivity {
         tabTypeOfBeer.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getText().toString().equals("...")) {
+                if (Objects.requireNonNull(tab.getText()).toString().equals("...")) {
                     listView_result.setAdapter(new SupplementTypeOfBeerAdapter(getApplicationContext(), beerTypes));
                     listView_result.setVisibility(View.VISIBLE);
                 } else {
@@ -78,14 +79,14 @@ public class LexiconActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                if (!tab.getText().toString().equals("...")) {
+                if (!Objects.requireNonNull(tab.getText()).toString().equals("...")) {
                     listView_result.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                if (tab.getText().toString().equals("...")) {
+                if (Objects.requireNonNull(tab.getText()).toString().equals("...")) {
                     listView_result.setVisibility(View.VISIBLE);
                 }
             }
