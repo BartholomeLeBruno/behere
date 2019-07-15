@@ -94,6 +94,10 @@ public class DefaultProfileActivity extends AppCompatActivity {
                 startActivity(next);
                 finish();
                 return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
+                startActivity(next);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

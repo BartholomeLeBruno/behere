@@ -131,6 +131,10 @@ public class GroupActivity extends AppCompatActivity {
                 next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
                 startActivity(next);
                 return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
+                startActivity(next);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

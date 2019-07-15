@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -85,18 +86,17 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         if (market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
-            if(!market.getFacebookLink().isEmpty()) {
+            Log.d("trucx",market.getFacebookLink());
+            if(!market.getFacebookLink().equals("null")) {
                 btnFacebook.setOnClickListener(v -> {
-                    if (!market.getWebSiteLink().isEmpty()) {
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.addCategory(Intent.CATEGORY_BROWSABLE);
                         intent.setData(Uri.parse(market.getFacebookLink()));
                         startActivity(intent);
-                    }
                 });
             }
-            if (!market.getWebSiteLink().isEmpty()) {
+            if (!market.getWebSiteLink().equals("null")) {
                 btnWebsite.setOnClickListener(v -> {
                     if (!market.getWebSiteLink().isEmpty()) {
                         Intent intent = new Intent();
@@ -301,6 +301,10 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                 return true;
             case R.id.navigation_myprofile:
                 next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
+                startActivity(next);
+                return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
                 startActivity(next);
                 return true;
         }

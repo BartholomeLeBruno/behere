@@ -34,15 +34,13 @@ public class CreateGroupeActivity extends AppCompatActivity {
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         btnCreateGroup.setOnClickListener(v -> {
-            if(!tvNameGroup.getText().toString().equals("")) {
+            if (!tvNameGroup.getText().toString().equals("")) {
                 prepareCreateGroup();
-                ApiUsage volleyService = new ApiUsage(mResultCallback,getApplicationContext());
-                volleyService.createGroup(tvNameGroup.getText().toString(), tvDescription.getText().toString(), sharedPreferences.getString(getString(R.string.access_token),""));
+                ApiUsage volleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                volleyService.createGroup(tvNameGroup.getText().toString(), tvDescription.getText().toString(), sharedPreferences.getString(getString(R.string.access_token), ""));
             }
         });
     }
-
-
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,12 +63,16 @@ public class CreateGroupeActivity extends AppCompatActivity {
                 next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
                 startActivity(next);
                 return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
+                startActivity(next);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void prepareCreateGroup(){
-         mResultCallback = new VolleyCallback() {
+    private void prepareCreateGroup() {
+        mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
@@ -88,8 +90,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
 
             @Override
             public void onError(VolleyError error) {
-                if(error.networkResponse.statusCode == 500)
-                {
+                if (error.networkResponse.statusCode == 500) {
                     new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
                 }
             }

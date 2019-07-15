@@ -68,11 +68,15 @@ public class MyGroupActivity extends AppCompatActivity {
                 startActivity(next);
                 finish();
                 return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
+                startActivity(next);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void openCreateGroup(View view){
+    public void openCreateGroup(View view) {
         Intent next;
         next = new Intent(getApplicationContext(), CreateGroupeActivity.class);
         startActivity(next);
@@ -88,8 +92,7 @@ public class MyGroupActivity extends AppCompatActivity {
     }
 
 
-    private void prepareGetAllGroups()
-    {
+    private void prepareGetAllGroups() {
         mResultCallback = new VolleyCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -110,14 +113,16 @@ public class MyGroupActivity extends AppCompatActivity {
                             onegroup.setName(name);
                             groups.add(onegroup);
                         }
-                        listMyGroups.setAdapter(new GroupAdapter(getApplicationContext(),groups));
+                        listMyGroups.setAdapter(new GroupAdapter(getApplicationContext(), groups));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
-            public void onError(VolleyError error) { }
+            public void onError(VolleyError error) {
+            }
         };
     }
 }

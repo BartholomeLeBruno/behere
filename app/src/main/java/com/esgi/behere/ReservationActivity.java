@@ -5,8 +5,10 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -52,6 +54,36 @@ public class ReservationActivity extends AppCompatActivity {
                 mVolleyService.addReservation(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), Integer.parseInt(np.getText().toString()), date, sharedPreferences.getString(getString(R.string.access_token), ""));
             }
         });
+        BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent next;
+        switch (item.getItemId()) {
+            case R.id.disconnected:
+                next = new Intent(getApplicationContext(), LoginActivity.class);
+                sharedPreferences.edit().clear().apply();
+                startActivity(next);
+                return true;
+            case R.id.navigation_mygroups:
+                next = new Intent(getApplicationContext(), MyGroupActivity.class);
+                startActivity(next);
+                return true;
+            case R.id.navigation_home:
+                next = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(next);
+                return true;
+            case R.id.navigation_myprofile:
+                next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
+                startActivity(next);
+                return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
+                startActivity(next);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showDatePickerDialog() {

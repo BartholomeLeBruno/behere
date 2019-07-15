@@ -110,7 +110,7 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
         });
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
-        if(btnJoinORAdd.getText().toString().equals(getString(R.string.delete_upercase)))
+        if (btnJoinORAdd.getText().toString().equals(getString(R.string.delete_upercase)))
             btnCommentWall.setVisibility(View.VISIBLE);
         else
             btnCommentWall.setVisibility(View.INVISIBLE);
@@ -136,6 +136,10 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                 return true;
             case R.id.navigation_myprofile:
                 next = new Intent(getApplicationContext(), DefaultProfileActivity.class);
+                startActivity(next);
+                return true;
+            case R.id.navigation_lexical:
+                next = new Intent(getApplicationContext(), LexiconActivity.class);
                 startActivity(next);
                 return true;
         }
@@ -317,7 +321,9 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
     private void prepareSendEmpty() {
         mResultCallback = new VolleyCallback() {
             @Override
-            public void onSuccess(JSONObject response) {}
+            public void onSuccess(JSONObject response) {
+            }
+
             @Override
             public void onError(VolleyError error) {
                 if (error.networkResponse.statusCode == 500) {
