@@ -137,10 +137,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:text="Legal Mention"
-            android:textColor="@android:color/holo_blue_bright"
-            android:textStyle="bold"
+            android:textColor="#A2A2A2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnRegisterLastStep" />
