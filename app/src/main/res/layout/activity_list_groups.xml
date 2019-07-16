@@ -6,41 +6,42 @@
     android:background="#F7F7FA">
 
 
-        <TextView
-            android:id="@+id/tvGroups"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:shadowColor="#000000"
-            android:text="GROUPS"
-            android:textAlignment="center"
-            android:textSize="56sp" />
+    <TextView
+        android:id="@+id/tvGroups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:shadowColor="#000000"
+        android:text="GROUPS"
+        android:textAlignment="center"
+        android:textSize="56sp" />
 
-        <Button
-            android:id="@+id/btnCreateGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvGroups"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="16dp"
-            android:onClick="openCreateGroup"
-            android:text="CREATE" />
+    <Button
+        android:id="@+id/btnCreateGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvGroups"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="openCreateGroup"
+        android:text="CREATE" />
 
 
-        <ListView
-            android:id="@+id/listMyGroups"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/btnCreateGroup"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@id/footerpub"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
+    <ListView
+        android:id="@+id/listMyGroups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/footerpub"
+        android:layout_below="@id/btnCreateGroup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="-56dp" />
 
 
     <android.support.design.widget.BottomNavigationView
