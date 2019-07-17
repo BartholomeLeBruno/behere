@@ -164,8 +164,14 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 List<ResultSearch> lsFound = new ArrayList<>();
                 if (!"All".equals(selectedTab)) {
                     for (ResultSearch item : resultSearches) {
-                        if (item.getType().equals(selectedTab))
-                            lsFound.add(item);
+                        if(!"Market".equals(selectedTab)) {
+                            if (item.getType().equals(selectedTab))
+                                lsFound.add(item);
+                        }
+                        else {
+                            if (item.getType().equals("Bar") || item.getType().equals("Brewery"))
+                                lsFound.add(item);
+                        }
                     }
 
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);

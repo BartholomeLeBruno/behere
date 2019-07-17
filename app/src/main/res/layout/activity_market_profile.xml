@@ -19,6 +19,13 @@
             android:layout_height="350dp"
             android:background="@android:drawable/screen_background_dark_transparent"/>
 
+        <ImageView
+            android:id="@+id/ivNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_notifications_grey_24dp"
+            android:layout_alignParentEnd="true"/>
+
         <TextView
             android:id="@+id/tvNameBar"
             android:layout_width="wrap_content"
@@ -91,12 +98,12 @@
 
             <TextView
                 android:id="@+id/tvDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textView2"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@+id/btnWebsite"
                 android:text="TextView"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
@@ -125,22 +132,10 @@
                 android:textColor="#FFFFFF" />
 
             <Button
-                android:id="@+id/btnSubscription"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_below="@id/btnSeeComment"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="28dp"
-                android:layout_marginEnd="24dp"
-                android:background="#3ACCE1"
-                android:text="SUSCRIBE"
-                android:textColor="#FFFFFF" />
-
-            <Button
                 android:id="@+id/btnCreateReservation"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_below="@id/btnSubscription"
+                android:layout_below="@id/btnSeeComment"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"

@@ -2,6 +2,10 @@ package com.esgi.behere;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -38,6 +42,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.JSONArray;
@@ -56,6 +61,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
     private LinearLayout linearLayoutStar;
     private Market market;
     private NetworkImageView imageView;
+    private ImageView ivNotification;
 
 
     @Override
@@ -64,10 +70,10 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         setContentView(R.layout.activity_market_profile);
 
         Button btnSeeComment = findViewById(R.id.btnSeeComment);
-        Button btnSubsrciption = findViewById(R.id.btnSubscription);
         Button btnReservation = findViewById(R.id.btnCreateReservation);
         linearLayoutStar = findViewById(R.id.linearLayoutStar);
         TextView tvNameBar = findViewById(R.id.tvNameBar);
+        ivNotification = findViewById(R.id.ivNotification);
         TextView contentDesc = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         Button btnWebsite = findViewById(R.id.btnWebsite);
@@ -95,17 +101,23 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         if (market != null) {
             tvNameBar.setText(market.getName());
             contentDesc.setText(market.getDescription());
-            if(!market.getFacebookLink().equals("null")) {
+            if (contentDesc.getText().toString().isEmpty())
+                contentDesc.setVisibility(View.INVISIBLE);
+            if (!market.getFacebookLink().equals("null"))
                 btnFacebook.setOnClickListener(v -> getIntoTheSite(market.getFacebookLink()));
-            }
+            else
+                btnFacebook.setVisibility(View.GONE);
             if (!market.getWebSiteLink().equals("null")) {
                 btnWebsite.setOnClickListener(v -> {
                     if (!market.getWebSiteLink().isEmpty()) {
                         getIntoTheSite(market.getWebSiteLink());
                     }
                 });
-            }
+            } else btnWebsite.setVisibility(View.INVISIBLE);
         }
+        prepareGetSubscriptionMarket();
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
@@ -113,11 +125,20 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         btnReservation.setOnClickListener(v -> {
-
             Intent intent = new Intent(getApplicationContext(), ReservationActivity.class);
-            intent.putExtra("market",market);
+            intent.putExtra("market", market);
             startActivity(intent);
         });
+        if (areDrawablesIdentical(ivNotification.getDrawable(), Objects.requireNonNull(getDrawable(R.drawable.ic_notifications_blue_24dp)))) {
+            ivNotification.setOnClickListener(v -> {
+                prepareUnSuscribe();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                if (market.getType().equals("Bar"))
+                    mVolleyService.unSuscribeBar(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                else
+                    mVolleyService.unSuscribeBrewery(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+            });
+        }
     }
 
     private void getIntoTheSite(String webSiteLink) {
@@ -167,7 +188,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             sharedPreferences.edit().putString(getString(R.string.longitude), marker.getPosition().longitude + "").apply();
             startActivity(destination);
             InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(),
-                    R.drawable.my_icon_bar, "Suivez le chemin de la bière mes amies !");
+                    R.drawable.my_icon_bar, "Follow the line for the beer !");
         }
         return false;
     }
@@ -191,11 +212,15 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
         Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
         EditText tvComment = popupView.findViewById(R.id.tvComment);
+        tvComment.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) tvComment.setHint("");
+            else tvComment.setHint("Your Comments...");
+        });
+        sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         btnSendComment.setOnClickListener((View v) -> {
             Market market = (Market) Objects.requireNonNull(getIntent().getExtras()).get("market");
             prepareAddComment();
             if (Objects.requireNonNull(market).getType().equals("Bar")) {
-                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.addCommentsToBar(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 prepareEmpty();
@@ -203,7 +228,6 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                 mVolleyService.addNoteToBar(note.get(), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 popupWindow.dismiss();
             } else {
-                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                 mVolleyService.addCommentsToBrewery(tvComment.getText().toString(), (int) market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
                 prepareEmpty();
@@ -364,6 +388,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                     throw new RuntimeException(e);
                 }
             }
+
             @Override
             public void onError(VolleyError error) {
                 if (error.networkResponse.statusCode == 500) {
@@ -372,4 +397,149 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             }
         };
     }
+
+    private void prepareGetSubscriptionMarket() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        boolean verif = false;
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
+                        JSONArray barTab = (JSONArray) parser.parse(objres.get("bar").toString());
+                        JSONArray breweryTab = (JSONArray) parser.parse(objres.get("brewery").toString());
+                        verif = marketBelongToUser(verif, barTab);
+                        verif = marketBelongToUser(verif, breweryTab);
+                        if (verif) {
+                            ivNotification.setImageDrawable(getDrawable(R.drawable.ic_notifications_blue_24dp));
+                            ivNotification.setOnClickListener(v -> {
+                                prepareUnSuscribe();
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                if (market.getType().equals("Bar"))
+                                    mVolleyService.unSuscribeBar(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                                else
+                                    mVolleyService.unSuscribeBrewery(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                            });
+                        }
+                        else{
+                            ivNotification.setOnClickListener(v -> {
+                                prepareSuscribe();
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                if (market.getType().equals("Bar"))
+                                    mVolleyService.suscribeBar(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                                else
+                                    mVolleyService.suscribeBrewery(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                            });
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void prepareUnSuscribe() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                ivNotification.setImageDrawable(getDrawable(R.drawable.ic_notifications_grey_24dp));
+                ivNotification.setOnClickListener(v -> {
+                    prepareSuscribe();
+                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                    if (market.getType().equals("Bar"))
+                        mVolleyService.suscribeBar(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                    else
+                        mVolleyService.suscribeBrewery(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                });
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                if (error.networkResponse.statusCode == 500) {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
+            }
+        };
+    }
+
+    private void prepareSuscribe() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                ivNotification.setImageDrawable(getDrawable(R.drawable.ic_notifications_blue_24dp));
+                ivNotification.setOnClickListener(v -> {
+                    prepareUnSuscribe();
+                    mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                    if (market.getType().equals("Bar"))
+                        mVolleyService.unSuscribeBar(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                    else
+                        mVolleyService.unSuscribeBrewery(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
+                });
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                if (error.networkResponse.statusCode == 500) {
+                    new PopupAchievement().popupAuthentification(getWindow().getDecorView().getRootView());
+                }
+            }
+        };
+    }
+
+    private boolean marketBelongToUser(boolean verif, JSONArray tab) throws JSONException {
+        if (!tab.isEmpty()) {
+            JSONObject objTab;
+            for (Object oneMarket : tab) {
+                objTab = (JSONObject) new JSONTokener(oneMarket.toString()).nextValue();
+                if (objTab.getLong("id") == market.getId()) {
+                    verif = true;
+                }
+            }
+        }
+        return verif;
+    }
+
+    public static boolean areDrawablesIdentical(Drawable drawableA, Drawable drawableB) {
+        Drawable.ConstantState stateA = drawableA.getConstantState();
+        Drawable.ConstantState stateB = drawableB.getConstantState();
+        // If the constant state is identical, they are using the same drawable resource.
+        // However, the opposite is not necessarily true.
+        return (stateA != null && stateB != null && stateA.equals(stateB))
+                || getBitmap(drawableA).sameAs(getBitmap(drawableB));
+    }
+
+    public static Bitmap getBitmap(Drawable drawable) {
+        Bitmap result;
+        if (drawable instanceof BitmapDrawable) {
+            result = ((BitmapDrawable) drawable).getBitmap();
+        } else {
+            int width = drawable.getIntrinsicWidth();
+            int height = drawable.getIntrinsicHeight();
+            // Some drawables have no intrinsic width - e.g. solid colours.
+            if (width <= 0) {
+                width = 1;
+            }
+            if (height <= 0) {
+                height = 1;
+            }
+
+            result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        }
+        return result;
+    }
+
 }

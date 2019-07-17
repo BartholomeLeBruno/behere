@@ -40,7 +40,7 @@ public class CacheContainer {
     {
         if (INSTANCE == null)
         {   INSTANCE = new CacheContainer();
-            CacheContainer.getQueue().getCache().clear();
+            CacheContainer.initializeQueue();
         }
         return INSTANCE;
     }

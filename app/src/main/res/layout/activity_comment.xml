@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="109dp"
         android:autofillHints="Comment"
-        android:hint="Votre commentaire..."
+        android:hint="Your comments...."
         android:inputType="text"
         android:textAlignment="center"
         android:textColor="#FFFFFF"

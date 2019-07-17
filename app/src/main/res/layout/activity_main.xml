@@ -173,23 +173,23 @@
             android:text="User" />
 
         <android.support.design.widget.TabItem
-            android:id="@+id/tabBar"
+            android:id="@+id/tabMarket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bar" />
+            android:text="Market" />
 
         <android.support.design.widget.TabItem
-            android:id="@+id/tabBrewery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Brewery"
-            android:textColor="@android:color/white" />
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/tabBeer"
+            android:id="@+id/tabGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Group"
+            android:textColor="@android:color/white" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabFavoriteMarket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_star_yellow_24dp"
             android:textColor="@android:color/white" />
 
     </android.support.design.widget.TabLayout>
@@ -197,7 +197,7 @@
     <ListView
         android:id="@+id/listView_result"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/tabLayout"
         android:layout_alignStart="@+id/content_frame"
         android:layout_alignEnd="@+id/content_frame"

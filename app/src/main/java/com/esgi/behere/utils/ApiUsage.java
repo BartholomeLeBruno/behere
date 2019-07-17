@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ApiUsage {
 
-    private final static String PATH_API = "http://31.220.61.74:8081/";
+    private final static String PATH_API = "http:/31.220.61.74:8081/";
 
     private final VolleyCallback mResultCallback;
 
@@ -26,8 +26,7 @@ public class ApiUsage {
     public ApiUsage(VolleyCallback resultCallback, Context context) {
         mResultCallback = resultCallback;
         mContext = context;
-        if (CacheContainer.getQueue() != null)
-            CacheContainer.initializeQueue();
+        CacheContainer.initializeQueue();
     }
 
     public void authentificate(String email, String password) {
@@ -482,41 +481,41 @@ public class ApiUsage {
         }
     }
 
-    public void suscibeBar(long user_id, long bar_id) {
+    public void suscribeBar(long user_id, long bar_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("bar_id", bar_id);
-            postData(params, PATH_API + "user/" + user_id + "/addSubscribeBar");
+            putDataWithAccessToken(params, PATH_API + "users/" + user_id + "/addSubscribeBar", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void unSuscibeBar(long user_id, long bar_id) {
+    public void unSuscribeBar(long user_id, long bar_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("bar_id", bar_id);
-            deleteData(params, PATH_API + "user/" + user_id + "/deleteSubscribeBar/" + bar_id);
+            deleteDataWithAccessToken(params, PATH_API + "users/" + user_id + "/deleteSubscribeBar/" + bar_id, access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void suscibeBrewery(long user_id, long brewery_id) {
+    public void suscribeBrewery(long user_id, long brewery_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("brewery_id", brewery_id);
-            postData(params, PATH_API + "user/" + user_id + "/addSubscribeBar");
+            putDataWithAccessToken(params, PATH_API + "users/" + user_id + "/addSubscribeBar", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void unSuscibeBrewery(long user_id, long brewery_id) {
+    public void unSuscribeBrewery(long user_id, long brewery_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("brewery_id", brewery_id);
-            deleteData(params, PATH_API + "user/" + user_id + "/deleteSubscribeBrewery/" + brewery_id);
+            deleteDataWithAccessToken(params, PATH_API + "users/" + user_id + "/deleteSubscribeBrewery/" + brewery_id, access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -600,6 +599,29 @@ public class ApiUsage {
 
     private void postData(JSONObject params, String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
+                (JSONObject response) -> {
+                    // response
+                    if (mResultCallback != null)
+                        mResultCallback.onSuccess(response);
+                },
+                (VolleyError error) -> {
+                    // error
+                    Log.d("Error.Response", error.getMessage() + " ");
+                    if (mResultCallback != null)
+                        mResultCallback.onError(error);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        CacheContainer.getQueue().add(jsonObjectRequest);
+    }
+
+    private void putData(JSONObject params, String url) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
                 (JSONObject response) -> {
                     // response
                     if (mResultCallback != null)
@@ -787,5 +809,6 @@ public class ApiUsage {
     public void setmContext(Context mContext) {
         this.mContext = mContext;
     }
+
 
 }
