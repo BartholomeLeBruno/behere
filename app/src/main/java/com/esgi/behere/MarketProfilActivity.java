@@ -2,14 +2,11 @@ package com.esgi.behere;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -129,16 +126,6 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             intent.putExtra("market", market);
             startActivity(intent);
         });
-        if (areDrawablesIdentical(ivNotification.getDrawable(), Objects.requireNonNull(getDrawable(R.drawable.ic_notifications_blue_24dp)))) {
-            ivNotification.setOnClickListener(v -> {
-                prepareUnSuscribe();
-                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                if (market.getType().equals("Bar"))
-                    mVolleyService.unSuscribeBar(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
-                else
-                    mVolleyService.unSuscribeBrewery(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), sharedPreferences.getString(getString(R.string.access_token), ""));
-            });
-        }
     }
 
     private void getIntoTheSite(String webSiteLink) {
@@ -406,6 +393,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         boolean verif = false;
+                        Log.d("voila",response.toString());
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         JSONArray barTab = (JSONArray) parser.parse(objres.get("bar").toString());
                         JSONArray breweryTab = (JSONArray) parser.parse(objres.get("brewery").toString());
@@ -508,38 +496,6 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
             }
         }
         return verif;
-    }
-
-    public static boolean areDrawablesIdentical(Drawable drawableA, Drawable drawableB) {
-        Drawable.ConstantState stateA = drawableA.getConstantState();
-        Drawable.ConstantState stateB = drawableB.getConstantState();
-        // If the constant state is identical, they are using the same drawable resource.
-        // However, the opposite is not necessarily true.
-        return (stateA != null && stateB != null && stateA.equals(stateB))
-                || getBitmap(drawableA).sameAs(getBitmap(drawableB));
-    }
-
-    public static Bitmap getBitmap(Drawable drawable) {
-        Bitmap result;
-        if (drawable instanceof BitmapDrawable) {
-            result = ((BitmapDrawable) drawable).getBitmap();
-        } else {
-            int width = drawable.getIntrinsicWidth();
-            int height = drawable.getIntrinsicHeight();
-            // Some drawables have no intrinsic width - e.g. solid colours.
-            if (width <= 0) {
-                width = 1;
-            }
-            if (height <= 0) {
-                height = 1;
-            }
-
-            result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(result);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-        }
-        return result;
     }
 
 }

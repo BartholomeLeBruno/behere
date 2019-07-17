@@ -26,7 +26,8 @@ public class ApiUsage {
     public ApiUsage(VolleyCallback resultCallback, Context context) {
         mResultCallback = resultCallback;
         mContext = context;
-        CacheContainer.initializeQueue();
+        if (CacheContainer.getQueue() == null)
+            CacheContainer.initializeQueue();
     }
 
     public void authentificate(String email, String password) {

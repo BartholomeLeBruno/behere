@@ -148,7 +148,7 @@ public class ReservationActivity extends AppCompatActivity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        Toast.makeText(getApplicationContext(), "Your reservation is processing !", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Your reservation is being processed !", Toast.LENGTH_LONG).show();
                         Intent back = new Intent(getApplicationContext(), MarketProfilActivity.class);
                         back.putExtra("market", market);
                         startActivity(back);
