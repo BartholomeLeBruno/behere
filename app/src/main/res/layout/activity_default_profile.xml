@@ -86,13 +86,11 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:tabBackground="@drawable/tab_layout_selector"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tabTextColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivProfile">
+        app:layout_constraintTop_toBottomOf="@+id/ivProfile"
+        app:tabBackground="@drawable/tab_layout_selector"
+        app:tabTextColor="@android:color/white">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabInfo"
