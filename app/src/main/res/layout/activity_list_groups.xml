@@ -32,11 +32,12 @@
         android:text="CREATE" />
 
 
-    <ListView
+    <GridView
         android:id="@+id/listMyGroups"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/footerpub"
+        android:numColumns="auto_fit"
         android:layout_below="@id/btnCreateGroup"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />

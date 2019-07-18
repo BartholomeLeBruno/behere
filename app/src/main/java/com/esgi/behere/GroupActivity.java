@@ -88,7 +88,7 @@ public class GroupActivity extends AppCompatActivity {
             btnAdd.setOnClickListener(v -> {
                 prepareSendNotification();
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.createNotification(new Notification("Demande acceptation pour rejoindre le groupe " + tvNameGroup.getText().toString(), "Groups", adminID,
+                mVolleyService.createNotification(new Notification("Asking to join the group " + tvNameGroup.getText().toString(), "Groups", adminID,
                         sharedPreferences.getLong(getString(R.string.prefs_id), 0), entityID), sharedPreferences.getString(getString(R.string.access_token), ""));
             });
         }
@@ -368,7 +368,7 @@ public class GroupActivity extends AppCompatActivity {
             mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
             for (Long memberID : memberList) {
                 if (memberID != sharedPreferences.getLong(getString(R.string.prefs_id), 0)) {
-                    mVolleyService.createNotification(new Notification("Commentaire de " + sharedPreferences.getString("USERNAME", ""), "Comments", memberID,
+                    mVolleyService.createNotification(new Notification("Commentary from " + sharedPreferences.getString("USERNAME", ""), "Comments", memberID,
                                     0, entityID),
                             sharedPreferences.getString(getString(R.string.access_token), ""));
                 }

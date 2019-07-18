@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="80dp"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:padding="10dp">
 
@@ -10,27 +10,29 @@
         android:id="@+id/imgRes"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:contentDescription="@string/default_piece"
         tools:background="#AAA" />
-
-    <TextView
-        android:id="@+id/pseudoRes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imgRes"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/imgRes"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        tools:text="Pseudo" />
 
     <TextView
         android:id="@+id/typeRes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pseudoRes"
-        android:layout_alignStart="@+id/pseudoRes"
+        android:layout_alignTop="@+id/imgRes"
+        android:layout_marginStart="10dp"
         android:textColor="@android:color/black"
+        android:textStyle="bold"
         tools:text="type" />
+
+    <TextView
+        android:id="@+id/pseudoRes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/typeRes"
+        android:layout_alignStart="@+id/typeRes"
+        android:textColor="@android:color/black"
+        tools:text="Pseudo" />
+
 
 </RelativeLayout>

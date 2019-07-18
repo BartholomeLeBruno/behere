@@ -166,11 +166,12 @@ public class ApiUsage {
         }
     }
 
-    public void addCommentsToUser(String text, long user_comment_id, String access_token) {
+    public void addCommentsToUser(String text, long user_id ,  long user_comment_id, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("text", text);
-            params.put("user_comment_id", user_comment_id);
+            params.put("user_id", user_comment_id);
+            params.put("user_comment_id", user_id);
             postDataWithAccessToken(params, PATH_API + "commentsUsers/create", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);

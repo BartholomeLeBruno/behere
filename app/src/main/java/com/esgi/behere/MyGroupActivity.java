@@ -5,9 +5,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.Group;
@@ -28,7 +29,7 @@ public class MyGroupActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private VolleyCallback mResultCallback = null;
-    private ListView listMyGroups;
+    private GridView listMyGroups;
 
 
     @Override
@@ -41,9 +42,8 @@ public class MyGroupActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetAllGroups();
         ApiUsage volleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        Log.d("voila",sharedPreferences.getLong(getString(R.string.prefs_id), 0)+"");
         volleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
-
-
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -121,7 +121,6 @@ public class MyGroupActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
-
             @Override
             public void onError(VolleyError error) {
             }

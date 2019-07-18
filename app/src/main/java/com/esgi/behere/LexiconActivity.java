@@ -162,7 +162,6 @@ public class LexiconActivity extends AppCompatActivity {
                                 oneBeer = new Beer();
                                 objres = (JSONObject) new JSONTokener(beer.toString()).nextValue();
                                 oneBeer.setId(objres.getLong("id"));
-                                oneBeer.setColor(objres.getString("color"));
                                 oneBeer.setDescription(objres.getString("description"));
                                 oneBeer.setName(objres.getString("name"));
                                 oneBeer.setOrigin(objres.getString("origin"));

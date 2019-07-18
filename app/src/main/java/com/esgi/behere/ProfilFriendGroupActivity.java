@@ -407,7 +407,6 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                                     btnJoinORAdd.setText(getString(R.string.waiting_uppercase));
                                     btnJoinORAdd.setOnClickListener(v -> {
                                     });
-                                    //btnJoinORAdd.setEnabled(false);
                                     break;
                                 }
                             }
@@ -471,12 +470,13 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
         EditText tvComment = popupView.findViewById(R.id.tvComment);
         btnSendComment.setOnClickListener((View v) -> {
             prepareAddComment();
+            //todo en attente de dorian
             sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
             mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-            mVolleyService.addCommentsToUser(tvComment.getText().toString(), entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
+            mVolleyService.addCommentsToUser(tvComment.getText().toString(),sharedPreferences.getLong(getString(R.string.prefs_id), 0) ,entityId, sharedPreferences.getString(getString(R.string.access_token), ""));
             prepareSendEmpty();
             mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-            mVolleyService.createNotification(new Notification("Commentaire de " + sharedPreferences.getString("USERNAME", ""), "Comments", entityId,
+            mVolleyService.createNotification(new Notification("Commentary from " + sharedPreferences.getString("USERNAME", ""), "Comments", entityId,
                             sharedPreferences.getLong(getString(R.string.prefs_id), 0), 0),
                     sharedPreferences.getString(getString(R.string.access_token), ""));
             popupWindow.dismiss();
@@ -489,7 +489,7 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
             public void onSuccess(JSONObject response) {
                 try {
                     InformationMessage.createToastInformation(ProfilFriendGroupActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
-                            "We love you my love");
+                            "Thank you for the comment");
                     if ((boolean) response.get("error")) {
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     }
