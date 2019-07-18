@@ -74,12 +74,12 @@
             <Button
                 android:id="@+id/btnComment"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="28dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="28dp"
                 android:layout_marginBottom="8dp"
-                android:background="#3ACCE1"
+                android:background="@drawable/roundbutton"
                 android:onClick="onButtonShowPopupWindowClick"
                 android:text="Comment"
                 android:textColor="#FFFFFF" />
@@ -87,12 +87,12 @@
             <Button
                 android:id="@+id/btnWebsite"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="28dp"
                 android:layout_below="@id/btnComment"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="28dp"
-                android:background="#3ACCE1"
+                android:background="@drawable/roundbutton"
                 android:text="WEBSITE"
                 android:textColor="#FFFFFF" />
 
@@ -115,7 +115,7 @@
                 android:layout_height="114dp"
                 android:layout_below="@id/btnWebsite"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
                 tools:context=".MarketProfilActivity" />
 
@@ -127,7 +127,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
-                android:background="#3ACCE1"
+                android:background="@drawable/roundbutton"
                 android:text="SEE COMMMENTS"
                 android:textColor="#FFFFFF" />
 
@@ -140,7 +140,8 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
-                android:background="#3C5A99"
+                android:background="@drawable/roundbutton"
+                android:backgroundTint="#3C5A99"
                 android:text="FACEBOOK"
                 android:textColor="#FFFFFF" />
 
@@ -152,7 +153,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
-                android:background="#3ACCE1"
+                android:background="@drawable/roundbutton"
                 android:text="RESERVATION"
                 android:textColor="#FFFFFF" />
 
