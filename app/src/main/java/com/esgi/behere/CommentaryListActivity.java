@@ -105,8 +105,6 @@ public class CommentaryListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(getIntent());
-        finish();
     }
 
     private void prepareGetAllCommentsBar() {

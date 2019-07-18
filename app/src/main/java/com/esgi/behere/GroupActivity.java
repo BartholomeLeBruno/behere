@@ -359,22 +359,29 @@ public class GroupActivity extends AppCompatActivity {
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
         Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
         EditText tvComment = popupView.findViewById(R.id.tvComment);
+        tvComment.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) tvComment.setHint("");
+            else tvComment.setHint("Your Comments...");
+        });
         btnSendComment.setOnClickListener((View v) -> {
-            prepareAddComment();
-            sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-            mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-            mVolleyService.addCommentsToGroup(tvComment.getText().toString(), entityID, sharedPreferences.getString(getString(R.string.access_token), ""));
-            prepareSendEmpty();
-            mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-            for (Long memberID : memberList) {
-                if (memberID != sharedPreferences.getLong(getString(R.string.prefs_id), 0)) {
-                    mVolleyService.createNotification(new Notification("Commentary from " + sharedPreferences.getString("USERNAME", ""), "Comments", memberID,
-                                    0, entityID),
-                            sharedPreferences.getString(getString(R.string.access_token), ""));
+            if (!tvComment.getText().toString().isEmpty()) {
+                prepareAddComment();
+                sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                mVolleyService.addCommentsToGroup(tvComment.getText().toString(), entityID, sharedPreferences.getString(getString(R.string.access_token), ""));
+                prepareSendEmpty();
+                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                for (Long memberID : memberList) {
+                    if (memberID != sharedPreferences.getLong(getString(R.string.prefs_id), 0)) {
+                        mVolleyService.createNotification(new Notification("Commentary from " + sharedPreferences.getString("USERNAME", ""), "Comments", memberID,
+                                        0, entityID),
+                                sharedPreferences.getString(getString(R.string.access_token), ""));
+                    }
+                    popupWindow.dismiss();
                 }
-                popupWindow.dismiss();
+                view.getContext().startActivity(getIntent());
+                finish();
             }
-
         });
     }
 
