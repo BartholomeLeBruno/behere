@@ -81,6 +81,7 @@
             android:layout_marginBottom="24dp"
             android:layout_weight="1"
             android:clickable="true"
+            android:onClick="deletePolyLone"
             app:backgroundTint="#2A2E43"
             app:layout_constraintBottom_toTopOf="@+id/footerpub"
             app:layout_constraintStart_toStartOf="parent"
@@ -189,6 +190,7 @@
             android:id="@+id/tabFavoriteMarket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Fav"
             android:icon="@drawable/ic_star_yellow_24dp"
             android:textColor="@android:color/white" />
 

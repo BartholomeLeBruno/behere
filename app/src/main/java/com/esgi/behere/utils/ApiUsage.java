@@ -26,8 +26,8 @@ public class ApiUsage {
     public ApiUsage(VolleyCallback resultCallback, Context context) {
         mResultCallback = resultCallback;
         mContext = context;
-        if (CacheContainer.getQueue() == null)
-            CacheContainer.initializeQueue();
+        if (CacheContainer.getQueue() != null)
+            CacheContainer.getQueue().getCache().clear();
     }
 
     public void authentificate(String email, String password) {
@@ -121,6 +121,24 @@ public class ApiUsage {
             JSONObject params = new JSONObject();
             params.put("typeOfBeer_id", typeBeer_ID);
             putDataWithAccessToken(params, PATH_API + "users/" + user_ID + "/addTypeOfBeer", access_token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getBarOnTypeOfBeer(long idBeer)
+    {
+        try {
+            getData(PATH_API + "bars/?type_of_beer_id=" + idBeer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getBreweryOnTypeOfBeer(long idBeer)
+    {
+        try {
+            getData(PATH_API + "brewerys/?type_of_beer_id=" + idBeer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

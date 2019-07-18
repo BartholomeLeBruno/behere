@@ -87,6 +87,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private ListView listView;
+    private List<ResultSearch> barUserCouldLike;
     private List<ResultSearch> resultSearches = CacheContainer.getInstance().getResultSearches();
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
@@ -104,7 +105,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         tabLayoutHandlerOnTabSelected();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        Log.d("user_id", sharedPreferences.getLong(getString(R.string.prefs_id), 0) +"");
+        Log.d("user_id", sharedPreferences.getLong(getString(R.string.prefs_id), 0) + "");
 
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
@@ -119,6 +120,9 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         setSupportActionBar(toolbar);
         searchView = findViewById(R.id.search_view);
         listView = findViewById(R.id.listView_result);
+        prepareGetTypeOfBeer();
+        mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+        mVolleyService.getUser(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
         searchViewHandlerOnSearch();
         if (searchViewHandlerOnQuery()) return;
         mLocationCallback = new LocationCallback() {
@@ -144,16 +148,16 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 }
             }
         };
-        FloatingActionButton btnDelete = findViewById(R.id.btnDelete);
-        btnDelete.setOnClickListener(v -> {
-            if (polyline != null) polyline.remove();
-            sharedPreferences.edit().remove(getString(R.string.longitude)).apply();
-            sharedPreferences.edit().remove(getString(R.string.latitude)).apply();
-            RelativeLayout relativeLayout = findViewById(R.id.rlTimeResult);
-            relativeLayout.setVisibility(View.INVISIBLE);
-        });
         startTrackingLocation();
         updateNotification();
+    }
+
+    public void deletePolyLone(View view) {
+        if (polyline != null) polyline.remove();
+        sharedPreferences.edit().remove(getString(R.string.longitude)).apply();
+        sharedPreferences.edit().remove(getString(R.string.latitude)).apply();
+        RelativeLayout relativeLayout = findViewById(R.id.rlTimeResult);
+        relativeLayout.setVisibility(View.INVISIBLE);
     }
 
     private void tabLayoutHandlerOnTabSelected() {
@@ -164,11 +168,10 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 List<ResultSearch> lsFound = new ArrayList<>();
                 if (!"All".equals(selectedTab)) {
                     for (ResultSearch item : resultSearches) {
-                        if(!"Market".equals(selectedTab)) {
+                        if (!"Market".equals(selectedTab)) {
                             if (item.getType().equals(selectedTab))
                                 lsFound.add(item);
-                        }
-                        else {
+                        } else {
                             if (item.getType().equals("Bar") || item.getType().equals("Brewery"))
                                 lsFound.add(item);
                         }
@@ -180,6 +183,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                     SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
                     listView.setAdapter(adapter);
                 }
+                // todo finir tab
             }
 
             @Override
@@ -284,7 +288,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         }
                         if (sharedPreferences.contains("NOTIFICATIONSIZE")) {
                             if (sharedPreferences.getLong("NOTIFICATIONSIZE", 0) != notifnumber) {
-                                Toast.makeText(getApplicationContext(), "Vous avez reçu une nouvelle notification", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "You got a new notification !", Toast.LENGTH_LONG).show();
                                 sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
                             }
                         } else {
@@ -495,7 +499,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 webSiteLink = objres.get("webSiteLink").toString();
                                 facebookLink = objres.get("facebokLink").toString();
                                 pathPicture = objres.get("pathPicture").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Bar",pathPicture));
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Bar", pathPicture));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
@@ -543,7 +547,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 webSiteLink = objres.get("webSiteLink").toString();
                                 facebookLink = objres.get("facebokLink").toString();
                                 pathPicture = objres.get("pathPicture").toString();
-                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Brewery",pathPicture));
+                                CacheContainer.getInstance().getMarketHashMap().put(name, new Bar(id, name, latitude, longitutde, description, webSiteLink, facebookLink, "Brewery", pathPicture));
                                 marker = mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(latitude, longitutde))
                                         .title(name)
@@ -718,5 +722,75 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         resultSearches.add(resultSearch);
     }
 
+    private void prepareGetTypeOfBeer() {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        JSONParser parser = new JSONParser();
+                        JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
+                        JSONArray typeOfBeerTab = (JSONArray) parser.parse(objres.get("typeOfBeer").toString());
+                        long idType;
+                        if (!typeOfBeerTab.isEmpty()) {
+                            barUserCouldLike = new ArrayList<>();
+                            JSONObject objTab;
+                            for (Object oneType : typeOfBeerTab) {
+                                objTab = (JSONObject) new JSONTokener(oneType.toString()).nextValue();
+                                idType = objTab.getLong("id");
+                                prepareGetMarketUserCouldLike("Bar");
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                mVolleyService.getBarOnTypeOfBeer(idType);
+                                prepareGetMarketUserCouldLike("Brewery");
+                                mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
+                                mVolleyService.getBreweryOnTypeOfBeer(idType);
+
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+            }
+        };
+    }
+
+    private void prepareGetMarketUserCouldLike(String entity) {
+        mResultCallback = new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    if (!(boolean) response.get("error")) {
+                        barUserCouldLike = new ArrayList<>();
+                        JSONParser parser = new JSONParser();
+                        JSONArray listMarket = (JSONArray) parser.parse(response.get(entity.toLowerCase()).toString());
+                        if (!listMarket.isEmpty()) {
+                            JSONObject objTab;
+                            ResultSearch resultSearch;
+                            for (Object oneMarket : listMarket) {
+                                objTab = (JSONObject) new JSONTokener(oneMarket.toString()).nextValue();
+                                resultSearch = new ResultSearch();
+                                resultSearch.setName(objTab.getString("name"));
+                                resultSearch.setType(entity);
+                                resultSearch.setId(Long.parseLong(objTab.getString("id")));
+                                resultSearch.setPath(objTab.get("pathPicture").toString());
+                                barUserCouldLike.add(resultSearch);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+            }
+        };
+    }
 
 }

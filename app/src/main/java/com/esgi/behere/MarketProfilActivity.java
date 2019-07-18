@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -393,7 +392,6 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
                         boolean verif = false;
-                        Log.d("voila",response.toString());
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         JSONArray barTab = (JSONArray) parser.parse(objres.get("bar").toString());
                         JSONArray breweryTab = (JSONArray) parser.parse(objres.get("brewery").toString());
@@ -411,6 +409,7 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                             });
                         }
                         else{
+                            ivNotification.setImageDrawable(getDrawable(R.drawable.ic_notifications_grey_24dp));
                             ivNotification.setOnClickListener(v -> {
                                 prepareSuscribe();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
