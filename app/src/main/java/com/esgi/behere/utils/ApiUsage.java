@@ -467,14 +467,13 @@ public class ApiUsage {
         }
     }
 
-    public void addReservation(long user_id, long bar_id, int numberOfPerson, String dateOfReservation, String access_token) {
+    public void addReservationBar(long user_id, long bar_id, int numberOfPerson, String dateOfReservation, String access_token) {
         try {
             JSONObject params = new JSONObject();
             params.put("numberOfPeople", numberOfPerson);
             params.put("arrivalTime", dateOfReservation);
             params.put("bar_id", (int) bar_id);
             params.put("user_id", (int) user_id);
-            Log.d("reser", params.toString() + access_token);
             postDataWithAccessToken(params, PATH_API + "reservations/create", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -525,7 +524,7 @@ public class ApiUsage {
         try {
             JSONObject params = new JSONObject();
             params.put("brewery_id", brewery_id);
-            putDataWithAccessToken(params, PATH_API + "users/" + user_id + "/addSubscribeBar", access_token);
+            putDataWithAccessToken(params, PATH_API + "users/" + user_id + "/addSubscribeBrewery", access_token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

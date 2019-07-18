@@ -17,6 +17,7 @@
         android:id="@+id/linearLayoutStar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_above="@id/tvNameBeer"
         android:orientation="horizontal" />
 

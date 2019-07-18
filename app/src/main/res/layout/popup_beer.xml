@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/dialog_holo_light_frame"
+    android:backgroundTint="#2A2E43"
     android:padding="10dp">
 
     <ImageView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imgBeerType"
         android:layout_toEndOf="@+id/imgBeerType"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textStyle="bold" />
 
     <TextView
@@ -29,28 +29,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/beerName"
         android:layout_toEndOf="@+id/imgBeerType"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/btnSeeCommentBeer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/tvComment"
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/imgBeerType"
-        android:layout_below="@id/beerDescription"
         android:background="#3ACCE1"
-        android:text="SEE Comment"
-        android:textColor="#FFFFFF"
-        />
+        android:text="SEE Comments"
+        android:textColor="#FFFFFF" />
 
     <EditText
         android:id="@+id/tvComment"
         android:layout_width="match_parent"
         android:layout_height="109dp"
-        android:background="#3ACCE1"
-        android:autofillHints="Comment"
-        android:hint="Votre commentaire..."
         android:layout_below="@id/imgBeerType"
+        android:autofillHints="Comment"
+        android:background="#3ACCE1"
+        android:hint="Your comments here..."
         android:inputType="text"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
@@ -58,11 +57,10 @@
         android:textSize="22sp" />
 
     <RelativeLayout
-        android:id="@+id/relativelayout"
+        android:id="@+id/relativelayoutStar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvComment"
-        android:layout_centerInParent="true"
         android:background="#3ACCE1"
         android:gravity="center">
 
@@ -70,29 +68,28 @@
             android:id="@+id/firstStar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+            android:src="@drawable/ic_star_border_yellow_24dp" />
 
         <ImageView
             android:id="@+id/secondStar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_toEndOf="@id/firstStar"
-            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+            android:src="@drawable/ic_star_border_yellow_24dp" />
 
         <ImageView
             android:id="@+id/thirdStar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/secondStar"
-            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+            android:src="@drawable/ic_star_border_yellow_24dp" />
 
         <ImageView
             android:id="@+id/fourthStar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/thirdStar"
-            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+            android:src="@drawable/ic_star_border_yellow_24dp" />
 
 
         <ImageView
@@ -100,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/fourthStar"
-            app:srcCompat="@drawable/ic_star_border_yellow_24dp" />
+            android:src="@drawable/ic_star_border_yellow_24dp" />
 
     </RelativeLayout>
 

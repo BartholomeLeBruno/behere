@@ -3,6 +3,7 @@ package com.esgi.behere.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,6 @@ public class BeerAdapter extends BaseAdapter {
     private List<Beer> data;
     private static LayoutInflater inflater = null;
     private VolleyCallback mResultCallback = null;
-    private LinearLayout linearLayoutStar;
     private SharedPreferences sharedPreferences;
 
 
@@ -75,8 +75,8 @@ public class BeerAdapter extends BaseAdapter {
             text.setText(data.get(position).getName());
             sharedPreferences = vi.getContext().getSharedPreferences(vi.getContext().getString(R.string.prefs), MODE_PRIVATE);
             vi.setOnClickListener(v -> onButtonShowPopupWindowClick(v, position, parent));
-            linearLayoutStar = vi.findViewById(R.id.linearLayoutStar);
-            prepareStar(vi,linearLayoutStar);
+            LinearLayout linearLayoutStar = vi.findViewById(R.id.linearLayoutStar);
+            prepareStar(vi, linearLayoutStar);
             ApiUsage mVolleyService = new ApiUsage(mResultCallback, vi.getContext());
             mVolleyService.getNotesBeer(data.get(position).getId());
 
@@ -88,17 +88,16 @@ public class BeerAdapter extends BaseAdapter {
 
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_beer, parent, false);
-        linearLayoutStar = popupView.findViewById(R.id.linearLayoutStar);
+        View popupView = inflater.inflate(R.layout.popup_beer, null);
         AtomicLong note = new AtomicLong();
         note.set(0);
         // create the popup window
-        int width = LinearLayout.LayoutParams.MATCH_PARENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);        // show the popup window
+        int width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        int height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        prepareStar(popupView,note);
         // which view you pass in doesn't matter, it is only used for the window token
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-        popupView.setElevation(15);
         TextView tvName = popupView.findViewById(R.id.beerName);
         TextView tvDescription = popupView.findViewById(R.id.beerDescription);
         Button btnSeeComment = popupView.findViewById(R.id.btnSeeCommentBeer);
@@ -108,13 +107,38 @@ public class BeerAdapter extends BaseAdapter {
             allComments.putExtra("entityType", "Beer");
             parent.getContext().startActivity(allComments);
         });
-        tvName.setText(String.format("%s Origine : %s", data.get(position).getName(), data.get(position).getOrigin()));
+        tvName.setText(String.format("%s \nOrigin : %s", data.get(position).getName(), data.get(position).getOrigin()));
+
         tvDescription.setText(data.get(position).getDescription());
-        RelativeLayout relativeLayout = popupView.findViewById(R.id.relativeLayout);
-        relativeLayout.setVisibility(View.VISIBLE);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window token
+        Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
+        EditText tvComment = popupView.findViewById(R.id.tvComment);
+        tvComment.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) tvComment.setHint("");
+            else tvComment.setHint("Your Comments...");
+        });
+        btnSendComment.setOnClickListener((View v) -> {
+            if (!tvComment.getText().toString().isEmpty()) {
+                prepareAddComment(v);
+                sharedPreferences = v.getContext().getSharedPreferences(v.getContext().getString(R.string.prefs), MODE_PRIVATE);
+                ApiUsage mVolleyServiceBeer = new ApiUsage(mResultCallback, view.getContext());
+                mVolleyServiceBeer.addCommentsToBeer(tvComment.getText().toString(), (int) data.get(position).getId(), sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
+                prepareEmpty(v);
+                ApiUsage mVolleyServiceNote = new ApiUsage(mResultCallback, view.getContext());
+                mVolleyServiceNote.addNoteToBeer(note.get(), data.get(position).getId(), sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
+                popupWindow.dismiss();
+            }
+        });
+    }
+
+    private void prepareStar(View popupView, AtomicLong note) {
+        Log.d("voila","oco");
         ImageView firstStar = popupView.findViewById(R.id.firstStar);
         ImageView secondStar = popupView.findViewById(R.id.secondStar);
         ImageView thirdStar = popupView.findViewById(R.id.thirdStar);
+        Log.d("voila",thirdStar.getDrawable().toString());
         ImageView fourthStar = popupView.findViewById(R.id.fourthStar);
         ImageView fifthStar = popupView.findViewById(R.id.fifthStar);
         firstStar.setOnClickListener(first -> {
@@ -157,22 +181,8 @@ public class BeerAdapter extends BaseAdapter {
             fifthStar.setImageResource(R.drawable.ic_star_yellow_24dp);
             note.set(5);
         });
-        // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window token
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-        Button btnSendComment = popupView.findViewById(R.id.btnSendComment);
-        EditText tvComment = popupView.findViewById(R.id.tvComment);
-        btnSendComment.setOnClickListener((View v) -> {
-            prepareAddComment(v);
-            sharedPreferences = v.getContext().getSharedPreferences(v.getContext().getString(R.string.prefs), MODE_PRIVATE);
-            ApiUsage mVolleyServiceBeer = new ApiUsage(mResultCallback, view.getContext());
-            mVolleyServiceBeer.addCommentsToBeer(tvComment.getText().toString(), (int) data.get(position).getId(), sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
-            prepareEmpty(v);
-            ApiUsage mVolleyServiceNote = new ApiUsage(mResultCallback, view.getContext());
-            mVolleyServiceNote.addNoteToBeer(note.get(), data.get(position).getId(), sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
-            popupWindow.dismiss();
-        });
     }
+
 
     private void prepareStar(View view, LinearLayout linearLayout) {
         mResultCallback = new VolleyCallback() {

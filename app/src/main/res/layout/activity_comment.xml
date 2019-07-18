@@ -23,7 +23,7 @@
         android:layout_below="@id/tvComment"
         android:layout_centerInParent="true"
         android:layout_marginTop="30dp"
-        android:text="ENVOYER"
+        android:text="SEND"
         android:textAlignment="center" />
 
 </RelativeLayout>

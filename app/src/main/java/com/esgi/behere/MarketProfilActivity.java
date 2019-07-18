@@ -79,10 +79,14 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
         linearLayoutStar.removeAllViews();
         prepareStar();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-        if (market.getType().equals("Bar"))
+        if (market.getType().equals("Bar")) {
             mVolleyService.getNotesBar(market.getId());
-        if (market.getType().equals("Brewery"))
+            btnReservation.setVisibility(View.VISIBLE);
+        }
+        if (market.getType().equals("Brewery")) {
             mVolleyService.getNotesBrewery(market.getId());
+            btnReservation.setVisibility(View.INVISIBLE);
+        }
         btnSeeComment.setOnClickListener(v -> {
             Intent comments = new Intent(getApplicationContext(), CommentaryListActivity.class);
             comments.putExtra("entityID", market.getId());

@@ -50,7 +50,8 @@ public class ReservationActivity extends AppCompatActivity {
                 String date = btnDay.getText().toString() + " " + btnTime.getText().toString();
                 prepareEmpty(market);
                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
-                mVolleyService.addReservation(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), Integer.parseInt(np.getText().toString()), date, sharedPreferences.getString(getString(R.string.access_token), ""));
+                mVolleyService.addReservationBar(sharedPreferences.getLong(getString(R.string.prefs_id), 0), market.getId(), Integer.parseInt(np.getText().toString()), date, sharedPreferences.getString(getString(R.string.access_token), ""));
+
             }
         });
         BottomNavigationView navigationView = findViewById(R.id.footerpub);

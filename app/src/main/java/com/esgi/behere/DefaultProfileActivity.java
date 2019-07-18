@@ -34,7 +34,6 @@ public class DefaultProfileActivity extends AppCompatActivity {
     private static TextView tvNbFriends;
     private NetworkImageView imageView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

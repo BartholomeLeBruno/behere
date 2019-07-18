@@ -105,9 +105,7 @@ public class CommentaryListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent next;
-        next = new Intent(getApplicationContext(), MapActivity.class);
-        startActivity(next);
+        startActivity(getIntent());
         finish();
     }
 
@@ -157,7 +155,7 @@ public class CommentaryListActivity extends AppCompatActivity {
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBrewery").toString());
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
-                                fillPublication(formatter, unres, "brewery_id", "brewery");
+                                fillPublication(formatter, unres, "user_id", "brewery");
                             }
                         }
                         Collections.sort(publications);
@@ -197,7 +195,7 @@ public class CommentaryListActivity extends AppCompatActivity {
                         JSONArray resCommentBrewery = (JSONArray) parser.parse(response.get("commentsBeer").toString());
                         if (!resCommentBrewery.isEmpty()) {
                             for (Object unres : resCommentBrewery) {
-                                fillPublication(formatter, unres, "beer_id", "beer");
+                                fillPublication(formatter, unres, "user_id", "beer");
                             }
                         }
                         Collections.sort(publications);
