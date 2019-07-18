@@ -48,7 +48,6 @@ public class SearchAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         View vi = convertView;
         if (vi == null) {
             vi = inflater.inflate(R.layout.fragment_result_search, null);

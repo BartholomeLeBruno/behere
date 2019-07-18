@@ -26,7 +26,6 @@ public class CommentMarketAdapter extends BaseAdapter {
     private VolleyCallback mResultCallback = null;
 
     public CommentMarketAdapter(Context context, List<Publication> data) {
-        // TODO Auto-generated constructor stub
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -34,25 +33,21 @@ public class CommentMarketAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         View vi = convertView;
         if (vi == null) {
             vi = inflater.inflate(R.layout.fragment_publication, null);
@@ -73,7 +68,6 @@ public class CommentMarketAdapter extends BaseAdapter {
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         TextView textPseudo = vi.findViewById(R.id.pseudoPubPro);
                         textPseudo.setText(String.format("%s %s", objres.getString("name"), objres.getString("surname")));
-                        //todo get image
 
                     }
                 } catch (Exception e) {

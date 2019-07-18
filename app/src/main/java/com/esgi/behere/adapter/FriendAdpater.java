@@ -27,7 +27,6 @@ public class FriendAdpater extends BaseAdapter {
     private static final String PREFS_ID = "USER_ID";
 
     public FriendAdpater(Context context, List<User> data) {
-        // TODO Auto-generated constructor stub
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -35,25 +34,21 @@ public class FriendAdpater extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         sharedPreferences = parent.getContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         View vi = convertView;
         if (vi == null) {

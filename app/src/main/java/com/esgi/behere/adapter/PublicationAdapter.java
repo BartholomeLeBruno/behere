@@ -29,7 +29,6 @@ public class PublicationAdapter extends BaseAdapter {
     private TextView textPseudo;
 
     public PublicationAdapter(Context context, List<Publication> data) {
-        // TODO Auto-generated constructor stub
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -38,25 +37,21 @@ public class PublicationAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         Log.d("ici", "ici");
         View vi = convertView;
         if (vi == null) {

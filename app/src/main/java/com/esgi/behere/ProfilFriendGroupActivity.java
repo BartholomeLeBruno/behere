@@ -274,7 +274,6 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        //todo handle error response
                         InformationMessage.createToastInformation(ProfilFriendGroupActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_highlight_off_red_24dp,
                                 "Deleted from friend");
                         btnJoinORAdd.setText(getString(R.string.add_upercase));
@@ -470,7 +469,6 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
         EditText tvComment = popupView.findViewById(R.id.tvComment);
         btnSendComment.setOnClickListener((View v) -> {
             prepareAddComment();
-            //todo en attente de dorian
             sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
             mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
             mVolleyService.addCommentsToUser(tvComment.getText().toString(),sharedPreferences.getLong(getString(R.string.prefs_id), 0) ,entityId, sharedPreferences.getString(getString(R.string.access_token), ""));

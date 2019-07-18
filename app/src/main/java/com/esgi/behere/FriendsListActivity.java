@@ -182,7 +182,6 @@ public class FriendsListActivity extends AppCompatActivity {
                         name = objres.getString("name");
                         surname = objres.getString("surname");
                         id = objres.getLong("id");
-                        // todo ajouter la photo
                         User friend = new User();
                         friend.setName(name);
                         friend.setSurname(surname);
