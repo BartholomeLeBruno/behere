@@ -55,7 +55,6 @@ public class Chat extends AppCompatActivity {
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        //todo handle error response
                         Toast.makeText(getApplicationContext(), String.format("Text : %s", messageText), Toast.LENGTH_LONG).show();
 
                     }

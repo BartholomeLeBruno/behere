@@ -105,8 +105,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         tabLayoutHandlerOnTabSelected();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        Log.d("user_id", sharedPreferences.getLong(getString(R.string.prefs_id), 0) + "");
-
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetAllBar();
@@ -166,24 +164,29 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public void onTabSelected(TabLayout.Tab tab) {
                 selectedTab = Objects.requireNonNull(tab.getText()).toString();
                 List<ResultSearch> lsFound = new ArrayList<>();
-                if (!"All".equals(selectedTab)) {
-                    for (ResultSearch item : resultSearches) {
-                        if (!"Market".equals(selectedTab)) {
-                            if (item.getType().equals(selectedTab))
-                                lsFound.add(item);
-                        } else {
-                            if (item.getType().equals("Bar") || item.getType().equals("Brewery"))
-                                lsFound.add(item);
+                SearchAdapter adapter;
+                switch (selectedTab) {
+                    case "All":
+                        adapter = new SearchAdapter(MapActivity.this, resultSearches);
+                        break;
+                    case "Fav":
+                        adapter = new SearchAdapter(MapActivity.this, barUserCouldLike);
+                        break;
+                    default:
+                        for (ResultSearch item : resultSearches) {
+                            if (!"Market".equals(selectedTab)) {
+                                if (item.getType().equals(selectedTab))
+                                    lsFound.add(item);
+                            } else {
+                                if (item.getType().equals("Bar") || item.getType().equals("Brewery"))
+                                    lsFound.add(item);
+                            }
                         }
-                    }
-
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                    listView.setAdapter(adapter);
-                } else {
-                    SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
-                    listView.setAdapter(adapter);
+                        adapter = new SearchAdapter(MapActivity.this, lsFound);
+                        break;
                 }
-                // todo finir tab
+                listView.setAdapter(adapter);
+
             }
 
             @Override
@@ -209,18 +212,33 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public boolean onQueryTextChange(String newText) {
                 List<ResultSearch> lsFound = new ArrayList<>();
                 if (newText != null && !newText.trim().equals("")) {
-                    if (!"All".equals(selectedTab)) {
-                        for (ResultSearch item : resultSearches) {
-                            if (item.getName().contains(newText) && item.getType().equals(selectedTab))
-                                lsFound.add(item);
-                        }
+                    SearchAdapter adapter;
+                    switch (selectedTab) {
+                        case "All":
+                            for (ResultSearch item : resultSearches) {
+                                if (item.getName().toLowerCase().contains(newText))
+                                    lsFound.add(item);
+                            }
+                            adapter = new SearchAdapter(MapActivity.this, lsFound);
+                            break;
+                        case "Fav":
+                            for (ResultSearch item : barUserCouldLike) {
+                                if (item.getName().toLowerCase().contains(newText))
+                                    lsFound.add(item);
+                            }
+                            adapter = new SearchAdapter(MapActivity.this, lsFound);
+                            break;
+                        default:
+                            for (ResultSearch item : resultSearches) {
+                                if (item.getName().toLowerCase().contains(newText) && item.getType().equals(selectedTab))
+                                    lsFound.add(item);
+                            }
 
-                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, lsFound);
-                        listView.setAdapter(adapter);
-                    } else {
-                        SearchAdapter adapter = new SearchAdapter(MapActivity.this, resultSearches);
-                        listView.setAdapter(adapter);
+                            adapter = new SearchAdapter(MapActivity.this, lsFound);
+                            break;
                     }
+                    listView.setAdapter(adapter);
+
                 }
                 return true;
             }
