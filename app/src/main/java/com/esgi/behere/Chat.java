@@ -2,10 +2,11 @@ package com.esgi.behere;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.Message;

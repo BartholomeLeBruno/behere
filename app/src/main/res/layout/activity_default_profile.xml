@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +8,7 @@
     android:background="#2A2E43"
     tools:context=".MarketProfilActivity">
 
-    <android.support.design.widget.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/footerpub"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -78,7 +79,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivProfile"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,28 +89,28 @@
         app:tabBackground="@drawable/tab_layout_selector"
         app:tabTextColor="@android:color/white">
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tabInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="EDIT" />
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tabWall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="WALL" />
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tabNotification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NOTIFICATION"
             android:textColor="@android:color/white" />
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/activity_main_viewpager"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -124,4 +125,4 @@
         app:layout_constraintVertical_bias="0.0" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

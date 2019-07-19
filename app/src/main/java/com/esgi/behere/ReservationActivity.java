@@ -5,19 +5,20 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.error.VolleyError;
 import com.esgi.behere.actor.Market;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.PopupAchievement;
 import com.esgi.behere.utils.VolleyCallback;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

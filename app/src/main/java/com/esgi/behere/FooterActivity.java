@@ -1,11 +1,13 @@
 package com.esgi.behere;
 
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.annotation.NonNull;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FooterActivity extends AppCompatActivity {
     private TextView mTextMessage;

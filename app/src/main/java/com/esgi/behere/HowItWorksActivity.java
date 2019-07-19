@@ -1,7 +1,8 @@
 package com.esgi.behere;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;

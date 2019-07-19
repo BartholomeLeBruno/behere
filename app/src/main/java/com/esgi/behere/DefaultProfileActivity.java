@@ -3,13 +3,12 @@ package com.esgi.behere;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.error.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -18,6 +17,8 @@ import com.esgi.behere.fragment.SectionsAdapterProfile;
 import com.esgi.behere.utils.ApiUsage;
 import com.esgi.behere.utils.CacheContainer;
 import com.esgi.behere.utils.VolleyCallback;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
