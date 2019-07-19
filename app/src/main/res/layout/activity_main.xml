@@ -83,9 +83,9 @@
             android:clickable="true"
             android:onClick="deletePolyLone"
             app:backgroundTint="#2A2E43"
+            android:backgroundTint="@android:color/holo_blue_bright"
             app:layout_constraintBottom_toTopOf="@+id/footerpub"
             app:layout_constraintStart_toStartOf="parent"
-            app:rippleColor="#00FFFFFF"
             app:srcCompat="@drawable/com_facebook_tooltip_blue_xout" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -97,6 +97,7 @@
             app:backgroundTint="#2A2E43"
             android:layout_weight="1"
             android:clickable="true"
+            android:backgroundTint="@android:color/holo_blue_bright"
             app:layout_constraintBottom_toTopOf="@+id/footerpub"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/ic_menu_compass" />

@@ -51,46 +51,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        app:boxStrokeColor="@android:color/holo_red_dark"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
+        android:hint="@string/email_champ"
+        app:boxBackgroundColor="@android:color/white"
+        app:startIconDrawable="@drawable/ic_person_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tVTitle">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:autofillHints="@string/email_champ"
-            android:background="@android:drawable/dialog_holo_light_frame"
-            android:hint="@string/email_champ"
-            android:gravity="center_horizontal|center_vertical"
             android:inputType="textEmailAddress"
             android:textColorHint="#F6F6F6" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        app:boxStrokeColor="@android:color/holo_red_dark"
+        app:boxBackgroundColor="@android:color/white"
+        app:startIconDrawable="@drawable/ic_remove_red_eye_black_24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
+        android:hint="@string/password_champ"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:autofillHints="@string/password_champ"
-            android:background="@android:drawable/dialog_holo_light_frame"
-            android:gravity="center_horizontal|center_vertical"
-            android:hint="@string/password_champ"
-            android:imeActionId="6"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:textColorHint="#F6F6F6" />
     </com.google.android.material.textfield.TextInputLayout>
