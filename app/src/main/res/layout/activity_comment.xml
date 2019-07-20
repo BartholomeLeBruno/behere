@@ -2,28 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#3ACCE1">
 
-    <EditText
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        app:boxStrokeColor="@android:color/holo_red_dark"
+        android:hint="Your comments...."
+        app:boxBackgroundColor="@android:color/white">
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/tvComment"
         android:layout_width="match_parent"
         android:layout_height="109dp"
         android:autofillHints="Comment"
-        android:hint="Your comments...."
-        android:inputType="text"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
+        android:inputType="textMultiLine"
         android:textSize="22sp" />
 
-    <Button
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSendComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvComment"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_below="@id/textInputLayout2"
         android:layout_centerInParent="true"
         android:layout_marginTop="30dp"
+        app:icon="@drawable/ic_send_white_24dp"
         android:text="SEND"
         android:textAlignment="center" />
+
 
 </RelativeLayout>

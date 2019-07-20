@@ -49,9 +49,9 @@
 
             <ImageView
                 android:id="@+id/iVLegs"
-                android:contentDescription="@string/default_piece"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/default_piece"
                 app:srcCompat="@drawable/ic_directions_walk_red_48dp" />
 
             <TextView
@@ -80,10 +80,10 @@
             android:layout_marginStart="24dp"
             android:layout_marginBottom="24dp"
             android:layout_weight="1"
+            android:backgroundTint="@android:color/holo_blue_bright"
             android:clickable="true"
             android:onClick="deletePolyLone"
             app:backgroundTint="#2A2E43"
-            android:backgroundTint="@android:color/holo_blue_bright"
             app:layout_constraintBottom_toTopOf="@+id/footerpub"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/com_facebook_tooltip_blue_xout" />
@@ -94,10 +94,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
-            app:backgroundTint="#2A2E43"
             android:layout_weight="1"
-            android:clickable="true"
             android:backgroundTint="@android:color/holo_blue_bright"
+            android:clickable="true"
+            app:backgroundTint="#2A2E43"
             app:layout_constraintBottom_toTopOf="@+id/footerpub"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/ic_menu_compass" />
@@ -133,20 +133,17 @@
             map:layout_constraintTop_toBottomOf="parent"
             tools:context=".MapActivity" />
 
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/footerpub"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            app:labelVisibilityMode="labeled"
             android:background="?android:attr/windowBackground"
+            app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu" >
-
-        </com.google.android.material.bottomnavigation.BottomNavigationView>
+            app:menu="@menu/bottom_nav_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -158,8 +155,8 @@
         android:background="#2A2E43"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tabMode="fixed"
         app:tabIconTint="@android:color/holo_green_light"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="#3ACCE1"
         app:tabTextColor="@android:color/white">
 
@@ -192,8 +189,8 @@
             android:id="@+id/tabFavoriteMarket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fav"
             android:icon="@drawable/ic_star_yellow_24dp"
+            android:text="Fav"
             android:textColor="@android:color/white" />
 
     </com.google.android.material.tabs.TabLayout>

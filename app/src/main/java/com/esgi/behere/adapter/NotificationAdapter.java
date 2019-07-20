@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
@@ -57,6 +58,7 @@ public class NotificationAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         sharedPreferences = parent.getContext().getSharedPreferences(parent.getContext().getString(R.string.prefs), MODE_PRIVATE);
         TextView agree, denied, profil, textMessage;
+        Button agreebtn, deniedbtn, profilbtn;
         TextView textMessageComment;
         View vi = convertView;
         if (vi == null) {
@@ -65,23 +67,23 @@ public class NotificationAdapter extends BaseAdapter {
                     vi = inflater.inflate(R.layout.fragment_add_friend, parent, false);
                     textMessage = vi.findViewById(R.id.tvDemand);
                     textMessage.setText(data.get(position).getText());
-                    agree = vi.findViewById(R.id.tvAdd);
-                    denied = vi.findViewById(R.id.tvNo);
-                    profil = vi.findViewById(R.id.tvSeeProfil);
-                    profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
-                    agree.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
-                    denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
+                    agreebtn = vi.findViewById(R.id.tvAdd);
+                    deniedbtn = vi.findViewById(R.id.tvNo);
+                    profilbtn = vi.findViewById(R.id.tvSeeProfil);
+                    profilbtn.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
+                    agreebtn.setOnClickListener(v -> addFriend(v, data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
+                    deniedbtn.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
                     break;
                 case "Groups":
                     vi = inflater.inflate(R.layout.fragment_add_friend, parent, false);
                     textMessage = vi.findViewById(R.id.tvDemand);
                     textMessage.setText(data.get(position).getText());
-                    agree = vi.findViewById(R.id.tvAdd);
-                    denied = vi.findViewById(R.id.tvNo);
-                    profil = vi.findViewById(R.id.tvSeeProfil);
-                    profil.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
-                    agree.setOnClickListener(v -> addToGroup(v, data.get(position).getGroup_id(), data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
-                    denied.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
+                    agreebtn = vi.findViewById(R.id.tvAdd);
+                    deniedbtn = vi.findViewById(R.id.tvNo);
+                    profilbtn = vi.findViewById(R.id.tvSeeProfil);
+                    profilbtn.setOnClickListener(v -> seeProfil(v, data.get(position).getOther_user_id()));
+                    agreebtn.setOnClickListener(v -> addToGroup(v, data.get(position).getGroup_id(), data.get(position).getOther_user_id(), data.get(position).getId(), data.get(position)));
+                    deniedbtn.setOnClickListener(v -> denyFriend(v, data.get(position).getId(), data.get(position)));
                     break;
                 case "Comments":
                     vi = inflater.inflate(R.layout.fragment_comment_notif, parent, false);

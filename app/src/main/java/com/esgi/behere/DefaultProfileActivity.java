@@ -69,6 +69,7 @@ public class DefaultProfileActivity extends AppCompatActivity {
         prepareGetAllGroups();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
         mVolleyService.getAllGroups(sharedPreferences.getLong(getString(R.string.prefs_id), 0));
+        navigationView.removeBadge(navigationView.getMenu().getItem(1).getItemId());
 
     }
 

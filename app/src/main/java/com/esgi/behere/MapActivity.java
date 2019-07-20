@@ -95,6 +95,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private MaterialSearchView searchView;
     private TabLayout tabLayout;
     private String selectedTab = "All";
+    private BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +107,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
         tabLayoutHandlerOnTabSelected();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView = findViewById(R.id.footerpub);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetAllBar();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
@@ -307,7 +308,8 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         }
                         if (sharedPreferences.contains("NOTIFICATIONSIZE")) {
                             if (sharedPreferences.getLong("NOTIFICATIONSIZE", 0) != notifnumber) {
-                                Toast.makeText(getApplicationContext(), "You got a new notification !", Toast.LENGTH_LONG).show();
+                                navigationView.getOrCreateBadge(navigationView.getMenu().getItem(1).getItemId());
+                                Toast.makeText(getApplicationContext(), "You received a new notification", Toast.LENGTH_LONG).show();
                                 sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
                             }
                         } else {

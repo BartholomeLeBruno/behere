@@ -5,13 +5,15 @@
     android:layout_height="match_parent"
     android:background="#2A2E43">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCommentWall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/mybutton"
+        app:backgroundTint="#3ACCE1"
         android:onClick="onButtonShowPopupWindowClick"
         android:text="COMMENT"
         android:visibility="invisible"
@@ -19,18 +21,20 @@
         app:layout_constraintStart_toEndOf="@+id/btnJoinOrAdd"
         app:layout_constraintTop_toBottomOf="@+id/tvGroupsOrPosts" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnJoinOrAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/mybutton"
+        app:backgroundTint="#3ACCE1"
         app:layout_constraintEnd_toStartOf="@+id/tvGroupsOrPosts"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFriendsOrMembers" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDenied"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +43,8 @@
         android:layout_marginEnd="8dp"
         android:text="Deny"
         android:visibility="invisible"
+        android:background="@drawable/mybutton"
+        app:backgroundTint="#3ACCE1"
         app:layout_constraintEnd_toStartOf="@+id/btnJoinOrAdd"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFriendsOrMembers" />
@@ -59,8 +65,8 @@
         android:layout_width="0dp"
         android:layout_height="400dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/default_image"
         android:orientation="vertical"
+        android:background="@android:drawable/screen_background_dark_transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,13 +120,14 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TabLayout.Colored"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:radius="18dp"
+        android:background="#2A2E43"
+        app:tabMode="fixed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:tabBackground="@drawable/tab_layout_selector"
         app:tabTextColor="@android:color/white">
 
         <com.google.android.material.tabs.TabItem

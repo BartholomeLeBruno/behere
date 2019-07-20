@@ -18,69 +18,79 @@
                 android:id="@+id/tvReservation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
-                android:layout_centerHorizontal="true"
                 android:shadowColor="#000000"
                 android:text="RESERVATION"
                 android:textAlignment="center"
                 android:textSize="56sp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDate"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
-                android:layout_marginTop="50dp"
-                android:background="#3ACCE1"
-                android:layout_alignParentStart="true"
                 android:layout_below="@id/tvReservation"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="50dp"
                 android:layout_toStartOf="@+id/middle"
+                android:backgroundTint="#2C83DB"
                 android:hint="CHOOSE DAY" />
 
             <TextView
                 android:id="@+id/middle"
                 android:layout_width="0dp"
-                android:layout_marginTop="50dp"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@id/tvReservation"
-                android:text=""/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:text="" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHour"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
+                android:layout_below="@id/tvReservation"
+                android:layout_alignParentEnd="true"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="50dp"
-                android:layout_alignParentEnd="true"
                 android:layout_toEndOf="@+id/middle"
-                android:background="#3ACCE1"
-                android:layout_below="@id/tvReservation"
+                android:backgroundTint="#2C83DB"
                 android:hint="CHOOSE TIME" />
 
-            <EditText
-                android:id="@+id/etNumberOfPlace"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:ems="10"
-                android:textAlignment="center"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/btnDate"
-                android:layout_marginTop="50dp"
                 android:layout_centerHorizontal="true"
-                android:inputType="number"
-                android:hint="Number of people"/>
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="50dp"
+                android:hint="Number of people"
+                android:gravity="center_horizontal"
+                app:boxBackgroundColor="@android:color/white"
+                app:boxStrokeColor="@android:color/holo_red_dark">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNumberOfPlace"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_below="@id/textInputLayout2"
                 android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="50dp"
+                android:layout_marginEnd="8dp"
                 android:background="#3ACCE1"
-                android:layout_below="@id/etNumberOfPlace"
                 android:text="VALIDATE" />
 
 

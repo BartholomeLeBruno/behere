@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayout"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:padding="10dp">
@@ -18,34 +19,43 @@
         android:textStyle="bold"
         tools:text="Vous avez reçu une nouvelle demande d'ami de :" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/tvAdd"
         android:layout_width="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:layout_below="@id/tvDemand"
-        android:drawableStart="@drawable/ic_check_green_24dp"
+        android:layout_below="@id/tvSeeProfil"
+        android:gravity="center"
+        android:layout_alignParentStart="true"
+        app:icon="@drawable/ic_check_green_24dp"
+        app:backgroundTint="@android:color/holo_green_light"
         android:text="Agree" />
 
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/tvNo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvDemand"
-        android:layout_toEndOf="@+id/tvAdd"
-        android:drawableStart="@drawable/ic_close_red_24dp"
+        android:layout_below="@id/tvSeeProfil"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_alignParentEnd="true"
+        app:icon="@drawable/ic_close_red_24dp"
+        app:backgroundTint="@android:color/holo_red_light"
         android:textStyle="bold"
         android:text="Denied" />
 
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/tvSeeProfil"
         android:layout_width="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
         android:layout_below="@id/tvDemand"
-        android:layout_toEndOf="@+id/tvNo"
-        android:drawableStart="@drawable/ic_person_black_24dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        app:icon="@drawable/ic_person_black_24dp"
         android:textStyle="bold"
         android:text="See Profil" />
 

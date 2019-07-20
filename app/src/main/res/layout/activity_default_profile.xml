@@ -80,13 +80,16 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
+        style="@style/Widget.MaterialComponents.TabLayout.Colored"
         android:id="@+id/tabLayout"
+        app:tabRippleColor="@android:color/holo_blue_bright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivProfile"
-        app:tabBackground="@drawable/tab_layout_selector"
+        android:background="#2A2E43"
+        app:tabMode="fixed"
         app:tabTextColor="@android:color/white">
 
         <com.google.android.material.tabs.TabItem

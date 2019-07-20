@@ -71,25 +71,27 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnComment"
                 android:layout_width="wrap_content"
-                android:layout_height="28dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="28dp"
+                app:backgroundTint="#3ACCE1"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/roundbutton"
                 android:onClick="onButtonShowPopupWindowClick"
                 android:text="Comment"
                 android:textColor="#FFFFFF" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWebsite"
                 android:layout_width="wrap_content"
-                android:layout_height="28dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/btnComment"
                 android:layout_alignParentEnd="true"
+                app:backgroundTint="#3ACCE1"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="28dp"
                 android:background="@drawable/roundbutton"
@@ -119,20 +121,21 @@
                 android:layout_marginEnd="24dp"
                 tools:context=".MarketProfilActivity" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSeeComment"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@id/map"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
+                app:backgroundTint="#2C83DB"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/roundbutton"
                 android:text="SEE COMMMENTS"
                 android:textColor="#FFFFFF" />
 
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFacebook"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -145,13 +148,14 @@
                 android:text="FACEBOOK"
                 android:textColor="#FFFFFF" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreateReservation"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@id/btnSeeComment"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
+                app:backgroundTint="#2C83DB"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/roundbutton"
                 android:text="RESERVATION"

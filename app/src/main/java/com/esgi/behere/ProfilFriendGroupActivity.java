@@ -209,8 +209,10 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                                 prepareGetAllFriends();
                                 mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());
                                 mVolleyService.getAllFriends(entityId);
+                                Intent intent = new Intent(getApplicationContext(),ProfilFriendGroupActivity.class);
+                                intent.putExtra("entityID",entityId);
+                                startActivity(intent);
                                 finish();
-                                startActivity(new Intent(getApplicationContext(), ProfilFriendGroupActivity.class));
                             });
                         }
                     }

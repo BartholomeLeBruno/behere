@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:background="#F7F7FA"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F7F7FA">
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,8 +12,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
@@ -34,51 +33,72 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/tvNameGroup"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:maxLines="1"
-        android:singleLine="true"
         android:hint="@string/name_champ"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        app:boxBackgroundColor="@android:color/white"
+        app:boxStrokeColor="@android:color/holo_red_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroups" />
+        app:layout_constraintTop_toBottomOf="@+id/tvGroups">
 
-    <EditText
-        android:id="@+id/tvDescription"
-        android:layout_width="0dp"
-        android:layout_height="125dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tvNameGroup"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="#ACA1A1"
+            android:textColorHint="#ACA1A1"
+            android:textSize="24sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descriptionLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
-        android:background="@android:drawable/dialog_holo_light_frame"
         android:hint="Description"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        app:boxBackgroundColor="@android:color/white"
+        app:boxStrokeColor="@android:color/holo_red_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNameGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/nameLayout">
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:textSize="24sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnUpload"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
+        app:backgroundTint="#2C83DB"
         android:text="Upload Photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCreateGroup"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -86,8 +106,9 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
         android:text="CREATE GROUP"
+        app:backgroundTint="#2C83DB"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnUpload" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

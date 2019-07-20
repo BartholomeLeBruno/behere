@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2A2E43">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCommentWall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/mybutton"
         android:onClick="onButtonShowPopupWindowClick"
         android:text="COMMENT"
         android:visibility="invisible"
+        app:backgroundTint="#3ACCE1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnJoin"
         app:layout_constraintTop_toBottomOf="@+id/tvMembers" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDenied"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/mybutton"
         android:text="Deny"
         android:visibility="invisible"
+        app:backgroundTint="#3ACCE1"
         app:layout_constraintEnd_toStartOf="@+id/btnJoin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMembers" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnJoin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/mybutton"
+        app:backgroundTint="#3ACCE1"
         app:layout_constraintEnd_toStartOf="@+id/tvPosts"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMembers" />
@@ -48,8 +53,8 @@
         android:id="@+id/footerpub"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:labelVisibilityMode="labeled"
         android:background="?android:attr/windowBackground"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,8 +64,8 @@
         android:id="@+id/ivGroup"
         android:layout_width="0dp"
         android:layout_height="400dp"
-        app:layout_constraintEnd_toEndOf="parent"
         android:background="@android:drawable/screen_background_dark_transparent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,15 +115,15 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        style="@style/Widget.MaterialComponents.TabLayout.Colored"
+        app:tabRippleColor="@android:color/holo_blue_bright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:tabBackground="@drawable/tab_layout_selector"
+        android:background="#2A2E43"
         app:layout_constraintEnd_toEndOf="parent"
-        android:radius="18dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivGroup"
+        app:tabMode="fixed"
         app:tabTextColor="@android:color/white">
 
         <com.google.android.material.tabs.TabItem
@@ -132,6 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="WALL" />
+
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager.widget.ViewPager
