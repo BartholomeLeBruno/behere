@@ -54,6 +54,7 @@ public class LexiconActivity extends AppCompatActivity {
         gridViewBeers = findViewById(R.id.gridViewBeers);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setSelectedItemId(R.id.navigation_lexical);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareTypeOfBeer();
         mVolleyService = new ApiUsage(mResultCallback, getApplicationContext());

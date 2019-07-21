@@ -110,6 +110,7 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
             startActivity(listFriend);
         });
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setSelectedItemId(R.id.navigation_myprofile);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         if (btnJoinORAdd.getText().toString().equals(getString(R.string.delete_upercase)))
             btnCommentWall.setVisibility(View.VISIBLE);

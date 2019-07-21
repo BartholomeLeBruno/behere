@@ -70,6 +70,7 @@ public class GroupActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setSelectedItemId(R.id.navigation_mygroups);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         btnAdd.setText(getString(R.string.join_upercase));
         if (getIntent().getExtras() != null) {

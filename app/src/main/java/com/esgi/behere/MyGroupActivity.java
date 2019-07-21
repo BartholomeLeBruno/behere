@@ -40,6 +40,7 @@ public class MyGroupActivity extends AppCompatActivity {
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         listMyGroups = findViewById(R.id.listMyGroups);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setSelectedItemId(R.id.navigation_mygroups);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         prepareGetAllGroups();
         ApiUsage volleyService = new ApiUsage(mResultCallback, getApplicationContext());

@@ -32,6 +32,7 @@ public class CreateGroupeActivity extends AppCompatActivity {
         EditText tvDescription = findViewById(R.id.tvDescription);
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setSelectedItemId(R.id.navigation_mygroups);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         btnCreateGroup.setOnClickListener(v -> {
             if (!tvNameGroup.getText().toString().equals("")) {

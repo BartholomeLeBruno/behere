@@ -42,6 +42,7 @@ public class FriendsListActivity extends AppCompatActivity {
         sharedPreferences = getBaseContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         TextView tvFriendsTitle = findViewById(R.id.tvFriendsTitle);
         BottomNavigationView navigationView = findViewById(R.id.footerpub);
+        navigationView.setSelectedItemId(R.id.navigation_myprofile);
         navigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
         CacheContainer.getInstance().getFriends().clear();
         if (getIntent().getExtras() != null) {
