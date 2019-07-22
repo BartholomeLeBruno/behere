@@ -21,6 +21,7 @@ public class CacheContainer {
     private static RequestQueue queue;
     private static HashMap<String, Market> marketHashMap;
     private static List<ResultSearch> resultSearches;
+    private static List<ResultSearch> barUserCouldLike;
 
 
     private static List<User> friends;
@@ -30,6 +31,7 @@ public class CacheContainer {
         marketHashMap = new HashMap<>();
         friends = new ArrayList<>();
         resultSearches = new ArrayList<>();
+        barUserCouldLike = new ArrayList<>();
     }
 
     /** Instance unique non préinitialisée */
@@ -71,5 +73,12 @@ public class CacheContainer {
 
     private static String stringEntities;
 
+    public List<ResultSearch> getBarUserCouldLike() {
+        return barUserCouldLike;
+    }
+
+    public void setBarUserCouldLike(List<ResultSearch> barUserCouldLike) {
+        CacheContainer.barUserCouldLike = barUserCouldLike;
+    }
 
 }

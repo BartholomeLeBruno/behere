@@ -87,7 +87,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     private VolleyCallback mResultCallback = null;
     private ApiUsage mVolleyService;
     private ListView listView;
-    private List<ResultSearch> barUserCouldLike;
     private List<ResultSearch> resultSearches = CacheContainer.getInstance().getResultSearches();
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
@@ -171,7 +170,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         adapter = new SearchAdapter(MapActivity.this, resultSearches);
                         break;
                     case "Fav":
-                        adapter = new SearchAdapter(MapActivity.this, barUserCouldLike);
+                        adapter = new SearchAdapter(MapActivity.this, CacheContainer.getInstance().getBarUserCouldLike());
                         break;
                     default:
                         for (ResultSearch item : resultSearches) {
@@ -223,7 +222,7 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                             adapter = new SearchAdapter(MapActivity.this, lsFound);
                             break;
                         case "Fav":
-                            for (ResultSearch item : barUserCouldLike) {
+                            for (ResultSearch item : CacheContainer.getInstance().getBarUserCouldLike()) {
                                 if (item.getName().toLowerCase().contains(newText))
                                     lsFound.add(item);
                             }
@@ -741,11 +740,12 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                 try {
                     if (!(boolean) response.get("error")) {
                         JSONParser parser = new JSONParser();
+                        Log.d("reponseTypeOfBeer", response.toString());
                         JSONObject objres = (JSONObject) new JSONTokener(response.get("user").toString()).nextValue();
                         JSONArray typeOfBeerTab = (JSONArray) parser.parse(objres.get("typeOfBeer").toString());
                         long idType;
                         if (!typeOfBeerTab.isEmpty()) {
-                            barUserCouldLike = new ArrayList<>();
+
                             JSONObject objTab;
                             for (Object oneType : typeOfBeerTab) {
                                 objTab = (JSONObject) new JSONTokener(oneType.toString()).nextValue();
@@ -777,7 +777,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
             public void onSuccess(JSONObject response) {
                 try {
                     if (!(boolean) response.get("error")) {
-                        barUserCouldLike = new ArrayList<>();
                         JSONParser parser = new JSONParser();
                         JSONArray listMarket = (JSONArray) parser.parse(response.get(entity.toLowerCase()).toString());
                         if (!listMarket.isEmpty()) {
@@ -790,10 +789,14 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                                 resultSearch.setType(entity);
                                 resultSearch.setId(Long.parseLong(objTab.getString("id")));
                                 resultSearch.setPath(objTab.get("pathPicture").toString());
-                                barUserCouldLike.add(resultSearch);
+                                CacheContainer.getInstance().getBarUserCouldLike().add(resultSearch);
                             }
                         }
                     }
+
+                    else
+                        Log.d("aidepas",response.toString());
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

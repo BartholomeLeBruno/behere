@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.android.volley.error.VolleyError;
 import com.esgi.behere.CommentaryListActivity;
+import com.esgi.behere.LexiconActivity;
 import com.esgi.behere.R;
 import com.esgi.behere.actor.Beer;
 import com.esgi.behere.tools.StarTools;
@@ -87,7 +88,7 @@ public class BeerAdapter extends BaseAdapter {
     private void onButtonShowPopupWindowClick(View view, int position, ViewGroup parent) {
 
         // inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_beer, null);
         AtomicLong note = new AtomicLong();
         note.set(0);
@@ -129,6 +130,8 @@ public class BeerAdapter extends BaseAdapter {
                 ApiUsage mVolleyServiceNote = new ApiUsage(mResultCallback, view.getContext());
                 mVolleyServiceNote.addNoteToBeer(note.get(), data.get(position).getId(), sharedPreferences.getString(v.getContext().getString(R.string.access_token), ""));
                 popupWindow.dismiss();
+                Intent n = new Intent(parent.getContext(), LexiconActivity.class);
+                parent.getContext().startActivity(n);
             }
         });
     }
