@@ -31,7 +31,6 @@ import org.json.simple.parser.JSONParser;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 
@@ -42,7 +41,6 @@ public class WallProfileFragment extends Fragment {
     private ArrayList<Publication> publications = new ArrayList<>();
     private ListView recyclerView;
     private VolleyCallback mResultCallback = null;
-    ApiUsage mVolleyService;
     private long entityID;
 
 
@@ -56,6 +54,7 @@ public class WallProfileFragment extends Fragment {
         SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         if(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).containsKey("entityID"))
             entityID = Objects.requireNonNull(getActivity().getIntent().getExtras()).getLong("entityID");
+        ApiUsage mVolleyService;
         if (Objects.requireNonNull(getActivity().getIntent().getExtras()).containsKey("group")) {
             prepareGetGroupComments();
             mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
@@ -64,7 +63,6 @@ public class WallProfileFragment extends Fragment {
         } else {
             prepareGetAllComments();
             if (getActivity().getIntent().getExtras().containsKey("entityID")) {
-                Log.d("entityID",entityID +"");
                 mVolleyService = new ApiUsage(mResultCallback, rootView.getContext());
                 mVolleyService.getAllComments(entityID);
             } else {
@@ -73,10 +71,6 @@ public class WallProfileFragment extends Fragment {
             }
         }
         // Create adapter passing in the sample user data
-        PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
-        // Attach the adapter to the recyclerview to populate items
-        recyclerView.setAdapter(adapter);
-        // Set layout manager to position the items
         // That's all!
 
         return rootView;
@@ -91,20 +85,21 @@ public class WallProfileFragment extends Fragment {
                 try {
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (!(boolean) response.get("error")) {
-                        Log.d("reponseComment", response.toString());
                         publications = new ArrayList<>();
                         JSONParser parser = new JSONParser();
+                        Log.d("response", response.toString());
                         loadComments(response, formatter, parser, "commentsBrewery", "brewery_id", "brewery");
                         loadComments(response, formatter, parser, "commentsBars", "bar_id", "bar");
                         loadComments(response, formatter, parser, "commentsBeers", "beer_id", "beer");
                         JSONArray resCommentUser = (JSONArray) parser.parse(response.get("commentsUsers").toString());
-                        Log.d("commentUser", resCommentUser.toJSONString());
                         if (!resCommentUser.isEmpty()) {
                             for (Object unres : resCommentUser) {
                                 fillPublication(formatter, unres, "user_comment_id", "user");
                             }
                         }
-                        Collections.sort(publications);
+                        Log.d("publication", publications.toString());
+                        publications.forEach(v -> Log.d("publication", v.getType() + v.getContent()));
+                        //Collections.sort(publications);
                         PublicationAdapter adapter = new PublicationAdapter(Objects.requireNonNull(getContext()), publications);
                         recyclerView.setAdapter(adapter);
                     }

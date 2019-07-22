@@ -44,7 +44,7 @@ public class BeerTypeAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
-        if (vi == null) {
+        //if (vi == null) {
             vi = inflater.inflate(R.layout.fragment_beertype, null);
             TextView text = vi.findViewById(R.id.beerTypeName);
             Button button = vi.findViewById(R.id.btnAddTypeOfBeer);
@@ -65,7 +65,7 @@ public class BeerTypeAdapter extends BaseAdapter {
                     Toast.makeText(parent.getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-        }
+       // }
         return vi;
     }
 }

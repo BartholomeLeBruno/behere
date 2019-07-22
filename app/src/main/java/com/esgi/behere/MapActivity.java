@@ -66,7 +66,6 @@ import org.json.simple.parser.JSONParser;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -377,16 +376,6 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (!CacheContainer.getInstance().getMarketHashMap().isEmpty()) {
-            for (Map.Entry<String, Market> market : CacheContainer.getInstance().getMarketHashMap().entrySet()) {
-                LatLng latLng = new LatLng(market.getValue().getLatitude(), market.getValue().getLongitutde());
-                marker = mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(market.getKey())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_icon_bar)));
-                marker.setTag(0);
-            }
-        }
         mMap.setOnMarkerClickListener(this);
         if (mLocationPermissionsGranted) {
             getDeviceLocation();

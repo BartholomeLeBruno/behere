@@ -284,6 +284,10 @@ public class MarketProfilActivity extends AppCompatActivity implements GoogleMap
                 try {
                     InformationMessage.createToastInformation(MarketProfilActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                             "We love you my love");
+                    Intent n = new Intent(getApplicationContext(),MarketProfilActivity.class);
+                    n.putExtra("marker", market);
+                    startActivity(n);
+                    finish();
                     if ((boolean) response.get("error")) {
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     }

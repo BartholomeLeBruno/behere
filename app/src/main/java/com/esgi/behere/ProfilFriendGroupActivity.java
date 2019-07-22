@@ -492,6 +492,10 @@ public class ProfilFriendGroupActivity extends AppCompatActivity {
                 try {
                     InformationMessage.createToastInformation(ProfilFriendGroupActivity.this, getLayoutInflater(), getApplicationContext(), R.drawable.ic_insert_emoticon_blue_24dp,
                             "Thank you for the comment");
+                    Intent n = new Intent(getApplicationContext(), ProfilFriendGroupActivity.class);
+                    n.putExtra("entityID", entityId);
+                    startActivity(n);
+                    finish();
                     if ((boolean) response.get("error")) {
                         Toast.makeText(getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     }
