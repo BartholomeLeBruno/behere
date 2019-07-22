@@ -309,11 +309,13 @@ public class MapActivity extends AppCompatActivity implements GoogleMap.OnMarker
                         if (sharedPreferences.contains("NOTIFICATIONSIZE")) {
                             if (sharedPreferences.getLong("NOTIFICATIONSIZE", 0) != notifnumber) {
                                 navigationView.getOrCreateBadge(navigationView.getMenu().getItem(1).getItemId());
+                                sharedPreferences.edit().putBoolean("PREF_BADGE", true).apply();
                                 Toast.makeText(getApplicationContext(), "You received a new notification", Toast.LENGTH_LONG).show();
                                 sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
                             }
                         } else {
                             sharedPreferences.edit().putLong("NOTIFICATIONSIZE", notifnumber).apply();
+                            sharedPreferences.edit().putBoolean("PREF_BADGE", false).apply();
                         }
 
                     }

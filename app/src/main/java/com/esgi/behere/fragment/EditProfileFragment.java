@@ -118,6 +118,7 @@ public class EditProfileFragment extends Fragment {
             String extension = filename.substring(filename.indexOf(".") + 1);
             String path_temp = getCacheDir() + filename;
             File file = new File(path_temp);
+
             FileOutputStream fos = null;
             try {
                 byte[] buffer = new byte[1024];
@@ -137,10 +138,12 @@ public class EditProfileFragment extends Fragment {
                 if (fos != null) {
                     try {
                         fos.close();
+
                     } catch (IOException e) {
                         Log.e(TAG, "Error while closing output stream", e);
                     }
                 }
+
             }
         }
     }
